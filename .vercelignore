@@ -1,0 +1,26 @@
+# Files excluded from the Vercel deployment upload.
+# These stay in git (they are the master copies / local tooling) but there is
+# no reason to ship them to the build machine on every deploy.
+
+# ~35MB of original camera photos and video. Only used locally by
+# scripts/build-images.mjs and scripts/build-video.sh to regenerate the
+# derivatives that live in public/media/, which IS deployed.
+_source/
+
+# Local asset-generation tooling. Not part of `next build`.
+scripts/
+
+# Playwright MCP scratch output
+.playwright-mcp/
+*.playwright-mcp*
+
+# Local build artefacts and noise
+.next/
+node_modules/
+.turbo/
+*.tsbuildinfo
+.DS_Store
+
+# Agent/dev notes
+AGENTS.md
+CLAUDE.md

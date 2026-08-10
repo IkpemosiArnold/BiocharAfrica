@@ -32,10 +32,49 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
 # vercel
 .vercel
 
 # typescript
 *.tsbuildinfo
-next-env.d.ts
+# next-env.d.ts is ignored by the stock create-next-app template. We keep it
+# tracked instead: it is tiny, stable, and lets `tsc --noEmit` work on a fresh
+# clone before anyone has run `next dev`/`next build`.
+
+# --- project-specific -------------------------------------------------------
+
+# Playwright MCP scratch output (traces, screenshots, console logs, .yml runs)
+/.playwright-mcp/
+*.playwright-mcp*
+
+# Stray screenshots/exports dropped at the repo root only.
+# Deliberately anchored with a leading slash: public/media/** holds the real
+# site imagery and MUST stay committed.
+/*.png
+/*.jpg
+/*.jpeg
+/*.webp
+/*.gif
+/*.mov
+/*.mp4
+
+# build output / caches
+node_modules/
+.next/
+.turbo/
+/dist/
+*.tsbuildinfo
+
+# OS noise
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# editor noise
+.vscode/
+.idea/
+*.swp
+*~
