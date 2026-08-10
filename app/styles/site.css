@@ -299,13 +299,23 @@
    becomes genuinely hard to read. Legibility wins over spectacle here. */
 @media (max-width: 48rem) {
   .hero__scrim {
+    /* An earlier version ran this at 94% and 86% opacity across the bottom two
+       thirds. It fixed legibility by painting over the shader almost entirely,
+       which on an iPhone was indistinguishable from the WebGL failing to load.
+       The scrim now clears completely by just under half height, so the pore
+       structure is unmistakably present, and the copy gets its legibility from
+       a local text-shadow instead of from hiding the artwork. */
     background: linear-gradient(
       to top,
-      oklch(0.09 0.008 60 / 0.94) 0%,
-      oklch(0.09 0.008 60 / 0.86) 34%,
-      oklch(0.09 0.008 60 / 0.5) 62%,
-      oklch(0.09 0.008 60 / 0.25) 100%
+      oklch(0.09 0.008 60 / 0.88) 0%,
+      oklch(0.09 0.008 60 / 0.62) 26%,
+      oklch(0.09 0.008 60 / 0.22) 40%,
+      transparent 52%
     );
+  }
+  .hero__title,
+  .hero__lede {
+    text-shadow: 0 1px 14px oklch(0.09 0.008 60 / 0.75);
   }
 }
 
@@ -1218,4 +1228,44 @@
    its own full top padding on top of that leaves a dead band with nothing in it. */
 .phead + .act {
   padding-block-start: clamp(1rem, 0.5rem + 1.5vw, 2.5rem);
+}
+
+/* On-screen perf readout, only rendered when ?debug=perf is present. */
+.perfdebug {
+  position: fixed;
+  inset-block-end: 0.75rem;
+  inset-inline-start: 0.75rem;
+  z-index: 300;
+  max-inline-size: min(20rem, calc(100vw - 1.5rem));
+  padding: 0.75rem 0.9rem;
+  background: oklch(0.09 0.008 60 / 0.94);
+  color: var(--color-bone-100);
+  border: 1px solid var(--color-rice-500);
+  font-size: 0.75rem;
+  line-height: 1.35;
+  font-variant-numeric: tabular-nums;
+}
+.perfdebug strong {
+  display: block;
+  color: var(--color-rice-500);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-size: 0.625rem;
+  margin-block-end: 0.5rem;
+}
+.perfdebug dl {
+  margin: 0;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.15rem 0.75rem;
+}
+.perfdebug dl > div {
+  display: contents;
+}
+.perfdebug dt {
+  color: var(--color-ash-400);
+}
+.perfdebug dd {
+  margin: 0;
+  overflow-wrap: anywhere;
 }

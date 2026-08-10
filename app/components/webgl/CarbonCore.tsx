@@ -127,8 +127,16 @@ function Core({
         <boxGeometry args={[1, 1, 1]} />
         {/* Unlit: no lights in the scene at all. Colour comes entirely from
             instanceColor, which removes every per-fragment lighting calculation
-            across a thousand instances. */}
-        <meshBasicMaterial vertexColors toneMapped={false} />
+            across a thousand instances.
+
+            Deliberately NOT vertexColors. That flag sets three's USE_COLOR
+            define, and the shader then runs `vColor *= color` against a `color`
+            attribute that boxGeometry does not have. A missing attribute reads
+            as (0,0,0), so every instance was multiplied to black before
+            instanceColor was applied, which is why this rendered as a solid
+            silhouette. InstancedMesh colour needs no flag; instanceColor is
+            picked up on its own. */}
+        <meshBasicMaterial toneMapped={false} />
       </instancedMesh>
     </group>
   );

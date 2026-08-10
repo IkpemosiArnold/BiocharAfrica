@@ -3,6 +3,7 @@ import { Big_Shoulders, Archivo } from "next/font/google";
 import SmoothScroll from "./components/SmoothScroll";
 import Nav from "./components/Nav";
 import Footer from "./components/Footer";
+import PerfDebug from "./components/PerfDebug";
 import "./globals.css";
 
 /* Display voice: a tall condensed industrial grotesque. The reference is
@@ -91,6 +92,7 @@ export default function RootLayout({
         <Footer />
         {/* One shared emulsion over everything, see globals.css */}
         <div className="grain" aria-hidden="true" />
+        <PerfDebug />
       </body>
     </html>
   );
