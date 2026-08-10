@@ -112,17 +112,26 @@ function isTouch(): boolean {
  * Pixel ratio cap per tier. Raymarching cost scales with total pixels, so this
  * is the single most effective lever available, far more than step count.
  *
- * FULL caps at 1.75 rather than 2. At DPR 2 on a Retina display this shader runs
- * over roughly 3 million pixels per frame, which was heavy enough to trip the
- * frame-rate governor on capable laptops and get them demoted to the flat
- * fallback. 1.75 is about 23% less work and, on a soft volumetric image with no
- * hard edges, is not distinguishable from 2.
+ * These caps are low on purpose. At DPR 2 on a 1440pt Retina laptop this shader
+ * covers ~4.5 million pixels per frame, and even after the governor was made
+ * more tolerant a MacBook Pro still could not hold frame rate and kept demoting
+ * itself to the flat fallback. Raising the bar for calling it broken was the
+ * wrong fix; the honest fix is making it cheaper.
+ *
+ * This image is soft volumetric with no hard edges or text, so it is one of the
+ * few things on a page that genuinely gains nothing from a Retina buffer.
+ * Dropping to 1.3 cuts fragment work by around 58% versus DPR 2 and is not
+ * perceptible. Resolution is a far bigger lever here than step count.
  */
 export function dprCap(tier: Tier): number {
   if (typeof window === "undefined") return 1;
   const dpr = window.devicePixelRatio || 1;
-  if (tier === TIER.FULL) return Math.min(dpr, 1.75);
-  if (tier === TIER.LEAN) return Math.min(dpr, 1); // effectively half-res on retina
+  if (tier === TIER.FULL) {
+    // A phone's logical viewport is small, so it can afford a higher ratio than
+    // a 1440pt laptop and still push far fewer total pixels.
+    return isTouch() ? Math.min(dpr, 1.5) : Math.min(dpr, 1.3);
+  }
+  if (tier === TIER.LEAN) return Math.min(dpr, 1);
   return 1;
 }
 
@@ -163,7 +172,7 @@ export function explainTier(): Record<string, unknown> {
  * the full experience instead of being demoted to the flat fallback.
  */
 export function rayStepsFor(tier: Tier): number {
-  if (tier === TIER.FULL) return isTouch() ? 40 : 64;
+  if (tier === TIER.FULL) return isTouch() ? 36 : 48;
   if (tier === TIER.LEAN) return 24;
   return 0;
 }
@@ -198,9 +207,9 @@ export function watchFrameRate(
   // scene appeared and then vanished, which is far worse than a scene that runs
   // at 40fps. 30fps is the real threshold for "this is not working", and it has
   // to be sustained over several seconds before we act.
-  const SLOW_FRAME_MS = 1000 / 30;
-  const SAMPLE_TARGET = 240;
-  const SLOW_RATIO = 0.6;
+  const SLOW_FRAME_MS = 1000 / 24;
+  const SAMPLE_TARGET = 300;
+  const SLOW_RATIO = 0.65;
 
   const tick = () => {
     const now = performance.now();
