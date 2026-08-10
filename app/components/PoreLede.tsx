@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { estimateTier, TIER } from "../lib/perf";
+import { estimateTier, TIER, prefersStaticScene } from "../lib/perf";
 
 /**
  * Tier-aware opening sentence for the pore section.
@@ -20,7 +20,9 @@ export default function PoreLede() {
   const [sawScene, setSawScene] = useState(false);
 
   useEffect(() => {
-    setSawScene(estimateTier() !== TIER.STILL);
+    // "Flew through" requires the animated camera. Someone on reduced motion
+    // sees the structure as a still image, so they get the neutral sentence.
+    setSawScene(estimateTier() !== TIER.STILL && !prefersStaticScene());
   }, []);
 
   return (

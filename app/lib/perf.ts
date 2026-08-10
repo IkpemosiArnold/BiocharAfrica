@@ -46,6 +46,17 @@ export function prefersReducedMotion(): boolean {
 }
 
 /**
+ * Render the WebGL scenes as a single static frame: no time animation, no
+ * scroll-driven camera, no render loop at all.
+ *
+ * This is how reduced-motion is honoured. It is also cheaper than the animated
+ * path, since one frame is drawn and then rAF stops entirely.
+ */
+export function prefersStaticScene(): boolean {
+  return prefersReducedMotion();
+}
+
+/**
  * Synchronous tier estimate. Runs before paint; must not touch the DOM or
  * allocate a WebGL context (context creation alone is ~10ms on weak hardware).
  */
@@ -62,10 +73,16 @@ export function estimateTier(): Tier {
     return Number(forced) as Tier;
   }
 
-  // An explicit accessibility or data-saving preference outranks any hardware
-  // signal. The user has told us what they want; hardware capability is moot.
-  if (prefersReducedMotion()) return TIER.STILL;
-
+  // NOTE: prefers-reduced-motion deliberately does NOT force the still tier.
+  // It means "I am sensitive to motion", not "do not show me images", and an
+  // earlier version conflated the two: it removed the entire artwork from any
+  // device with the setting on. On iOS, Reduce Motion is switched on by a large
+  // share of users because it also disables the system parallax effects, so
+  // that decision was serving a blank hero to a lot of capable phones.
+  //
+  // The correct response is prefersStaticScene(): the scene still renders, at
+  // full quality, as a single frozen frame with no animation and no
+  // scroll-driven camera. Motion removed, content kept.
   const nav = navigator as NavigatorWithHints;
 
   if (nav.connection?.saveData) return TIER.STILL;

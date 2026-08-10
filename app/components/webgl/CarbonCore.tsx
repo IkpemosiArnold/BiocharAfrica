@@ -5,7 +5,13 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { type Tier, TIER, dprCap, watchFrameRate } from "../../lib/perf";
+import {
+  type Tier,
+  TIER,
+  dprCap,
+  watchFrameRate,
+  prefersStaticScene,
+} from "../../lib/perf";
 
 const YEARS = 1000;
 
@@ -24,9 +30,11 @@ const YEARS = 1000;
 function Core({
   tier,
   scrollRef,
+  isStatic,
 }: {
   tier: Tier;
   scrollRef: React.RefObject<number>;
+  isStatic: boolean;
 }) {
   const mesh = useRef<THREE.InstancedMesh>(null);
   const group = useRef<THREE.Group>(null);
@@ -110,6 +118,15 @@ function Core({
 
   useFrame((state, delta) => {
     if (!group.current) return;
+
+    // Reduced motion: park the core at a depth that shows both the living
+    // topsoil colour and a century marker, then never move it again.
+    if (isStatic) {
+      group.current.position.y = 6;
+      group.current.rotation.y = 0.22;
+      return;
+    }
+
     // Descend through the core as the section scrolls.
     const target = scrollRef.current * 38;
     group.current.position.y +=
@@ -151,10 +168,13 @@ export default function CarbonCore({
 }) {
   const [tier, setTier] = useState<Tier>(initialTier);
   const [visible, setVisible] = useState(false);
+  const [isStatic, setIsStatic] = useState(false);
   const scrollRef = useRef(0);
 
+  useEffect(() => setIsStatic(prefersStaticScene()), []);
+
   useEffect(() => {
-    if (!triggerRef.current) return;
+    if (!triggerRef.current || isStatic) return;
     gsap.registerPlugin(ScrollTrigger);
     const st = ScrollTrigger.create({
       trigger: triggerRef.current,
@@ -165,7 +185,7 @@ export default function CarbonCore({
       },
     });
     return () => st.kill();
-  }, [triggerRef]);
+  }, [triggerRef, isStatic]);
 
   useEffect(() => {
     const el = triggerRef.current;
@@ -178,20 +198,23 @@ export default function CarbonCore({
     return () => io.disconnect();
   }, [triggerRef]);
 
-  useEffect(() => watchFrameRate(tier, setTier), [tier]);
+  useEffect(() => {
+    if (isStatic) return;
+    return watchFrameRate(tier, setTier);
+  }, [tier, isStatic]);
 
   if (tier === TIER.STILL) return null;
 
   return (
     <Canvas
       className="core-canvas"
-      frameloop={visible ? "always" : "never"}
+      frameloop={isStatic ? "demand" : visible ? "always" : "never"}
       dpr={dprCap(tier)}
       gl={{ antialias: tier === TIER.FULL, alpha: true, stencil: false }}
       camera={{ position: [0, 0, 13], fov: 40 }}
     >
       <fog attach="fog" args={["#0f1a10", 14, 34]} />
-      <Core tier={tier} scrollRef={scrollRef} />
+      <Core tier={tier} scrollRef={scrollRef} isStatic={isStatic} />
     </Canvas>
   );
 }

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
-import { estimateTier, type Tier, TIER } from "../lib/perf";
+import { estimateTier, prefersStaticScene, type Tier, TIER } from "../lib/perf";
 
 /* Three.js and the raymarcher are ~560KB of JS that a low-tier device would
    spend longer *parsing* than downloading. Kept out of the initial bundle
@@ -15,12 +15,14 @@ const PoreField = dynamic(() => import("./webgl/PoreField"), {
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
   const [tier, setTier] = useState<Tier | null>(null);
+  const [isStatic, setIsStatic] = useState(false);
 
   useEffect(() => {
     // Resolved in an effect, not during render: navigator hints do not exist on
     // the server and guessing would cause a hydration mismatch.
     const t = estimateTier();
     setTier(t);
+    setIsStatic(prefersStaticScene());
 
     // ?debug=perf prints exactly why this device got the tier it did. Without
     // it, "the WebGL is not showing" is undiagnosable from anywhere except the
@@ -81,7 +83,9 @@ export default function Hero() {
               {/* Same rule as PoreLede: never promise a journey into a
                   structure that this device is not rendering. */}
               <span>
-                {showWebGL ? "Scroll into the pore structure" : "Scroll"}
+                {showWebGL && !isStatic
+                  ? "Scroll into the pore structure"
+                  : "Scroll"}
               </span>
             </span>
             <span className="hero__arrow" aria-hidden="true" />

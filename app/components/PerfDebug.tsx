@@ -14,13 +14,25 @@ import { useEffect, useState } from "react";
 export default function PerfDebug() {
   const [info, setInfo] = useState<Record<string, unknown> | null>(null);
   const [webgl, setWebgl] = useState<string>("checking");
+  // The canvas mounts after this panel does (Three.js is dynamically imported),
+  // so a count read once at render always said 0 and looked like a failure.
+  const [canvasCount, setCanvasCount] = useState(0);
+  const [staticScene, setStaticScene] = useState(false);
 
   useEffect(() => {
     if (new URLSearchParams(window.location.search).get("debug") !== "perf") {
       return;
     }
 
-    import("../lib/perf").then(({ explainTier }) => setInfo(explainTier()));
+    import("../lib/perf").then(({ explainTier, prefersStaticScene }) => {
+      setInfo(explainTier());
+      setStaticScene(prefersStaticScene());
+    });
+
+    const poll = window.setInterval(
+      () => setCanvasCount(document.querySelectorAll("canvas").length),
+      600
+    );
 
     // Prove the device can actually create a context, separately from whether
     // our heuristic decided to use one. These are different failures and were
@@ -42,6 +54,8 @@ export default function PerfDebug() {
     } catch {
       setWebgl("threw on creation");
     }
+
+    return () => window.clearInterval(poll);
   }, []);
 
   if (!info) return null;
@@ -49,8 +63,9 @@ export default function PerfDebug() {
   const rows: [string, unknown][] = [
     ["tier", info.tierName],
     ["webgl", webgl],
-    ["canvas on page", document.querySelectorAll("canvas").length],
+    ["canvas on page", canvasCount],
     ["reduced motion", info.prefersReducedMotion],
+    ["static scene", staticScene ? "yes (motion removed)" : "no"],
     ["save data", info.saveData],
     ["connection", info.effectiveType],
     ["cores", info.hardwareConcurrency],

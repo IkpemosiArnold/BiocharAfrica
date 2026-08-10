@@ -11,10 +11,19 @@ import {
   dprCap,
   rayStepsFor,
   watchFrameRate,
+  prefersStaticScene,
 } from "../../lib/perf";
 import { poreVertexShader, makePoreFragmentShader } from "./poreShader";
 
-function PorePlane({ tier, scrollRef }: { tier: Tier; scrollRef: React.RefObject<number> }) {
+function PorePlane({
+  tier,
+  scrollRef,
+  isStatic,
+}: {
+  tier: Tier;
+  scrollRef: React.RefObject<number>;
+  isStatic: boolean;
+}) {
   const material = useRef<THREE.ShaderMaterial>(null);
   const { size, viewport } = useThree();
 
@@ -41,6 +50,16 @@ function PorePlane({ tier, scrollRef }: { tier: Tier; scrollRef: React.RefObject
 
   useFrame((_, delta) => {
     if (!material.current) return;
+
+    // Reduced motion: hold a single composed frame. A fixed non-zero time picks
+    // a better-looking slice of the volume than t=0, which sits on the field's
+    // symmetry and looks flat.
+    if (isStatic) {
+      uniforms.uTime.value = 8.5;
+      uniforms.uScroll.value = 0.18;
+      return;
+    }
+
     // Clamp delta: after a tab-switch the first delta can be seconds long and
     // would jump the camera deep into the volume.
     uniforms.uTime.value += Math.min(delta, 0.05);
@@ -85,13 +104,16 @@ export default function PoreField({
 }) {
   const [tier, setTier] = useState<Tier>(initialTier);
   const [visible, setVisible] = useState(true);
+  const [isStatic, setIsStatic] = useState(false);
   const scrollRef = useRef(0);
+
+  useEffect(() => setIsStatic(prefersStaticScene()), []);
 
   /* Drive the camera from scroll progress over the hero. scrub, never pin
      pinning recalculates against a viewport height that Android changes
      mid-gesture as the URL bar collapses. */
   useEffect(() => {
-    if (!triggerRef.current) return;
+    if (!triggerRef.current || isStatic) return;
     gsap.registerPlugin(ScrollTrigger);
 
     const st = ScrollTrigger.create({
@@ -103,7 +125,7 @@ export default function PoreField({
       },
     });
     return () => st.kill();
-  }, [triggerRef]);
+  }, [triggerRef, isStatic]);
 
   /* Stop rendering entirely once the hero leaves the screen. A raymarcher
      burning GPU behind three screens of content is pure battery cost. */
@@ -120,15 +142,17 @@ export default function PoreField({
 
   /* Downgrade if the device cannot hold frame rate. Never upgrades. */
   useEffect(() => {
+    // Nothing to govern when only one frame is ever drawn.
+    if (isStatic) return;
     return watchFrameRate(tier, (next) => setTier(next));
-  }, [tier]);
+  }, [tier, isStatic]);
 
   if (tier === TIER.STILL) return null;
 
   return (
     <Canvas
       className="pore-canvas"
-      frameloop={visible ? "always" : "never"}
+      frameloop={isStatic ? "demand" : visible ? "always" : "never"}
       dpr={dprCap(tier)}
       gl={{
         antialias: false, // meaningless for a fullscreen fragment shader
@@ -140,7 +164,7 @@ export default function PoreField({
       // Fixed camera; the shader owns its own ray origin.
       camera={{ position: [0, 0, 1] }}
     >
-      <PorePlane tier={tier} scrollRef={scrollRef} />
+      <PorePlane tier={tier} scrollRef={scrollRef} isStatic={isStatic} />
     </Canvas>
   );
 }
