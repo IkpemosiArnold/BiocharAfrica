@@ -624,13 +624,39 @@
 .permanence {
   position: relative;
   overflow: clip;
-  padding-block: clamp(7rem, 4rem + 12vw, 16rem);
+  padding-block: clamp(9rem, 5rem + 18vw, 24rem);
 }
 .permanence__stage {
   position: absolute;
   inset: 0;
   z-index: 0;
-  opacity: 0.85;
+  opacity: 0.9;
+  /* Dissolve the core at the section edges. Without this the canvas is clipped
+     by the section box and the column stops with a hard horizontal cut, which
+     reads as the core ending. A thousand years should run off the frame in both
+     directions. */
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    #000 14%,
+    #000 82%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    #000 14%,
+    #000 82%,
+    transparent 100%
+  );
+}
+
+/* On a phone the core sits behind the copy rather than beside it, so it has to
+   drop back far enough that the text stays comfortably readable on top. */
+@media (max-width: 48rem) {
+  .permanence__stage {
+    opacity: 0.42;
+  }
 }
 .permanence__stage canvas,
 .core-canvas {

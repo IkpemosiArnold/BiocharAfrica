@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useMemo, useEffect, useState } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -39,6 +39,12 @@ function Core({
   const mesh = useRef<THREE.InstancedMesh>(null);
   const group = useRef<THREE.Group>(null);
 
+  /* The core sits to the right of the copy on desktop. On a phone that same
+     offset pushes it almost entirely off the frame, leaving a meaningless
+     sliver, so it moves in to sit behind the column of text instead. */
+  const { size } = useThree();
+  const offsetX = size.width < 700 ? 0.6 : 3.4;
+
   // Lean devices draw a quarter of the strata. At the depth they recede to,
   // the difference is invisible; the fill-rate saving is not.
   const count = tier === TIER.FULL ? YEARS : Math.floor(YEARS / 4);
@@ -49,49 +55,102 @@ function Core({
     const matrices = new Float32Array(count * 16);
     const colors = new Float32Array(count * 3);
 
-    // Values are lifted well above the section ground (#0f1a10). An earlier
-    // pass used near-black for depth, which made the core disappear into the
-    // page instead of standing on it.
-    const topsoil = new THREE.Color("#9bf03a"); // living surface
-    const deep = new THREE.Color("#4a4038"); // carbon at depth
-    const marker = new THREE.Color("#d98a3c"); // laterite century bands
+    /* ---- Deterministic value noise -------------------------------------
+       Seeded hashes rather than Math.random(), so the core is identical on
+       the server, on the client and on every reload. Layered at three
+       frequencies to give horizons at three scales, which is what an actual
+       soil profile looks like. */
+    const hash = (n: number) => {
+      const x = Math.sin(n * 127.1) * 43758.5453;
+      return x - Math.floor(x);
+    };
+    const noise = (x: number) => {
+      const i = Math.floor(x);
+      const f = x - i;
+      const u = f * f * (3 - 2 * f); // smoothstep
+      return hash(i) * (1 - u) + hash(i + 1) * u;
+    };
+    const fbm = (x: number) =>
+      noise(x) * 0.55 + noise(x * 2.3 + 11) * 0.28 + noise(x * 5.1 + 31) * 0.17;
+
+    /* ---- Palette, all sampled from the site tokens ---------------------- */
+    const living = new THREE.Color("#9bf03a"); // paddy at the surface
+    const root = new THREE.Color("#3f6b2a"); // root zone
+    const laterite = new THREE.Color("#b5764a"); // the red earth at Suntale
+    const ochre = new THREE.Color("#c9a678"); // weathered mineral
+    const ash = new THREE.Color("#8a8175"); // pale silt
+    const char = new THREE.Color("#17130f"); // biochar
+    const marker = new THREE.Color("#e0913f"); // century seam
+
     const c = new THREE.Color();
+    const mineral = new THREE.Color();
+
+    // Band thickness follows spacing, so the lean tier (a quarter of the
+    // instances) renders thicker bands rather than a sparse comb.
+    const spacing = 62 / count;
+    const RADIUS = 2.0;
 
     for (let i = 0; i < count; i++) {
       const year = i * step;
       const t = i / count;
 
-      // Deterministic pseudo-random, a seeded hash, not Math.random(), so the
-      // core is identical on server, client and every reload.
-      const h = Math.sin(i * 12.9898) * 43758.5453;
-      const jitter = h - Math.floor(h);
-      const h2 = Math.sin(i * 78.233) * 12345.6789;
-      const jitter2 = h2 - Math.floor(h2);
-
       const isCentury = Math.floor(year) % 100 === 0;
 
-      dummy.position.set(
-        (jitter - 0.5) * 0.1,
-        -t * 44,
-        (jitter2 - 0.5) * 0.1
-      );
-      dummy.rotation.set(0, jitter * 0.12, (jitter2 - 0.5) * 0.02);
+      /* ---- Silhouette: clean. ------------------------------------------
+         The previous version jittered width per band as well as colour, which
+         made the edge ragged and the interior flat: exactly backwards. The
+         column is now a constant radius and only century markers protrude, so
+         the eye reads a solid core and all the variation lives in the strata. */
+      dummy.position.set(0, -t * 62, 0);
+      dummy.rotation.set(0, 0, 0);
       dummy.scale.set(
-        isCentury ? 3.5 : 2.5 + jitter * 0.7,
-        isCentury ? 0.075 : 0.022 + jitter2 * 0.018,
-        isCentury ? 3.5 : 2.5 + jitter2 * 0.7
+        isCentury ? RADIUS * 1.14 : RADIUS,
+        isCentury ? spacing * 1.5 : spacing * 0.72,
+        isCentury ? RADIUS * 1.14 : RADIUS
       );
       dummy.updateMatrix();
       dummy.matrix.toArray(matrices, i * 16);
 
-      // Green only in the top few percent, the living layer, then a fast
-      // fall into carbon. Century bands read as laterite seams.
-      c.copy(topsoil).lerp(deep, Math.min(1, Math.pow(t * 2.2, 0.75)));
-      // Seam-to-seam lightness variation. Without it each visible slice is one
-      // flat tone and the core reads as a solid block rather than as strata.
-      const shade = 0.72 + jitter * 0.62;
-      c.multiplyScalar(shade);
-      if (isCentury) c.lerp(marker, 0.6);
+      /* ---- Stratigraphy, not a gradient. -------------------------------
+         The old ramp saturated at t = 0.45, so the bottom 55% of the core was
+         a single flat brown. Horizons are chosen by noise instead, so there is
+         readable structure at every depth you scroll past. */
+      const horizon = fbm(t * 24);
+      const fine = fbm(t * 96 + 3);
+
+      if (horizon < 0.34) {
+        mineral.copy(laterite).lerp(ochre, horizon / 0.34);
+      } else if (horizon < 0.62) {
+        mineral.copy(ochre).lerp(ash, (horizon - 0.34) / 0.28);
+      } else {
+        mineral.copy(ash).lerp(laterite, (horizon - 0.62) / 0.38).multiplyScalar(0.62);
+      }
+
+      /* Biochar seams. Thematically the whole point: worked into a field, char
+         stays as a visible black band in the soil profile for centuries. These
+         are the product, drawn in the ground. */
+      const seam = fbm(t * 38 + 7);
+      const charAmount = seam > 0.56 ? Math.min(1, (seam - 0.56) / 0.09) : 0;
+      mineral.lerp(char, charAmount * 0.92);
+
+      /* The living surface occupies only the top couple of percent, then hands
+         over to the mineral profile. */
+      if (t < 0.055) {
+        const k = t / 0.055;
+        c.copy(living).lerp(root, Math.min(1, k * 2.2)).lerp(mineral, k * k);
+      } else {
+        c.copy(mineral);
+      }
+
+      // Fine seam-to-seam lightness so adjacent bands separate.
+      c.multiplyScalar(0.78 + fine * 0.44);
+
+      // Depth darkening, applied last and gently, so the bottom of the core
+      // recedes without collapsing to the single flat tone we just fixed.
+      c.multiplyScalar(1 - t * 0.16);
+
+      if (isCentury) c.lerp(marker, 0.72);
+
       c.toArray(colors, i * 3);
     }
 
@@ -128,20 +187,24 @@ function Core({
     }
 
     // Descend through the core as the section scrolls.
-    const target = scrollRef.current * 38;
+    const target = scrollRef.current * 52;
     group.current.position.y +=
       (target - group.current.position.y) * Math.min(1, delta * 4);
     group.current.rotation.y += delta * 0.035;
   });
 
   return (
-    <group ref={group} position={[3.4, 0, 0]}>
+    <group ref={group} position={[offsetX, 0, 0]} rotation={[0.07, 0, 0]}>
       <instancedMesh
         ref={mesh}
         args={[undefined, undefined, count]}
         frustumCulled={false}
       >
-        <boxGeometry args={[1, 1, 1]} />
+        {/* Discs, not cuboids. A core sample is cylindrical, and a stack of
+            thin cylinders reads as one instantly. Radius 0.5 so the instance
+            scale maps directly to diameter. 18 segments is plenty at this size
+            and keeps the whole core at ~72k triangles in a single draw call. */}
+        <cylinderGeometry args={[0.5, 0.5, 1, 18]} />
         {/* Unlit: no lights in the scene at all. Colour comes entirely from
             instanceColor, which removes every per-fragment lighting calculation
             across a thousand instances.
@@ -211,9 +274,9 @@ export default function CarbonCore({
       frameloop={isStatic ? "demand" : visible ? "always" : "never"}
       dpr={dprCap(tier)}
       gl={{ antialias: tier === TIER.FULL, alpha: true, stencil: false }}
-      camera={{ position: [0, 0, 13], fov: 40 }}
+      camera={{ position: [0, 1.2, 13.5], fov: 40 }}
     >
-      <fog attach="fog" args={["#0f1a10", 14, 34]} />
+      <fog attach="fog" args={["#0f1a10", 11, 30]} />
       <Core tier={tier} scrollRef={scrollRef} isStatic={isStatic} />
     </Canvas>
   );

@@ -3,13 +3,13 @@
 **Project:** BiocharAfrica
 **Session:** 34acf2db
 **Branch:** main
-**Context Usage:** 237.1% (474,155 / 200,000 tokens)
-**Timestamp:** 2026-08-10T21:16:06.252Z
+**Context Usage:** 247.4% (494,760 / 200,000 tokens)
+**Timestamp:** 2026-08-10T21:25:53.756Z
 **Working Directory:** /Users/mac/Documents/DevProjects/BiocharAfrica
 
 ## IMPORTANT: Resume from here
 
-Context window is at 237.1% capacity. Auto-compact will trigger soon.
+Context window is at 247.4% capacity. Auto-compact will trigger soon.
 This document was auto-generated. Continue from the tasks and conversation below.
 
 ## Active Tasks
@@ -22,28 +22,15 @@ This document was auto-generated. Continue from the tasks and conversation below
 - [completed] Contain acid green to a CTA slab; fix nav, footer, CTA contrast
 - [completed] Interior pages: about, services, impact, contact + form endpoint
 - [completed] Guarantee no internal notes are browser-reachable
-- [completed] Git cleaned, ignore files, committed AND pushed to origin/main
-- [completed] Fix tier governor demoting capable devices; tier-aware copy
+- [completed] Git cleaned, ignore files, committed and pushed to origin/main
 - [completed] Fix carbon core rendering black (vertexColors zeroing instanceColor)
 - [completed] Fix mobile scrim hiding the shader; on-screen ?debug=perf panel
-- [in_progress] Await iPhone 12 retest to confirm the mobile WebGL fix
+- [completed] Reduced motion now renders a static scene instead of removing it
+- [pending] Carbon core mid-section still uniform brown; needs art-direction pass
+- [pending] Contact form needs CONTACT_TO + a mail provider to deliver enquiries
 
 
 ## Recent Conversation
-
-**ASSISTANT:** Confirmed fixed. With **no query param** on a MacBook-class profile: canvas present, survived 6 seconds without demotion, render ratio 1.75 (2520×1575), and the tier-aware copy correctly says *"What you flew through…"*. So the culprit was the frame-rate governor demoting capable hardware, exactly as suspected.
-
-**ASSISTANT:** Fair on both counts. More tolerance was the wrong fix — if it still demotes, the shader is genuinely too expensive and I should make it cheaper rather than raise the bar for calling it broken.
-
-The dominant cost is pixels, and this image is soft volumetric — it gains nothing from Retina:
-
-**ASSISTANT:** **331.8M → 105.1M samples per frame on desktop, a 68% cut.** Let me measure whether it actually holds now, over a long enough window that the governor would have fired:
-
-**ASSISTANT:** Canvas survived the full 20 seconds with no demotion (28fps here is software-rendered SwiftShader in headless — real GPU will be far higher). But there's a new console error I should check before pushing:
-
-**ASSISTANT:** That error is from my own test harness re-defining an already-patched property, not from the site. 
-
-Committing and pushing, as you asked:
 
 **ASSISTANT:** Pushed to `origin/main` — Vercel will redeploy automatically.
 
@@ -95,5 +82,27 @@ Pushed, so Vercel is redeploying.
 
 Not a WebGL failure. When I fixed h
 
+**ASSISTANT:** That's the answer, and it's unambiguous: **`reduced motion: true`, `webgl: Apple GPU`.** Your iPhone is fully capable — WebGL creates a context fine. It's the iOS **Reduce Motion** accessibility setting, and my code treats that as "render nothing."
+
+That's my logic being wrong, not your phone. `prefers-reduced-motion` means *"I'm sensitive to motion"* — vestibular triggers, motion sickness. It does not mean *"don't show me images."* I conflated the two and stripped the entire artwork when the correct response is to remove the **movement** and keep the picture.
+
+This matters at scale: Reduce Motion is very commonly switched on by iPhone users, because it also kills the iOS parallax/zoom effects. So I was serving a blank hero to a large share of your mobile audience.
+
+The right fix is a stat
+
+**ASSISTANT:** Now let me verify with reduced motion actually emulated, which is the exact condition on your phone:
+
+**ASSISTANT:** Exactly right: **tier FULL** (was STILL), canvas present, and frames byte-identical after 1.5s — the artwork renders, the motion doesn't. Let me look at it:
+
+**ASSISTANT:** Structure renders on reduced-motion mobile. One flaw though — the panel reports `canvas on page: 0` when a canvas is clearly present; it reads the count before the canvas mounts. Since you're relying on this panel, it needs to be accurate:
+
+**ASSISTANT:** Your debug panel gave the definitive answer, and it was my logic, not your phone.
+
+**`reduced motion: true`, `webgl: Apple GPU`.** The iPhone could render it perfectly — `estimateTier()` returned `STILL` the instant it saw `prefers-reduced-motion`, before looking at any hardware.
+
+That was wrong. `prefers-reduced-motion` means *"I'm sensitive to motion"* — vestibular triggers, motion sickness. It doesn't mean *"don't show me images."* I treated one as the other and deleted the entire artwork. And it matters more on iOS than anywhere else: Reduce Motion is switched on by a large share of iPhone users **because it also disables the system parallax and zoom effects**, so I was serving a blank hero to a lot of perfectly capable phones — very likely including people at the management review.
+
+*
+
 ---
-*Auto-generated at 237.1% context usage by context-threshold-tracker*
+*Auto-generated at 247.4% context usage by context-threshold-tracker*
