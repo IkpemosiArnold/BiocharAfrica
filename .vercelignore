@@ -24,3 +24,6 @@ node_modules/
 # Agent/dev notes
 AGENTS.md
 CLAUDE.md
+
+# Internal notes for the client. Never part of a deployment.
+docs/

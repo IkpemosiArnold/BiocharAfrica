@@ -3,9 +3,9 @@
  *
  * Every factual claim here traces to something the company already publishes
  * (its own site and letterhead) or to a property of biochar that is settled
- * science. Nothing is invented to sound impressive, see NEEDS_REAL_DATA at the
- * bottom for the numbers an awards-grade impact section would normally carry and
- * which only the company can supply.
+ * science. Nothing is invented to sound impressive. The numbers an impact
+ * section would normally carry, and which only the company can supply, are
+ * tracked in docs/DATA-NEEDED.md so they never ship inside the bundle.
  */
 
 export const COMPANY = {
@@ -110,17 +110,4 @@ export const VALUES = [
     title: "Integrity",
     body: "Transparent practice and claims we can show you the coordinates for.",
   },
-] as const;
-
-/**
- * Numbers a jury, and a serious customer, will look for, which we do not have
- * and will not invent. Surfaced in the UI as explicit gaps rather than silently
- * omitted or filled with plausible-looking fiction.
- */
-export const NEEDS_REAL_DATA = [
-  "Tonnes of CO₂e sequestered to date",
-  "Hectares under biochar application",
-  "Number of farmers supplied or trained",
-  "Measured yield delta from your own trial plots",
-  "Tonnes of biochar produced per year",
 ] as const;

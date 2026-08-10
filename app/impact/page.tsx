@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import PageHead from "../components/PageHead";
 import Photo from "../components/Photo";
-import { FIELD_SITES, NEEDS_REAL_DATA } from "../lib/content";
+import { FIELD_SITES } from "../lib/content";
 
 export const metadata: Metadata = {
   title: "Impact",
@@ -173,39 +173,6 @@ export default function Impact() {
           </ol>
         </div>
       </section>
-
-      {/*
-        Development-only build note.
-        These are the numbers a serious buyer, a carbon auditor and an awards
-        jury will all look for. They are not invented here, and this panel is
-        stripped from production builds so an unfinished dataset never ships as
-        if it were content.
-      */}
-      {process.env.NODE_ENV === "development" && (
-        <section
-          className="act band-tight"
-          data-ground="#1b1712"
-          data-ink="#ece7dd"
-          data-ink-dim="#948b7e"
-          data-rule="#332c23"
-        >
-          <div className="shell">
-            <p className="eyebrow act__eyebrow">
-              <span>Build note, not shown in production</span>
-            </p>
-            <h2 className="act__title">Data still needed</h2>
-            <ul className="gaps">
-              {NEEDS_REAL_DATA.map((g) => (
-                <li key={g}>{g}</li>
-              ))}
-            </ul>
-            <p className="caption">
-              Supply these and this page gains a figures section. Until then it
-              leads with mechanism and provenance, which are both defensible.
-            </p>
-          </div>
-        </section>
-      )}
 
       <section
         className="act"
