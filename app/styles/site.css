@@ -1,0 +1,1229 @@
+/* ==========================================================================
+   Site components, "The black that feeds"
+
+   Layout rules this file follows deliberately:
+   · Asymmetric. Content sits off-axis; almost nothing is centred.
+   · Varied rhythm. Sections do not share one padding value.
+   · No card soup. Photographs and text sit on the ground, not in boxes.
+   · Motion is transform/opacity only.
+   ========================================================================== */
+
+:root {
+  /* One tiled turbulence tile, reused as the page-wide film emulsion. */
+  --grain-src: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.55'/></svg>");
+}
+
+.skip-link {
+  position: fixed;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 200;
+  padding: 0.6rem 1rem;
+  background: var(--color-rice-500);
+  color: var(--color-char-950);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-decoration: none;
+  transform: translateY(-160%);
+  transition: transform 0.25s var(--ease-out-quint);
+}
+.skip-link:focus-visible {
+  transform: none;
+}
+
+/* A short hairline used inside eyebrows to separate label from value. */
+.rule-dash {
+  inline-size: clamp(1.5rem, 4vw, 3.25rem);
+  block-size: 1px;
+  background: currentColor;
+  opacity: 0.42;
+  align-self: center;
+  flex: none;
+}
+
+/* ==========================================================================
+   Nav
+   ========================================================================== */
+
+.nav {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
+  z-index: 80;
+  /* Inherits the ink colour GroundShift is already driving, so it stays
+     legible as the page migrates from black through paper to acid green.
+     An earlier version used mix-blend-mode: difference, which inverted to
+     purple over the light sections, clever, and wrong. */
+  color: var(--ink);
+  transition: transform 0.55s var(--ease-out-quint);
+}
+.nav--hidden {
+  transform: translateY(-102%);
+}
+
+.nav__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding-block: clamp(0.9rem, 0.6rem + 0.9vw, 1.6rem);
+}
+
+.nav__mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  text-decoration: none;
+  color: inherit;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  font-variation-settings: "wdth" 96;
+  letter-spacing: -0.005em;
+}
+.nav__glyph {
+  display: block;
+  flex: none;
+}
+.glyph-ring {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+  opacity: 0.55;
+}
+.glyph-fill {
+  fill: currentColor;
+  opacity: 0.9;
+}
+.glyph-sprout {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.3;
+  stroke-linecap: round;
+  mix-blend-mode: difference;
+}
+.nav__word-dim {
+  opacity: 0.55;
+}
+
+.nav__links {
+  display: none;
+  align-items: center;
+  gap: clamp(1.25rem, 2.2vw, 2.5rem);
+  font-size: var(--text-sm);
+}
+.nav__links a {
+  color: inherit;
+  text-decoration: none;
+  position: relative;
+  padding-block: 0.2rem;
+}
+/* Underline grows from the left rather than fading in, a fade reads as a
+   hover state, a wipe reads as a deliberate mark. */
+.nav__links a::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  block-size: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.45s var(--ease-out-quint);
+}
+.nav__links a:hover::after {
+  transform: scaleX(1);
+}
+.nav__cta {
+  border: 1px solid currentColor;
+  padding: 0.45rem 1rem !important;
+  border-radius: 999px;
+}
+.nav__cta::after {
+  display: none;
+}
+
+.nav__toggle {
+  background: none;
+  border: 1px solid currentColor;
+  color: inherit;
+  font: inherit;
+  font-size: var(--text-xs);
+  font-variation-settings: "wdth" 108;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.5rem 0.9rem;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.nav__drawer {
+  position: fixed;
+  inset: 0;
+  background: var(--color-char-950);
+  color: var(--color-bone-100);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.25rem;
+  padding: 6rem var(--gutter, 1.25rem) 3rem;
+  transform: translateY(-100%);
+  transition: transform 0.7s var(--ease-in-out-quart);
+  z-index: -1;
+}
+.nav__drawer.is-open {
+  transform: none;
+}
+.nav__drawer a {
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  line-height: 1.05;
+  color: inherit;
+  text-decoration: none;
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  opacity: 0;
+  transform: translateY(1rem);
+  transition:
+    opacity 0.5s var(--ease-out-quint),
+    transform 0.6s var(--ease-out-quint);
+}
+.nav__drawer.is-open a {
+  opacity: 1;
+  transform: none;
+}
+.nav__drawer-num {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  color: var(--color-rice-500);
+  font-variation-settings: "wdth" 110;
+}
+.nav__drawer-foot {
+  margin-block-start: auto;
+  font-size: var(--text-sm);
+  color: var(--color-ash-500);
+}
+
+@media (min-width: 62rem) {
+  .nav__links {
+    display: flex;
+  }
+  .nav__toggle,
+  .nav__drawer {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   Hero
+   ========================================================================== */
+
+.hero {
+  position: relative;
+  /* svh, not vh: on Android the URL bar collapsing mid-scroll would otherwise
+     resize the hero and shove the headline around. */
+  min-block-size: 100svh;
+  display: flex;
+  align-items: flex-end;
+  padding-block-end: clamp(2.5rem, 1.5rem + 4vw, 5rem);
+  overflow: clip;
+  isolation: isolate;
+}
+
+.hero__stage {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+.hero__stage canvas,
+.pore-canvas {
+  position: absolute !important;
+  inset: 0;
+  inline-size: 100% !important;
+  block-size: 100% !important;
+  /* Bloom the structure in. The first frame after shader compile always
+     arrives late, and a hard cut advertises that. */
+  animation: canvas-in 1.5s var(--ease-out-quint) 0.1s both;
+}
+@keyframes canvas-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Tier-0 and pre-compile stand-in. A CSS approximation of the pore volume:
+   layered radial fields in the same palette, so the fallback belongs to the
+   same image family rather than looking like a missing asset. */
+.hero__fallback {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      50% 42% at 62% 34%,
+      oklch(0.42 0.14 128 / 0.4),
+      transparent 70%
+    ),
+    radial-gradient(
+      44% 38% at 28% 66%,
+      oklch(0.38 0.09 55 / 0.32),
+      transparent 72%
+    ),
+    radial-gradient(90% 80% at 50% 50%, oklch(0.2 0.02 60), oklch(0.09 0.01 60));
+  opacity: 1;
+  transition: opacity 1.2s var(--ease-out-quint);
+}
+.hero__fallback.is-hidden {
+  opacity: 0;
+}
+
+/* Only as much scrim as the text actually needs. It sits low and clears early,
+   so the upper two-thirds of the pore structure stays fully visible, the
+   headline copy refers to flying through it, so it has to be legible. */
+.hero__scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    oklch(0.09 0.008 60 / 0.82) 0%,
+    oklch(0.09 0.008 60 / 0.34) 26%,
+    transparent 48%
+  );
+}
+
+/* On a phone the headline and lede occupy most of the screen, so there is no
+   "empty upper third" for the structure to live in. The scrim has to carry much
+   further up or the copy sits directly on top of high-frequency pore detail and
+   becomes genuinely hard to read. Legibility wins over spectacle here. */
+@media (max-width: 48rem) {
+  .hero__scrim {
+    background: linear-gradient(
+      to top,
+      oklch(0.09 0.008 60 / 0.94) 0%,
+      oklch(0.09 0.008 60 / 0.86) 34%,
+      oklch(0.09 0.008 60 / 0.5) 62%,
+      oklch(0.09 0.008 60 / 0.25) 100%
+    );
+  }
+}
+
+.hero__content {
+  position: relative;
+  inline-size: 100%;
+}
+.hero__eyebrow {
+  margin-block-end: clamp(1.5rem, 1rem + 2vw, 2.75rem);
+}
+
+.hero__title {
+  font-size: var(--text-5xl);
+  line-height: 0.82;
+  letter-spacing: 0.002em;
+  margin-block-end: clamp(2rem, 1.2rem + 3.5vw, 4rem);
+}
+.hero__foot {
+  display: grid;
+  gap: clamp(1.75rem, 1rem + 3vw, 3.5rem);
+  align-items: end;
+}
+.hero__lede {
+  font-size: var(--text-lg);
+  color: color-mix(in oklch, var(--ink) 78%, transparent);
+}
+.hero__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+.hero__arrow {
+  inline-size: 1px;
+  block-size: 2.6rem;
+  background: linear-gradient(
+    to bottom,
+    currentColor,
+    transparent
+  );
+  color: var(--color-rice-500);
+  animation: drop 2.4s var(--ease-in-out-quart) infinite;
+}
+@keyframes drop {
+  0%,
+  100% {
+    transform: scaleY(0.35);
+    transform-origin: top;
+    opacity: 0.3;
+  }
+  45% {
+    transform: scaleY(1);
+    transform-origin: top;
+    opacity: 1;
+  }
+  46%,
+  99% {
+    transform-origin: bottom;
+  }
+}
+
+@media (min-width: 60rem) {
+  .hero__foot {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+}
+
+/* ==========================================================================
+   Acts, shared editorial scaffolding
+   ========================================================================== */
+
+.act {
+  position: relative;
+  padding-block: clamp(5rem, 3rem + 9vw, 12rem);
+}
+
+.act__eyebrow {
+  grid-column: 1 / -1;
+  margin-block-end: clamp(2rem, 1.2rem + 3vw, 4rem);
+}
+
+.act__title {
+  grid-column: 1 / -1;
+  font-size: var(--text-3xl);
+  margin-block-end: clamp(1.75rem, 1rem + 3vw, 3rem);
+}
+.act__body {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 1.15rem;
+  max-inline-size: 46ch;
+  color: color-mix(in oklch, var(--ink) 76%, transparent);
+}
+
+@media (min-width: 62rem) {
+  /* Asymmetric: the headline holds the left seven columns, body sits right and
+     drops below its cap-height, an editorial offset, not a two-column split. */
+  .act__title {
+    grid-column: 1 / 8;
+  }
+  .act__body {
+    grid-column: 8 / -1;
+    padding-block-start: 0.75rem;
+  }
+}
+
+.caption {
+  font-size: var(--text-xs);
+  color: var(--ink-dim);
+  max-inline-size: 34ch;
+  margin-block-start: 0.9rem;
+}
+
+/* ==========================================================================
+   Photography
+   ========================================================================== */
+
+.photo {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+}
+.photo img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  /* Fade the real image over its own LQIP so the swap is never a hard flash. */
+  animation: photo-in 0.7s var(--ease-out-quint) both;
+}
+@keyframes photo-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.plate {
+  /* Photographs sit flush on the ground. No border, no radius, no shadow
+     a drop shadow here would turn documentary evidence into a UI card. */
+  inline-size: 100%;
+}
+
+.definition__plates {
+  margin-block-start: clamp(3rem, 2rem + 5vw, 6.5rem);
+  display: grid;
+  gap: clamp(1rem, 0.6rem + 1.6vw, 2rem);
+}
+.definition__aside {
+  align-self: end;
+}
+
+@media (min-width: 56rem) {
+  .definition__plates {
+    grid-template-columns: 1.55fr 1fr;
+    align-items: end;
+  }
+  .plate--wide {
+    aspect-ratio: 16 / 10;
+  }
+}
+
+/* ==========================================================================
+   Act III, pore
+   ========================================================================== */
+
+.pore__title {
+  font-size: var(--text-3xl);
+  margin-block-end: clamp(2rem, 1.2rem + 3vw, 3.5rem);
+  max-inline-size: 18ch;
+}
+.pore__grid {
+  display: grid;
+  gap: clamp(2rem, 1.2rem + 3.5vw, 4.5rem);
+  color: color-mix(in oklch, var(--ink) 78%, transparent);
+}
+.pore__facts {
+  display: grid;
+  gap: 1.6rem;
+}
+.fact {
+  display: grid;
+  gap: 0.35rem;
+  padding-block-start: 0.9rem;
+  border-block-start: 1px solid var(--rule);
+}
+.fact__k {
+  font-size: var(--text-eyebrow);
+  font-variation-settings: "wdth" 112;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-rice-500);
+}
+.fact p {
+  font-size: var(--text-sm);
+  max-inline-size: 30ch;
+}
+
+.pore__plate {
+  margin-block-start: clamp(3rem, 2rem + 5vw, 7rem);
+}
+.pore__plate .photo {
+  aspect-ratio: 21 / 9;
+}
+
+@media (min-width: 62rem) {
+  .pore__grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .pore__facts {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+}
+
+/* ==========================================================================
+   Act IV, field
+   ========================================================================== */
+
+.field__title {
+  max-inline-size: 16ch;
+}
+.field__lede {
+  color: color-mix(in oklch, var(--ink) 76%, transparent);
+  font-size: var(--text-lg);
+}
+
+/* Horizontal reel of portrait clips. Native scroll-snap rather than a JS
+   carousel: it is a fraction of the code, works without JS, and behaves
+   correctly with a trackpad, a touchscreen and a keyboard. */
+.field__reel {
+  margin-block: clamp(2.5rem, 1.5rem + 4vw, 5rem);
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(62vw, 16rem);
+  gap: clamp(0.75rem, 0.4rem + 1.2vw, 1.4rem);
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scroll-snap-type: x mandatory;
+  padding-inline: var(--gutter, 1.25rem);
+  scrollbar-width: none;
+}
+.field__reel::-webkit-scrollbar {
+  display: none;
+}
+
+.video-panel {
+  scroll-snap-align: start;
+}
+.video-panel__frame {
+  position: relative;
+  /* Native portrait ratio of the source. Never full-bleed and never scaled past
+     576px, the grade only reads as film at moderate size. */
+  aspect-ratio: 9 / 16;
+  overflow: hidden;
+  background: var(--color-char-900);
+}
+.video-panel video {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+.video-panel__caption {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-block-start: 0.7rem;
+  font-size: var(--text-xs);
+  color: var(--ink-dim);
+}
+.video-panel__place {
+  color: color-mix(in oklch, var(--color-rice-500) 80%, transparent);
+}
+
+.field__pair {
+  display: grid;
+  gap: clamp(1.75rem, 1rem + 3vw, 3.5rem);
+  align-items: center;
+}
+.field__pair .photo {
+  aspect-ratio: 4 / 5;
+}
+.field__pair-text {
+  display: grid;
+  gap: 1.1rem;
+  color: color-mix(in oklch, var(--ink) 78%, transparent);
+}
+
+@media (min-width: 56rem) {
+  .field__pair {
+    grid-template-columns: 0.9fr 1fr;
+  }
+  .field__reel {
+    grid-auto-columns: minmax(0, 19rem);
+    justify-content: start;
+  }
+}
+
+/* ==========================================================================
+   Act V, permanence
+   ========================================================================== */
+
+.permanence {
+  position: relative;
+  overflow: clip;
+  padding-block: clamp(7rem, 4rem + 12vw, 16rem);
+}
+.permanence__stage {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.85;
+}
+.permanence__stage canvas,
+.core-canvas {
+  position: absolute !important;
+  inset: 0;
+  inline-size: 100% !important;
+  block-size: 100% !important;
+}
+.permanence__content {
+  position: relative;
+  z-index: 1;
+}
+
+.permanence__figure {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4em;
+  font-size: var(--text-5xl);
+  line-height: 0.8;
+  letter-spacing: 0.004em;
+  margin-block: clamp(1rem, 0.5rem + 2vw, 2.5rem);
+}
+.permanence__unit {
+  font-family: var(--font-body);
+  font-size: var(--text-lg);
+  font-variation-settings: "wdth" 108;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-rice-500);
+}
+
+.permanence__cols {
+  display: grid;
+  gap: clamp(1.25rem, 0.8rem + 2vw, 2.75rem);
+  color: color-mix(in oklch, var(--ink) 80%, transparent);
+  margin-block-end: clamp(2rem, 1.2rem + 3vw, 3.5rem);
+}
+.permanence__caption {
+  color: var(--ink-dim);
+}
+
+@media (min-width: 56rem) {
+  .permanence__cols {
+    grid-template-columns: 1fr 1fr;
+    max-inline-size: 64rem;
+  }
+}
+
+/* ==========================================================================
+   Act VI, field log (paper ground)
+   ========================================================================== */
+
+.log__lede {
+  color: color-mix(in oklch, var(--ink) 72%, transparent);
+  font-size: var(--text-lg);
+  margin-block-end: clamp(2.5rem, 1.5rem + 4vw, 5rem);
+}
+
+.log {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: clamp(2.5rem, 1.5rem + 4vw, 5rem);
+}
+.log__row {
+  display: grid;
+  gap: clamp(1rem, 0.6rem + 1.6vw, 2rem);
+  padding-block-start: clamp(1.25rem, 0.8rem + 1.6vw, 2rem);
+  border-block-start: 1px solid var(--rule);
+}
+.log__index {
+  font-size: var(--text-eyebrow);
+  font-variation-settings: "wdth" 112;
+  letter-spacing: 0.2em;
+  color: var(--color-paddy-800);
+}
+.log__shot .photo {
+  aspect-ratio: 4 / 3;
+}
+
+.log__meta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem 1.5rem;
+  margin: 0;
+  align-content: start;
+}
+.log__meta dt {
+  font-size: var(--text-eyebrow);
+  font-variation-settings: "wdth" 108;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-block-end: 0.3rem;
+}
+.log__meta dd {
+  margin: 0;
+  font-size: var(--text-sm);
+  line-height: 1.35;
+}
+.log__place {
+  font-family: var(--font-display);
+  font-size: var(--text-xl) !important;
+  line-height: 1 !important;
+}
+.log__note {
+  grid-column: 1 / -1;
+}
+
+@media (min-width: 56rem) {
+  .log__row {
+    grid-template-columns: 4rem 1.15fr 1fr;
+    gap: clamp(1.5rem, 1rem + 2vw, 3rem);
+    align-items: start;
+  }
+}
+
+/* ==========================================================================
+   Act VII, services + CTA (acid green ground, black type)
+   ========================================================================== */
+
+.services__title {
+  margin-block-end: clamp(2.5rem, 1.5rem + 4vw, 4.5rem);
+}
+
+.services {
+  list-style: none;
+  margin: 0 0 clamp(4rem, 2.5rem + 6vw, 9rem);
+  padding: 0;
+  display: grid;
+  gap: 0;
+  border-block-start: 1px solid var(--rule);
+}
+.service {
+  display: grid;
+  gap: 0.5rem;
+  padding-block: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+  border-block-end: 1px solid var(--rule);
+  transition: padding-inline-start 0.5s var(--ease-out-quint);
+}
+.service:hover {
+  padding-inline-start: 1rem;
+}
+.service__n {
+  font-size: var(--text-eyebrow);
+  font-variation-settings: "wdth" 112;
+  letter-spacing: 0.2em;
+  color: color-mix(in oklch, var(--ink) 55%, transparent);
+}
+.service__title {
+  font-size: var(--text-2xl);
+}
+.service__lede {
+  font-size: var(--text-lg);
+  max-inline-size: 30ch;
+}
+.service__body {
+  font-size: var(--text-sm);
+  color: color-mix(in oklch, var(--ink) 72%, transparent);
+  max-inline-size: 52ch;
+}
+
+@media (min-width: 56rem) {
+  .service {
+    grid-template-columns: 4rem 1fr 1.1fr;
+    gap: clamp(1.5rem, 1rem + 2vw, 3rem);
+    align-items: baseline;
+  }
+  .service__lede {
+    grid-column: 2;
+  }
+  .service__title {
+    grid-column: 2;
+  }
+  .service__body {
+    grid-column: 3;
+    grid-row: 1 / span 3;
+  }
+  .service__n {
+    grid-row: 1;
+  }
+}
+
+/* The one place the acid green is spent as a ground. Contained to a slab so it
+   lands as the payoff of the black-to-green migration rather than as a
+   punishing full-viewport flood. */
+.cta {
+  display: grid;
+  gap: clamp(1.75rem, 1rem + 3vw, 3rem);
+  background: var(--color-rice-500);
+  color: var(--color-char-950);
+  padding-block: clamp(2.5rem, 1.5rem + 4vw, 5.5rem);
+  padding-inline: clamp(1.15rem, 0.6rem + 2.6vw, 4.5rem);
+  margin-inline: calc(var(--gutter) * -1);
+}
+.cta__title {
+  font-size: var(--text-4xl);
+  max-inline-size: 14ch;
+}
+.cta__title em {
+  color: var(--color-paddy-950);
+}
+.cta__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+/* Inside the slab the buttons invert against the acid, not against the page. */
+.cta .btn--solid {
+  background: var(--color-char-950);
+  color: var(--color-rice-500);
+  border-color: var(--color-char-950);
+}
+.cta .btn--ghost {
+  color: var(--color-char-950);
+}
+.cta .btn--ghost:hover {
+  background: var(--color-char-950);
+  color: var(--color-rice-500);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.95rem 1.6rem;
+  border-radius: 999px;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid currentColor;
+  transition:
+    transform 0.4s var(--ease-out-quint),
+    background-color 0.4s var(--ease-out-quint),
+    color 0.4s var(--ease-out-quint);
+}
+.btn--solid {
+  background: var(--ink);
+  color: var(--ground);
+  border-color: var(--ink);
+}
+.btn--ghost {
+  color: var(--ink);
+}
+.btn:hover {
+  transform: translateY(-2px);
+}
+.btn--ghost:hover {
+  background: var(--ink);
+  color: var(--ground);
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+
+.foot {
+  padding-block: clamp(4rem, 2.5rem + 6vw, 8rem) 2.5rem;
+}
+.foot__top {
+  display: grid;
+  gap: clamp(2.5rem, 1.5rem + 5vw, 5rem);
+  margin-block-end: clamp(3rem, 2rem + 4vw, 5rem);
+}
+.foot__statement {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  line-height: 0.92;
+  letter-spacing: 0.004em;
+}
+.foot__cols {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: clamp(1.75rem, 1rem + 3vw, 3rem);
+}
+.foot__heading {
+  margin-block-end: 1rem;
+}
+.foot__cols ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.45rem;
+}
+.foot__cols a {
+  color: var(--ink);
+  text-decoration: none;
+  font-size: var(--text-sm);
+  opacity: 0.75;
+  transition: opacity 0.3s var(--ease-out-quint);
+}
+.foot__cols a:hover {
+  opacity: 1;
+}
+.foot__address {
+  font-style: normal;
+  font-size: var(--text-sm);
+  color: var(--ink-dim);
+  display: grid;
+  gap: 0.2rem;
+}
+.foot__address a {
+  display: block;
+}
+.foot__base {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-block-start: 1.5rem;
+  font-size: var(--text-xs);
+  color: var(--ink-dim);
+}
+.foot__coords {
+  color: color-mix(in oklch, var(--color-rice-500) 70%, transparent);
+}
+
+@media (min-width: 62rem) {
+  .foot__top {
+    grid-template-columns: 1fr 1.35fr;
+  }
+  .foot__statement {
+    font-size: var(--text-3xl);
+  }
+}
+
+/* ==========================================================================
+   Interior pages
+   ========================================================================== */
+
+.phead {
+  padding-block: clamp(7rem, 5rem + 9vw, 13rem) clamp(3rem, 2rem + 4vw, 6rem);
+}
+.phead__eyebrow {
+  margin-block-end: clamp(1.25rem, 1rem + 2vw, 2.5rem);
+}
+.phead__title {
+  font-size: var(--text-4xl);
+  margin-block-end: clamp(1.5rem, 1rem + 2.5vw, 2.75rem);
+}
+.phead__lede {
+  font-size: var(--text-lg);
+  color: color-mix(in oklch, var(--ink) 76%, transparent);
+}
+
+.about__plates {
+  margin-block-start: clamp(3rem, 2rem + 5vw, 6rem);
+  display: grid;
+  gap: clamp(1rem, 0.6rem + 1.6vw, 2rem);
+}
+.about__plates .photo {
+  aspect-ratio: 4 / 5;
+}
+
+/* Values sit on hairlines rather than in cards. Four boxed panels would be the
+   single most templated thing this page could do. */
+.values {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0;
+  border-block-start: 1px solid var(--rule);
+}
+.value {
+  display: grid;
+  gap: 0.6rem;
+  padding-block: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+  border-block-end: 1px solid var(--rule);
+  color: color-mix(in oklch, var(--ink) 76%, transparent);
+}
+.value__title {
+  font-size: var(--text-xl);
+  color: var(--ink);
+}
+
+.about__training {
+  display: grid;
+  gap: clamp(2rem, 1.2rem + 3.5vw, 4rem);
+  align-items: center;
+}
+.about__training-clip {
+  max-inline-size: 22rem;
+}
+.about__address {
+  font-style: normal;
+  font-size: var(--text-lg);
+  color: var(--ink-dim);
+}
+
+.service-deep {
+  padding-block: clamp(3.5rem, 2.5rem + 5vw, 7rem);
+}
+.service-deep__inner {
+  display: grid;
+  gap: clamp(1.75rem, 1rem + 3vw, 3.5rem);
+  align-items: center;
+}
+.service-deep__title {
+  font-size: var(--text-2xl);
+  margin-block: 1rem 1.1rem;
+  max-inline-size: 20ch;
+}
+.service-deep__text p {
+  color: color-mix(in oklch, var(--ink) 76%, transparent);
+}
+
+.claims {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0;
+  border-block-start: 1px solid var(--rule);
+}
+.claim {
+  display: grid;
+  gap: 0.6rem;
+  padding-block: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+  border-block-end: 1px solid var(--rule);
+  color: color-mix(in oklch, var(--ink) 76%, transparent);
+}
+.claim__title {
+  font-size: var(--text-xl);
+  color: var(--ink);
+}
+.claim p {
+  max-inline-size: 58ch;
+}
+
+.gaps {
+  margin: 1.5rem 0 1rem;
+  padding: 0 0 0 1.1rem;
+  display: grid;
+  gap: 0.4rem;
+  color: var(--color-laterite-400);
+  font-size: var(--text-sm);
+}
+
+@media (min-width: 56rem) {
+  .about__plates {
+    grid-template-columns: 1fr 1fr;
+  }
+  .about__training {
+    grid-template-columns: 1fr auto;
+  }
+  .claim {
+    grid-template-columns: 16rem 1fr;
+    gap: clamp(1.5rem, 1rem + 2vw, 3rem);
+    align-items: baseline;
+  }
+  .value {
+    grid-template-columns: 16rem 1fr;
+    gap: clamp(1.5rem, 1rem + 2vw, 3rem);
+    align-items: baseline;
+  }
+  .service-deep__inner {
+    grid-template-columns: 1fr 0.85fr;
+  }
+  /* Alternate which side the photograph falls on, so six sections do not
+     become a rhythm you can predict and stop reading. */
+  .service-deep:nth-of-type(even) .service-deep__plate {
+    order: -1;
+  }
+}
+
+/* ==========================================================================
+   Contact
+   ========================================================================== */
+
+.contact {
+  display: grid;
+  gap: clamp(2.5rem, 1.5rem + 4vw, 5rem);
+  align-items: start;
+}
+
+.form {
+  display: grid;
+  gap: clamp(1rem, 0.8rem + 0.8vw, 1.5rem);
+}
+.form__row {
+  display: grid;
+  gap: inherit;
+}
+.field {
+  display: grid;
+  gap: 0.45rem;
+}
+.field__label {
+  font-size: var(--text-eyebrow);
+  font-variation-settings: "wdth" 110;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+.field__opt {
+  letter-spacing: 0.08em;
+  opacity: 0.6;
+  text-transform: none;
+}
+.field input,
+.field textarea {
+  font: inherit;
+  font-size: var(--text-base);
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  /* An underline rather than a boxed input: fewer containers, and it sits on
+     the ground with the rest of the page instead of floating in a card. */
+  border-block-end: 1px solid var(--rule);
+  padding: 0.6rem 0;
+  border-radius: 0;
+  transition: border-color 0.3s var(--ease-out-quint);
+}
+.field input:hover,
+.field textarea:hover {
+  border-color: color-mix(in oklch, var(--ink) 45%, transparent);
+}
+.field input:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: var(--color-rice-500);
+}
+.field textarea {
+  resize: vertical;
+  min-block-size: 8rem;
+}
+.field ::placeholder {
+  color: color-mix(in oklch, var(--ink) 34%, transparent);
+}
+
+.form__trap {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.form__foot {
+  display: grid;
+  gap: 1rem;
+  justify-items: start;
+  margin-block-start: 0.75rem;
+}
+.form__fallback {
+  font-size: var(--text-sm);
+  color: var(--color-laterite-400);
+  max-inline-size: 46ch;
+}
+.form__fallback a {
+  color: var(--color-rice-500);
+}
+.form--done {
+  padding-block: 2rem;
+}
+.form__done-title {
+  font-size: var(--text-2xl);
+  margin-block-end: 0.75rem;
+}
+
+.contact__aside {
+  display: grid;
+  gap: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+}
+.contact__block a {
+  display: block;
+  color: var(--ink);
+  text-decoration: none;
+  opacity: 0.8;
+}
+.contact__block a:hover {
+  opacity: 1;
+}
+.contact__block address {
+  font-style: normal;
+  color: var(--ink-dim);
+}
+.contact__block .eyebrow {
+  margin-block-end: 0.6rem;
+}
+.contact__coords {
+  color: var(--ink-dim);
+  font-size: var(--text-sm);
+  line-height: 1.7;
+}
+
+@media (min-width: 46rem) {
+  .form__row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (min-width: 62rem) {
+  .contact {
+    grid-template-columns: 1.35fr 0.65fr;
+    gap: clamp(3rem, 2rem + 5vw, 7rem);
+  }
+}
+
+/* The masthead already supplies generous closing space; the next section adding
+   its own full top padding on top of that leaves a dead band with nothing in it. */
+.phead + .act {
+  padding-block-start: clamp(1rem, 0.5rem + 1.5vw, 2.5rem);
+}
