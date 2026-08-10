@@ -41,9 +41,12 @@ function Core({
     const matrices = new Float32Array(count * 16);
     const colors = new Float32Array(count * 3);
 
-    const topsoil = new THREE.Color("#7ed321"); // living surface
-    const deep = new THREE.Color("#141210"); // carbon at depth
-    const marker = new THREE.Color("#c9752f"); // laterite century bands
+    // Values are lifted well above the section ground (#0f1a10). An earlier
+    // pass used near-black for depth, which made the core disappear into the
+    // page instead of standing on it.
+    const topsoil = new THREE.Color("#9bf03a"); // living surface
+    const deep = new THREE.Color("#4a4038"); // carbon at depth
+    const marker = new THREE.Color("#d98a3c"); // laterite century bands
     const c = new THREE.Color();
 
     for (let i = 0; i < count; i++) {
@@ -60,23 +63,27 @@ function Core({
       const isCentury = Math.floor(year) % 100 === 0;
 
       dummy.position.set(
-        (jitter - 0.5) * 0.14,
-        -t * 46,
-        (jitter2 - 0.5) * 0.14
+        (jitter - 0.5) * 0.1,
+        -t * 44,
+        (jitter2 - 0.5) * 0.1
       );
       dummy.rotation.set(0, jitter * 0.12, (jitter2 - 0.5) * 0.02);
       dummy.scale.set(
-        isCentury ? 7.2 : 5.4 + jitter * 1.4,
-        isCentury ? 0.06 : 0.018 + jitter2 * 0.016,
-        isCentury ? 7.2 : 5.4 + jitter2 * 1.4
+        isCentury ? 3.5 : 2.5 + jitter * 0.7,
+        isCentury ? 0.075 : 0.022 + jitter2 * 0.018,
+        isCentury ? 3.5 : 2.5 + jitter2 * 0.7
       );
       dummy.updateMatrix();
       dummy.matrix.toArray(matrices, i * 16);
 
       // Green only in the top few percent, the living layer, then a fast
       // fall into carbon. Century bands read as laterite seams.
-      c.copy(topsoil).lerp(deep, Math.min(1, Math.pow(t * 3.4, 0.7)));
-      if (isCentury) c.lerp(marker, 0.55);
+      c.copy(topsoil).lerp(deep, Math.min(1, Math.pow(t * 2.2, 0.75)));
+      // Seam-to-seam lightness variation. Without it each visible slice is one
+      // flat tone and the core reads as a solid block rather than as strata.
+      const shade = 0.72 + jitter * 0.62;
+      c.multiplyScalar(shade);
+      if (isCentury) c.lerp(marker, 0.6);
       c.toArray(colors, i * 3);
     }
 
@@ -86,25 +93,32 @@ function Core({
   useEffect(() => {
     if (!mesh.current) return;
     const m = new THREE.Matrix4();
+    const c = new THREE.Color();
     for (let i = 0; i < count; i++) {
       m.fromArray(matrices, i * 16);
       mesh.current.setMatrixAt(i, m);
+      c.fromArray(colors, i * 3);
+      // setColorAt, not a hand-assigned instanceColor attribute. Assigning the
+      // attribute directly after the material has already compiled means three
+      // never sets its USE_INSTANCING_COLOR define, so every instance silently
+      // renders in the material's base colour and the strata vanish.
+      mesh.current.setColorAt(i, c);
     }
     mesh.current.instanceMatrix.needsUpdate = true;
-    mesh.current.instanceColor = new THREE.InstancedBufferAttribute(colors, 3);
+    if (mesh.current.instanceColor) mesh.current.instanceColor.needsUpdate = true;
   }, [matrices, colors, count]);
 
   useFrame((state, delta) => {
     if (!group.current) return;
     // Descend through the core as the section scrolls.
-    const target = scrollRef.current * 40;
+    const target = scrollRef.current * 38;
     group.current.position.y +=
       (target - group.current.position.y) * Math.min(1, delta * 4);
     group.current.rotation.y += delta * 0.035;
   });
 
   return (
-    <group ref={group}>
+    <group ref={group} position={[3.4, 0, 0]}>
       <instancedMesh
         ref={mesh}
         args={[undefined, undefined, count]}
@@ -166,9 +180,9 @@ export default function CarbonCore({
       frameloop={visible ? "always" : "never"}
       dpr={dprCap(tier)}
       gl={{ antialias: tier === TIER.FULL, alpha: true, stencil: false }}
-      camera={{ position: [0, 3, 13], fov: 42 }}
+      camera={{ position: [0, 0, 13], fov: 40 }}
     >
-      <fog attach="fog" args={["#141210", 12, 44]} />
+      <fog attach="fog" args={["#0f1a10", 14, 34]} />
       <Core tier={tier} scrollRef={scrollRef} />
     </Canvas>
   );

@@ -19,7 +19,18 @@ export default function Hero() {
   useEffect(() => {
     // Resolved in an effect, not during render: navigator hints do not exist on
     // the server and guessing would cause a hydration mismatch.
-    setTier(estimateTier());
+    const t = estimateTier();
+    setTier(t);
+
+    // ?debug=perf prints exactly why this device got the tier it did. Without
+    // it, "the WebGL is not showing" is undiagnosable from anywhere except the
+    // affected machine, since every input is a property of that machine.
+    if (new URLSearchParams(window.location.search).get("debug") === "perf") {
+      import("../lib/perf").then(({ explainTier }) => {
+        // eslint-disable-next-line no-console
+        console.table(explainTier());
+      });
+    }
   }, []);
 
   const showWebGL = tier !== null && tier !== TIER.STILL;
@@ -67,7 +78,11 @@ export default function Hero() {
 
           <div className="hero__meta">
             <span className="eyebrow">
-              <span>Scroll into the pore structure</span>
+              {/* Same rule as PoreLede: never promise a journey into a
+                  structure that this device is not rendering. */}
+              <span>
+                {showWebGL ? "Scroll into the pore structure" : "Scroll"}
+              </span>
             </span>
             <span className="hero__arrow" aria-hidden="true" />
           </div>

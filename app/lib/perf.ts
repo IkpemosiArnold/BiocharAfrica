@@ -73,37 +73,97 @@ export function estimateTier(): Tier {
   const effectiveType = nav.connection?.effectiveType ?? "";
   if (effectiveType === "slow-2g" || effectiveType === "2g") return TIER.STILL;
 
-  const memory = nav.deviceMemory ?? 4;
-  const cores = nav.hardwareConcurrency ?? 4;
+  // navigator.deviceMemory is Chromium-only. Defaulting it to a number and then
+  // testing that number downgraded EVERY Safari and Firefox visitor, however
+  // powerful their machine, because the default tripped the same threshold as a
+  // genuinely weak device. A missing signal means "unknown", not "bad", so it is
+  // left undefined and simply not used as evidence.
+  const memory = nav.deviceMemory;
+  const cores = nav.hardwareConcurrency ?? 8;
+
+  const weakMemory = memory !== undefined && memory <= 2;
+  const modestMemory = memory !== undefined && memory <= 3;
 
   // ≤2GB RAM or ≤2 cores is squarely the low-end Android bracket where a
   // raymarcher will not hold a usable frame rate at any resolution.
-  if (memory <= 2 || cores <= 2) return TIER.STILL;
+  if (weakMemory || cores <= 2) return TIER.STILL;
 
-  if (memory <= 4 || cores <= 4 || effectiveType === "3g") return TIER.LEAN;
+  if (modestMemory || cores <= 4 || effectiveType === "3g") return TIER.LEAN;
 
-  // A very high DPR on a modest GPU is the classic trap: the shader runs at
-  // 3x the pixel count for no perceived gain. Treat it as a downgrade signal.
-  if (window.devicePixelRatio > 2.5 && cores <= 6) return TIER.LEAN;
-
+  // Everything from roughly an iPhone 11 / Snapdragon 730 era device upward gets
+  // the full scene. An earlier version demoted any high-DPR device with ≤6 cores,
+  // which caught every modern iPhone despite those chips being comfortably able
+  // to run this shader.
+  //
+  // The safety net is better than the guess: resolution is capped (dprCap) and
+  // the step count is lowered on touch (rayStepsFor), and if a device still
+  // cannot hold frame rate then watchFrameRate demotes it within about a second.
+  // Measuring beats predicting, so we start optimistic and let evidence correct.
   return TIER.FULL;
+}
+
+/** Coarse pointer, i.e. a phone or tablet rather than a desktop. */
+function isTouch(): boolean {
+  if (typeof window === "undefined") return false;
+  return window.matchMedia("(pointer: coarse)").matches;
 }
 
 /**
  * Pixel ratio cap per tier. Raymarching cost scales with total pixels, so this
  * is the single most effective lever available, far more than step count.
+ *
+ * FULL caps at 1.75 rather than 2. At DPR 2 on a Retina display this shader runs
+ * over roughly 3 million pixels per frame, which was heavy enough to trip the
+ * frame-rate governor on capable laptops and get them demoted to the flat
+ * fallback. 1.75 is about 23% less work and, on a soft volumetric image with no
+ * hard edges, is not distinguishable from 2.
  */
 export function dprCap(tier: Tier): number {
   if (typeof window === "undefined") return 1;
   const dpr = window.devicePixelRatio || 1;
-  if (tier === TIER.FULL) return Math.min(dpr, 2);
+  if (tier === TIER.FULL) return Math.min(dpr, 1.75);
   if (tier === TIER.LEAN) return Math.min(dpr, 1); // effectively half-res on retina
   return 1;
 }
 
-/** Ray-march step budget per tier. Blue-noise dithering covers the low counts. */
+/**
+ * Why the current device landed on the tier it did.
+ *
+ * This exists because "the WebGL is not showing" is otherwise almost impossible
+ * to diagnose from the outside: every input is a property of the visitor's
+ * machine. Append ?debug=perf to any URL to print the decision to the console.
+ */
+export function explainTier(): Record<string, unknown> {
+  if (typeof window === "undefined") return {};
+  const nav = navigator as NavigatorWithHints;
+  const tier = estimateTier();
+  return {
+    tier,
+    tierName: ["STILL (no WebGL)", "LEAN", "FULL"][tier],
+    forcedByUrl: isTierForced(),
+    prefersReducedMotion: prefersReducedMotion(),
+    saveData: nav.connection?.saveData ?? false,
+    effectiveType: nav.connection?.effectiveType ?? "unknown",
+    deviceMemory: nav.deviceMemory ?? "unreported (Safari/Firefox)",
+    hardwareConcurrency: nav.hardwareConcurrency ?? "unreported",
+    devicePixelRatio: window.devicePixelRatio,
+    touch: window.matchMedia("(pointer: coarse)").matches,
+    renderPixelRatio: dprCap(tier),
+    raySteps: rayStepsFor(tier),
+  };
+}
+
+/**
+ * Ray-march step budget per tier. Dithering of the ray start offset covers the
+ * low counts, so these read as grain rather than as banding.
+ *
+ * A phone on FULL renders the same scene as a desktop, just with a shorter loop.
+ * 40 versus 64 steps is not perceptible on a 6in screen, but it is roughly a
+ * third less fragment work, which is what lets an iPhone 11 class device hold
+ * the full experience instead of being demoted to the flat fallback.
+ */
 export function rayStepsFor(tier: Tier): number {
-  if (tier === TIER.FULL) return 64;
+  if (tier === TIER.FULL) return isTouch() ? 40 : 64;
   if (tier === TIER.LEAN) return 24;
   return 0;
 }
@@ -129,10 +189,18 @@ export function watchFrameRate(
   let last = performance.now();
   let samples = 0;
   let slow = 0;
-  let warmup = 8;
+  // Shader compile, first texture upload and font swap all land in the opening
+  // frames. Judging a device on those is how a capable laptop gets demoted.
+  let warmup = 45;
 
-  const SLOW_FRAME_MS = 1000 / 45; // below ~45fps counts as struggling
-  const SAMPLE_TARGET = 90;
+  // Deliberately tolerant. An earlier version demoted at 45fps over 90 frames,
+  // which fired on perfectly good hardware roughly a second after load: the
+  // scene appeared and then vanished, which is far worse than a scene that runs
+  // at 40fps. 30fps is the real threshold for "this is not working", and it has
+  // to be sustained over several seconds before we act.
+  const SLOW_FRAME_MS = 1000 / 30;
+  const SAMPLE_TARGET = 240;
+  const SLOW_RATIO = 0.6;
 
   const tick = () => {
     const now = performance.now();
@@ -147,8 +215,10 @@ export function watchFrameRate(
       if (delta > SLOW_FRAME_MS && delta < 400) slow += 1;
 
       if (samples >= SAMPLE_TARGET) {
-        // A third of frames missing 45fps means this is not a transient stall.
-        if (slow / samples > 0.34) {
+        if (slow / samples > SLOW_RATIO) {
+          // Step down one tier and stop watching. Falling all the way to a
+          // static image while someone is looking at it reads as a crash;
+          // one quiet step down does not.
           onDowngrade(current === TIER.FULL ? TIER.LEAN : TIER.STILL);
           return;
         }

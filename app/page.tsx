@@ -4,6 +4,7 @@ import Permanence from "./components/Permanence";
 import GroundShift from "./components/GroundShift";
 import Photo from "./components/Photo";
 import VideoPanel from "./components/VideoPanel";
+import PoreLede from "./components/PoreLede";
 import { FIELD_SITES, SERVICES } from "./lib/content";
 
 /**
@@ -103,13 +104,7 @@ export default function Home() {
           </h2>
 
           <div className="pore__grid">
-            <p className="measure" data-reveal>
-              What you flew through at the top of this page is the reason biochar
-              works. Pyrolysis leaves behind the plant&apos;s own vascular
-              architecture as a labyrinth of interconnected voids. Macropores
-              wide enough to hold water. Micropores fine enough to lock carbon
-              away from the microbes that would otherwise consume it.
-            </p>
+            <PoreLede />
             <div className="pore__facts">
               <div className="fact" data-reveal>
                 <span className="fact__k tabular">Holds</span>
