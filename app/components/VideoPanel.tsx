@@ -58,7 +58,17 @@ export default function VideoPanel({
       { rootMargin: "300px 0px" }
     );
     io.observe(el);
-    return () => io.disconnect();
+
+    // Same fail-open rule as the reveals. If the observer never delivers, the
+    // <source> elements are never rendered and the panel is frozen on its
+    // poster forever. Arming late costs a little bandwidth; never arming means
+    // the field footage, which is most of the point of this site, is missing.
+    const failsafe = window.setTimeout(() => setArmed(true), 4000);
+
+    return () => {
+      io.disconnect();
+      window.clearTimeout(failsafe);
+    };
   }, [armed]);
 
   // Play only while on screen. A muted loop running off-screen still decodes

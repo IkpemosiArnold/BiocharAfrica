@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Site components, "The black that feeds"
+   Site components, Biochar Solutions Africa
 
    Layout rules this file follows deliberately:
    · Asymmetric. Content sits off-axis; almost nothing is centred.
@@ -215,7 +215,7 @@
 }
 
 /* ==========================================================================
-   Hero
+   Hero, photograph-led welcome page
    ========================================================================== */
 
 .hero {
@@ -225,123 +225,69 @@
   min-block-size: 100svh;
   display: flex;
   align-items: flex-end;
-  padding-block-end: clamp(2.5rem, 1.5rem + 4vw, 5rem);
+  padding-block: clamp(6rem, 5rem + 6vw, 9rem) clamp(2.5rem, 1.5rem + 4vw, 5rem);
   overflow: clip;
   isolation: isolate;
 }
 
-.hero__stage {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-}
-.hero__stage canvas,
-.pore-canvas {
-  position: absolute !important;
-  inset: 0;
-  inline-size: 100% !important;
-  block-size: 100% !important;
-  /* Bloom the structure in. The first frame after shader compile always
-     arrives late, and a hard cut advertises that. */
-  animation: canvas-in 1.5s var(--ease-out-quint) 0.1s both;
-}
-@keyframes canvas-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+.hero__inner {
+  inline-size: 100%;
 }
 
-/* Tier-0 and pre-compile stand-in. A CSS approximation of the pore volume:
-   layered radial fields in the same palette, so the fallback belongs to the
-   same image family rather than looking like a missing asset. */
-.hero__fallback {
+/* Phone: the photograph is the ground. */
+.hero__media {
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(
-      50% 42% at 62% 34%,
-      oklch(0.42 0.14 128 / 0.4),
-      transparent 70%
-    ),
-    radial-gradient(
-      44% 38% at 28% 66%,
-      oklch(0.38 0.09 55 / 0.32),
-      transparent 72%
-    ),
-    radial-gradient(90% 80% at 50% 50%, oklch(0.2 0.02 60), oklch(0.09 0.01 60));
-  opacity: 1;
-  transition: opacity 1.2s var(--ease-out-quint);
+  z-index: -2;
+  margin: 0;
 }
-.hero__fallback.is-hidden {
-  opacity: 0;
+.hero__media .photo {
+  block-size: 100%;
+  inline-size: 100%;
+  aspect-ratio: auto !important;
+}
+.hero__media img {
+  block-size: 100%;
+  object-fit: cover;
+  /* Hold the figure and her bowl in frame as the crop narrows. */
+  object-position: 42% 42%;
 }
 
-/* Only as much scrim as the text actually needs. It sits low and clears early,
-   so the upper two-thirds of the pore structure stays fully visible, the
-   headline copy refers to flying through it, so it has to be legible. */
+/* Graded so the photograph belongs to the same emulsion as the field video:
+   crushed warm blacks, green push, and enough weight at the foot of the frame
+   for the headline to sit on. */
 .hero__scrim {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to top,
-    oklch(0.09 0.008 60 / 0.82) 0%,
-    oklch(0.09 0.008 60 / 0.34) 26%,
-    transparent 48%
-  );
-}
-
-/* On a phone the headline and lede occupy most of the screen, so there is no
-   "empty upper third" for the structure to live in. The scrim has to carry much
-   further up or the copy sits directly on top of high-frequency pore detail and
-   becomes genuinely hard to read. Legibility wins over spectacle here. */
-@media (max-width: 48rem) {
-  .hero__scrim {
-    /* An earlier version ran this at 94% and 86% opacity across the bottom two
-       thirds. It fixed legibility by painting over the shader almost entirely,
-       which on an iPhone was indistinguishable from the WebGL failing to load.
-       The scrim now clears completely by just under half height, so the pore
-       structure is unmistakably present, and the copy gets its legibility from
-       a local text-shadow instead of from hiding the artwork. */
-    background: linear-gradient(
+  z-index: -1;
+  background:
+    linear-gradient(
       to top,
-      oklch(0.09 0.008 60 / 0.88) 0%,
-      oklch(0.09 0.008 60 / 0.62) 26%,
-      oklch(0.09 0.008 60 / 0.22) 40%,
-      transparent 52%
+      oklch(0.09 0.008 60 / 0.94) 0%,
+      oklch(0.09 0.008 60 / 0.72) 26%,
+      oklch(0.09 0.008 60 / 0.28) 52%,
+      oklch(0.09 0.008 60 / 0.1) 100%
+    ),
+    linear-gradient(
+      to right,
+      oklch(0.09 0.008 60 / 0.5) 0%,
+      transparent 62%
     );
-  }
-  .hero__title,
-  .hero__lede {
-    text-shadow: 0 1px 14px oklch(0.09 0.008 60 / 0.75);
-  }
-}
-
-.hero__content {
-  position: relative;
-  inline-size: 100%;
-}
-.hero__eyebrow {
-  margin-block-end: clamp(1.5rem, 1rem + 2vw, 2.75rem);
 }
 
 .hero__title {
   font-size: var(--text-5xl);
   line-height: 0.82;
   letter-spacing: 0.002em;
-  margin-block-end: clamp(2rem, 1.2rem + 3.5vw, 4rem);
+  margin-block-end: clamp(1.25rem, 0.8rem + 2vw, 2.25rem);
 }
-.hero__foot {
-  display: grid;
-  gap: clamp(1.75rem, 1rem + 3vw, 3.5rem);
-  align-items: end;
-}
+
 .hero__lede {
   font-size: var(--text-lg);
-  color: color-mix(in oklch, var(--ink) 78%, transparent);
+  color: color-mix(in oklch, var(--ink) 82%, transparent);
+  margin-block-end: clamp(1.75rem, 1.2rem + 2.5vw, 3rem);
 }
+
 .hero__meta {
   display: flex;
   align-items: center;
@@ -350,11 +296,7 @@
 .hero__arrow {
   inline-size: 1px;
   block-size: 2.6rem;
-  background: linear-gradient(
-    to bottom,
-    currentColor,
-    transparent
-  );
+  background: linear-gradient(to bottom, currentColor, transparent);
   color: var(--color-rice-500);
   animation: drop 2.4s var(--ease-in-out-quart) infinite;
 }
@@ -376,9 +318,53 @@
   }
 }
 
-@media (min-width: 60rem) {
-  .hero__foot {
-    grid-template-columns: minmax(0, 1fr) auto;
+@media (max-width: 61.99rem) {
+  .hero__title,
+  .hero__lede {
+    text-shadow: 0 1px 16px oklch(0.09 0.008 60 / 0.8);
+  }
+}
+
+/* Desktop: the photograph becomes a bounded panel beside the type rather than a
+   stretched backdrop. At 810px wide the source cannot fill a 1440pt Retina
+   viewport without a 3.5x upscale, and a soft hero photograph is the single
+   most obvious way to look amateur. Constraining it keeps it sharp. */
+@media (min-width: 62rem) {
+  .hero {
+    align-items: center;
+  }
+  .hero__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 30rem);
+    align-items: center;
+    column-gap: clamp(2.5rem, 4vw, 6rem);
+  }
+  /* Both pinned to row 1. The figure comes first in the DOM and takes column
+     2, which under default sparse auto-placement pushes the text that follows
+     into a second row, leaving the headline stranded below the fold. */
+  .hero__content {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .hero__media {
+    position: relative;
+    inset: auto;
+    z-index: 0;
+    grid-column: 2;
+    grid-row: 1;
+    block-size: min(78vh, 42rem);
+  }
+  .hero__media .photo {
+    block-size: 100%;
+  }
+  .hero__scrim {
+    /* The panel carries its own contrast, so the full-frame wash is not needed;
+       just enough to seat the type on the char ground. */
+    background: radial-gradient(
+      70% 60% at 20% 60%,
+      oklch(0.09 0.008 60 / 0.5),
+      transparent 75%
+    );
   }
 }
 
@@ -481,8 +467,86 @@
 }
 
 /* ==========================================================================
-   Act III, pore
+   Act III, pore. The volume that used to be the hero now sits behind the copy
+   that explains it.
    ========================================================================== */
+
+.act--pore {
+  position: relative;
+  overflow: clip;
+  isolation: isolate;
+  padding-block: clamp(6rem, 4rem + 10vw, 14rem);
+}
+
+.pore__stage {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+}
+.pore__stage canvas,
+.pore__stage .pore-canvas {
+  position: absolute !important;
+  inset: 0;
+  inline-size: 100% !important;
+  block-size: 100% !important;
+}
+
+/* Tier-0 and pre-compile stand-in, in the same palette so the fallback belongs
+   to the same image family rather than looking like a missing asset. */
+.pore__fallback {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      54% 46% at 68% 32%,
+      oklch(0.4 0.13 128 / 0.34),
+      transparent 72%
+    ),
+    radial-gradient(
+      46% 40% at 26% 70%,
+      oklch(0.36 0.09 55 / 0.28),
+      transparent 74%
+    ),
+    oklch(0.17 0.014 62);
+  transition: opacity 1.2s var(--ease-out-quint);
+}
+.pore__fallback.is-hidden {
+  opacity: 0;
+}
+
+/* The copy has to win. The structure is the evidence, not the subject. */
+.pore__veil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    oklch(0.11 0.012 62 / 0.93) 0%,
+    oklch(0.11 0.012 62 / 0.82) 42%,
+    oklch(0.11 0.012 62 / 0.5) 100%
+  );
+}
+
+.pore__body {
+  position: relative;
+}
+
+.pore__legend {
+  position: relative;
+  margin-block-start: clamp(2.5rem, 1.5rem + 4vw, 5rem);
+  padding-inline: var(--gutter, 1.25rem);
+  color: var(--ink-dim);
+}
+
+@media (max-width: 61.99rem) {
+  .pore__veil {
+    background: linear-gradient(
+      to bottom,
+      oklch(0.11 0.012 62 / 0.72) 0%,
+      oklch(0.11 0.012 62 / 0.9) 34%,
+      oklch(0.11 0.012 62 / 0.94) 100%
+    );
+  }
+}
 
 .pore__title {
   font-size: var(--text-3xl);
@@ -516,12 +580,6 @@
   max-inline-size: 30ch;
 }
 
-.pore__plate {
-  margin-block-start: clamp(3rem, 2rem + 5vw, 7rem);
-}
-.pore__plate .photo {
-  aspect-ratio: 21 / 9;
-}
 
 @media (min-width: 62rem) {
   .pore__grid {

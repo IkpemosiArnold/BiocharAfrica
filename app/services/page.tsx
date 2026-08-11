@@ -19,12 +19,14 @@ const ANCHORS = [
   "training",
 ];
 
-/* One photograph per service, so the page is carried by the work rather than by
-   six identically-sized cards. */
+/* One distinct frame per service, so the page is carried by the work rather
+   than by six identically-sized cards, and deliberately only two from the
+   char-on-sand production set. An earlier version leaned on those repeatedly,
+   which made the site look like it had four photographs. */
 const PLATES = [
   { name: "production-char-drying-rake", alt: "Biochar raked out to dry at the production site" },
   { name: "application-teal-bowl-paddy", alt: "A farmer broadcasting biochar into standing rice" },
-  { name: "wm-char-bed-hand", alt: "A hand in a bed of drying char, showing granule structure" },
+  { name: "strawhat-portrait-char", alt: "A farmer in a wide straw hat holding a bowl of biochar in a green field" },
   { name: "paddy-tilling-wide", alt: "A prepared paddy being worked before planting" },
   { name: "production-sacks-stored", alt: "Sacks of finished biochar in storage" },
   { name: "transplanting-crew-wide", alt: "A crew transplanting rice into treated beds" },

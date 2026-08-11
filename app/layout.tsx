@@ -41,7 +41,7 @@ const archivo = Archivo({
 export const metadata: Metadata = {
   metadataBase: new URL("https://biocharsolutions.africa"),
   title: {
-    default: "Biochar Solutions Africa: The black that feeds",
+    default: "Biochar Solutions Africa: richer soil, every season",
     template: "%s · Biochar Solutions Africa",
   },
   description:
@@ -60,7 +60,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_NG",
     siteName: "Biochar Solutions Africa",
-    title: "Biochar Solutions Africa: The black that feeds",
+    title: "Biochar Solutions Africa: richer soil, every season",
     description:
       "Carbon out of the sky, into Nigerian soil, for a thousand years.",
   },
@@ -76,11 +76,28 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en-NG" className={`${display.variable} ${archivo.variable}`}>
+    /* suppressHydrationWarning because the inline script below adds a `js`
+       class to <html> before React hydrates, so the server and client
+       classNames legitimately differ. This is the one element where that is
+       expected; it does not suppress warnings anywhere else in the tree. */
+    <html
+      lang="en-NG"
+      className={`${display.variable} ${archivo.variable}`}
+      suppressHydrationWarning
+    >
       <head>
         {/* Field footage and photography are same-origin; no third-party media
             hosts, so there is nothing to preconnect to. Fonts are self-hosted
             by next/font at build time for the same reason. */}
+
+        {/* Marks the document as scripted BEFORE first paint. Every hidden
+            reveal state is scoped to .js, so if this never runs the page is
+            simply fully visible rather than half empty. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `document.documentElement.classList.add('js')`,
+          }}
+        />
       </head>
       <body>
         <a href="#main" className="skip-link">

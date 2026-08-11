@@ -5,13 +5,14 @@ import GroundShift from "./components/GroundShift";
 import Photo from "./components/Photo";
 import VideoPanel from "./components/VideoPanel";
 import PoreLede from "./components/PoreLede";
+import PoreAct from "./components/PoreAct";
 import { FIELD_SITES, SERVICES } from "./lib/content";
 
 /**
  * Home, seven acts, and the page's ground colour migrates from carbon black to
- * acid paddy green across them. The background is the argument: black becomes
- * green, sky-carbon becomes ground-carbon. Each <section> declares its palette
- * via data-ground / data-ink; GroundShift interpolates between them.
+ * paddy green across them. The background carries the argument: carbon out of
+ * the sky and into the soil. Each <section> declares its palette via
+ * data-ground / data-ink; GroundShift interpolates between them.
  */
 export default function Home() {
   return (
@@ -67,27 +68,22 @@ export default function Home() {
           />
           <div className="definition__aside">
             <Photo
-              name="production-bagging-crew"
-              alt="Workers bagging finished biochar from a heap"
+              name="elder-pan-rice-overhead"
+              alt="A farmer lowering a pan of biochar into a stand of young rice"
               sizes="(max-width: 900px) 100vw, 34vw"
               className="plate"
             />
             <p className="caption">
-              Char raked to cool and dry, then bagged. From here it moves to the
-              field by road.
+              Raked to cool and dry, bagged, then carried into the field. The
+              same material, ten kilometres and one week apart.
             </p>
           </div>
         </div>
       </section>
 
-      {/* ── Act III, the pore structure, which the hero flew through ─────── */}
-      <section
-        className="act act--pore"
-        data-ground="#1b1712"
-        data-ink="#ece7dd"
-        data-ink-dim="#948b7e"
-        data-rule="#332c23"
-      >
+      {/* ── Act III, why it works. The pore volume now lives here, behind the
+           copy that explains it, instead of being the welcome page. ───────── */}
+      <PoreAct>
         <div className="shell">
           <p className="eyebrow act__eyebrow" data-reveal>
             <span>02</span>
@@ -130,16 +126,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-
-        <div className="shell pore__plate">
-          <Photo
-            name="wm-char-bed-hand"
-            alt="A hand pressed into a bed of drying biochar, showing the coarse porous granules"
-            sizes="(max-width: 900px) 100vw, 90vw"
-            className="plate"
-          />
-        </div>
-      </section>
+      </PoreAct>
 
       {/* ── Act IV, into the ground. The green begins here. ──────────────── */}
       <section

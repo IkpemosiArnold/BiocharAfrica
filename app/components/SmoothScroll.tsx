@@ -52,8 +52,14 @@ export default function SmoothScroll() {
     if (reduced) {
       revealables.forEach((el) => el.classList.add("is-in"));
     } else {
+      // Health flag. A working observer delivers an entry for anything already
+      // on screen almost immediately, so "never fired at all" is a reliable
+      // signal that this browser is not going to cooperate.
+      let observerFired = false;
+
       const io = new IntersectionObserver(
         (entries) => {
+          observerFired = true;
           entries.forEach((entry) => {
             if (!entry.isIntersecting) return;
             const el = entry.target as HTMLElement;
@@ -72,8 +78,39 @@ export default function SmoothScroll() {
       );
       revealables.forEach((el) => io.observe(el));
 
+      /* Anything already on screen at mount is revealed directly rather than
+         being left to the observer.
+
+         The hero headline went missing on an Android phone: the observer never
+         delivered an entry for it, so the masked lines stayed translated out of
+         view and the most important sentence on the site simply was not there.
+         Above-the-fold content must not depend on an async callback firing. */
+      revealables.forEach((el) => {
+        const r = el.getBoundingClientRect();
+        if (r.top < window.innerHeight && r.bottom > 0) {
+          el.classList.add("is-in");
+          io.unobserve(el);
+        }
+      });
+
+      /* Last-resort failsafe. If the observer has not fired a single time by
+         now it is not working on this browser, so every remaining element is
+         revealed outright, including everything below the fold.
+
+         Scoping this to the viewport was not enough: with a dead observer the
+         hero survived but the rest of the page stayed blank as you scrolled.
+         A reveal animation that never runs is a nice-to-have; text that never
+         appears is a broken page. */
+      const failsafe = window.setTimeout(() => {
+        if (observerFired) return;
+        document
+          .querySelectorAll<HTMLElement>("[data-reveal]:not(.is-in)")
+          .forEach((el) => el.classList.add("is-in"));
+      }, 2500);
+
       return () => {
         io.disconnect();
+        window.clearTimeout(failsafe);
         if (tickerFn) gsap.ticker.remove(tickerFn);
         lenis?.destroy();
         ScrollTrigger.getAll().forEach((t) => t.kill());

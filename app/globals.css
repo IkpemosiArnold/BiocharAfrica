@@ -2,7 +2,7 @@
 @import "./styles/site.css";
 
 /* ==========================================================================
-   BIOCHAR SOLUTIONS AFRICA, "The Black That Feeds"
+   BIOCHAR SOLUTIONS AFRICA
 
    The site's structural idea: biochar takes carbon out of the sky and locks it
    in the ground, where dead-looking black matter makes soil come alive. So the
@@ -306,12 +306,17 @@ p {
    Reveal primitives, transform/opacity only, never layout properties
    ========================================================================== */
 
-[data-reveal] {
+/* Reveals are gated behind .js, which an inline script in <head> sets before
+   first paint. If scripting is unavailable or fails, nothing is ever hidden.
+   The previous version hid this content in the stylesheet and relied on
+   JavaScript to bring it back, so any failure in that path left the page's
+   headline permanently invisible. Fail open, always. */
+.js [data-reveal] {
   opacity: 0;
   transform: translate3d(0, 1.35rem, 0);
   will-change: transform, opacity;
 }
-[data-reveal].is-in {
+.js [data-reveal].is-in {
   opacity: 1;
   transform: none;
   transition:
@@ -320,25 +325,36 @@ p {
 }
 
 /* Line-level masked reveal for display type. */
+/* The mask needs headroom at BOTH ends.
+   An earlier version padded only the bottom, for descenders. But the display
+   face is set at line-height 0.82, so the capitals stand taller than their own
+   line box and the tops of round letters (S, O, C) were being sliced off by
+   overflow: hidden. The padding opens the box up; the negative margin keeps the
+   type's optical position and leading exactly where it was. */
 .line-mask {
   display: block;
   overflow: hidden;
-  padding-block-end: 0.08em; /* descenders must not be clipped by the mask */
-  margin-block-end: -0.08em;
+  padding-block: 0.16em 0.1em;
+  margin-block: -0.16em -0.1em;
+}
+.js .line-mask > span {
+  display: block;
+  transform: translate3d(0, 130%, 0);
+  will-change: transform;
 }
 .line-mask > span {
   display: block;
-  transform: translate3d(0, 105%, 0);
-  will-change: transform;
 }
-.is-in .line-mask > span {
+.js .is-in .line-mask > span {
   transform: none;
   transition: transform 1.1s var(--ease-out-expo);
 }
 
 @media (prefers-reduced-motion: reduce) {
   [data-reveal],
-  .line-mask > span {
+  .line-mask > span,
+  .js [data-reveal],
+  .js .line-mask > span {
     opacity: 1 !important;
     transform: none !important;
   }
