@@ -1,0 +1,120 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Photo from "./Photo";
+import { prefersReducedMotion } from "../lib/perf";
+
+/**
+ * Crossfading hero slideshow, three frames, all supplied by management.
+ *
+ * Loading is staged rather than parallel. Only the first frame is `priority`;
+ * the rest mount a beat later, so a phone on metered data fetches one hero
+ * image up front instead of three competing for the same connection during
+ * first paint. LCP is decided by frame one, and nothing else is allowed to
+ * compete with it.
+ *
+ * Under prefers-reduced-motion the rotation does not run at all. A background
+ * that changes on its own is exactly the sort of unrequested movement that
+ * setting exists to stop, so those visitors get a single still frame.
+ */
+const SLIDES = [
+  {
+    name: "application-headwrap-paddy",
+    alt: "A farmer broadcasting biochar by hand from a teal bowl into standing rice near Jima, Niger State",
+    place: "Jima, Niger State",
+    coords: "9.032°N 5.796°E",
+  },
+  {
+    name: "community-gathering-wide",
+    alt: "Several hundred community members, mostly women, gathered around a Biochar Solutions Africa field demonstration",
+    place: "Community demonstration",
+    coords: "Northern Nigeria",
+  },
+  {
+    name: "community-women-training",
+    alt: "Women pounding biomass with mortar and pestle during a Biochar Solutions Africa training session",
+    place: "Training session",
+    coords: "Northern Nigeria",
+  },
+] as const;
+
+const INTERVAL = 6000;
+
+export default function HeroSlides() {
+  const [index, setIndex] = useState(0);
+  const [mounted, setMounted] = useState(false);
+  const [still, setStill] = useState(false);
+
+  useEffect(() => {
+    const reduced = prefersReducedMotion();
+    setStill(reduced);
+    // Let the first frame settle before the others are even created.
+    const t = window.setTimeout(() => setMounted(true), 900);
+    return () => window.clearTimeout(t);
+  }, []);
+
+  useEffect(() => {
+    if (still || !mounted) return;
+    const id = window.setInterval(
+      () => setIndex((i) => (i + 1) % SLIDES.length),
+      INTERVAL
+    );
+    return () => window.clearInterval(id);
+  }, [still, mounted]);
+
+  const active = still ? 0 : index;
+
+  return (
+    <>
+      <div className="hero__media">
+        {SLIDES.map((s, i) => {
+          // Frame one renders immediately; the others wait for `mounted`.
+          if (i > 0 && !mounted) return null;
+          return (
+            <div
+              key={s.name}
+              className={`hero__slide ${i === active ? "is-active" : ""}`}
+              aria-hidden={i === active ? undefined : true}
+            >
+              <Photo
+                name={s.name}
+                alt={s.alt}
+                sizes="(min-width: 62rem) 30rem, 100vw"
+                priority={i === 0}
+              />
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Caption and controls, grouped so CSS can order them after the
+          headline on a phone. The media above is absolutely positioned, so its
+          DOM position is irrelevant, but these two are in the flow and were
+          landing above the title. */}
+      <div className="hero__caption">
+        {/* Provenance line tracks the visible frame. */}
+        <p className="eyebrow hero__place">
+          <span>{SLIDES[active].place}</span>
+          <span className="rule-dash" />
+          <span className="tabular">{SLIDES[active].coords}</span>
+        </p>
+
+        {!still && (
+          <div className="hero__dots" role="tablist" aria-label="Hero images">
+            {SLIDES.map((s, i) => (
+              <button
+                key={s.name}
+                type="button"
+                role="tab"
+                aria-selected={i === active}
+                aria-label={`Show image ${i + 1}: ${s.place}`}
+                className={`hero__dot ${i === active ? "is-active" : ""}`}
+                onClick={() => setIndex(i)}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </>
+  );
+}

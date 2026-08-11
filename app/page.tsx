@@ -6,7 +6,7 @@ import Photo from "./components/Photo";
 import VideoPanel from "./components/VideoPanel";
 import PoreLede from "./components/PoreLede";
 import PoreAct from "./components/PoreAct";
-import { FIELD_SITES, SOLUTIONS } from "./lib/content";
+import { FIELD_SITES, SOLUTIONS, OVERVIEW } from "./lib/content";
 
 /**
  * Home, seven acts, and the page's ground colour migrates from carbon black to
@@ -26,6 +26,54 @@ export default function Home() {
       <GroundShift />
       <Hero />
 
+      {/* ── The write-up from management's positioning document, on the home
+           page where they asked for it. This is the company in its own words,
+           and it has to come before any explanation of the material. ───────── */}
+      <section
+        className="act act--overview"
+        data-ground="#131009"
+        data-ink="#f0ebe1"
+        data-ink-dim="#93897b"
+        data-rule="#2b261f"
+      >
+        <div className="shell">
+          <p className="eyebrow act__eyebrow" data-reveal>
+            <span>01</span>
+            <span className="rule-dash" />
+            <span>Who we are</span>
+          </p>
+
+          <p className="overview measure-wide" data-reveal>
+            {OVERVIEW}
+          </p>
+
+          <div className="overview__cols">
+            <p data-reveal data-reveal-delay="90">
+              We deploy efficient, low-emission pyrolysis systems to convert rice
+              husks and straw, maize cobs and stalks, and other responsibly
+              sourced biomass residues into stable, carbon-rich products.
+            </p>
+            <p data-reveal data-reveal-delay="160">
+              The circular production model reduces open-field burning and
+              uncontrolled biomass decomposition while improving soil
+              productivity, strengthening agricultural resilience and creating
+              new income opportunities across rural value chains.
+            </p>
+          </div>
+
+          <ul className="pillars">
+            {["Regenerating African soils", "Removing carbon", "Creating rural prosperity"].map(
+              (t, i) => (
+                <li key={t} data-reveal data-reveal-delay={i * 90}>
+                  <span className="pillars__n tabular">0{i + 1}</span>
+                  <span>{t}</span>
+                </li>
+              )
+            )}
+          </ul>
+        </div>
+      </section>
+
       {/* ── Act II, what it actually is ─────────────────────────────────── */}
       <section
         className="act act--definition"
@@ -36,7 +84,7 @@ export default function Home() {
       >
         <div className="shell grid12">
           <p className="eyebrow act__eyebrow" data-reveal>
-            <span>01</span>
+            <span>02</span>
             <span className="rule-dash" />
             <span>What it is</span>
           </p>
@@ -92,7 +140,7 @@ export default function Home() {
       <PoreAct>
         <div className="shell">
           <p className="eyebrow act__eyebrow" data-reveal>
-            <span>02</span>
+            <span>03</span>
             <span className="rule-dash" />
             <span>Why it works</span>
           </p>
@@ -144,7 +192,7 @@ export default function Home() {
       >
         <div className="shell">
           <p className="eyebrow act__eyebrow" data-reveal>
-            <span>03</span>
+            <span>04</span>
             <span className="rule-dash" />
             <span>Into the ground</span>
           </p>
@@ -222,7 +270,7 @@ export default function Home() {
       >
         <div className="shell">
           <p className="eyebrow act__eyebrow" data-reveal>
-            <span>05</span>
+            <span>06</span>
             <span className="rule-dash" />
             <span>Field log</span>
           </p>
@@ -300,7 +348,7 @@ export default function Home() {
       >
         <div className="shell">
           <p className="eyebrow act__eyebrow" data-reveal>
-            <span>06</span>
+            <span>07</span>
             <span className="rule-dash" />
             <span>Community</span>
           </p>
@@ -358,7 +406,7 @@ export default function Home() {
       >
         <div className="shell">
           <p className="eyebrow act__eyebrow" data-reveal>
-            <span>07</span>
+            <span>08</span>
             <span className="rule-dash" />
             <span>What we do</span>
           </p>

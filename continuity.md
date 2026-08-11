@@ -3,73 +3,70 @@
 **Project:** BiocharAfrica
 **Session:** 34acf2db
 **Branch:** main
-**Context Usage:** 304.0% (608,000 / 200,000 tokens)
-**Timestamp:** 2026-08-11T05:55:03.558Z
+**Context Usage:** 347.2% (694,415 / 200,000 tokens)
+**Timestamp:** 2026-08-11T12:40:38.106Z
 **Working Directory:** /Users/mac/Documents/DevProjects/BiocharAfrica
 
 ## IMPORTANT: Resume from here
 
-Context window is at 304.0% capacity. Auto-compact will trigger soon.
+Context window is at 347.2% capacity. Auto-compact will trigger soon.
 This document was auto-generated. Continue from the tasks and conversation below.
 
 ## Active Tasks
 
-- [completed] Photograph-led welcome page using management's chosen image
-- [completed] Headline changed to plain commercial: Richer soil, every season
-- [completed] Move pore shader from hero to Act III where the copy explains it
-- [completed] Rebalance photography: 4 repeated frames → 10 distinct, 1 char-on-sand on home
-- [completed] Fix H1 invisible on Android: reveals now fail open, not closed
-- [completed] Fix capitals clipped by the line mask (no ascender headroom)
-- [completed] Fix hero grid row placement stranding the headline below the fold
-- [completed] Fix hydration mismatch from the pre-paint js class
-- [completed] Verify live deployment: all 5 routes, 100% reveals, no broken images
+- [completed] Adopt management's positioning doc: 4 solutions, impact proposition, feedstocks
+- [completed] Crawl the old site properly: found /our-team with 6 people, not 2
+- [completed] Add all six leaders with full bios and downloaded portraits
+- [completed] Wire management's two community photographs into the community act
+- [completed] Fix CTA rendering acid-green text on the acid-green slab (invisible)
+- [completed] Broaden CTA copy beyond soil to match the four solutions
+- [completed] Favicon and apple touch icon from the company logo
+- [completed] Make the image pipeline incremental (full rebuild exceeded 10 min)
+- [completed] Verify live: 5 routes, 100% reveals, no broken images, no invisible text
 - [pending] Contact form still needs CONTACT_TO + a mail provider to deliver enquiries
 
 
 ## Recent Conversation
 
-**ASSISTANT:** Layout bug: the photo is in row 1 but the text got pushed to row 2. Classic grid auto-placement — I placed the figure in column 2 first, so the cursor had already passed column 1 when the text came along:
+**ASSISTANT:** Now mapping each photo to the right person by DOM position, and downloading them:
 
-**ASSISTANT:** Two of those errors are my own test harness. The third is real and mine: **a hydration mismatch on `<html>`** — my pre-paint script adds the `js` class before React hydrates, so server and client classNames differ. That's the standard case for `suppressHydrationWarning`:
+**ASSISTANT:** Clean 1:1 mapping. Downloading the originals (not the cropped Elementor thumbnails) and running them through the pipeline:
 
-**ASSISTANT:** Desktop hero works now. Let me answer your question with a test rather than a guess — I'll **break `IntersectionObserver` entirely** and see what disappears:
+**ASSISTANT:** All six at good resolution. Let me also grab the real logo for the favicon you asked about, then process everything:
 
-**ASSISTANT:** With the observer fully dead: the H1 and lede now survive (that's the fix working). **But only 6 of 37 elements** — everything below the fold would still be blank on a device where the observer misbehaves. Still fail-closed. Let me make it detect a broken observer and bail out entirely:
+**ASSISTANT:** Six full bios with serious credentials — Lancaster, Wageningen, Cambridge/Stanford/MIT fellowships. Updating the data:
 
-**ASSISTANT:** Good catch — that's real clipping, and it's my bug. `.line-mask` has `overflow: hidden`, and I added padding to protect **descenders** but not ascenders. With `line-height: 0.82`, the capitals overflow the top of the line box and get sliced:
+**ASSISTANT:** Now the favicon, then I'll look at Contact properly before pushing anything:
 
-**ASSISTANT:** Full round tops on the S and O now — the overshoot is no longer sliced. Let me verify mobile and the new Act III, then push:
+**ASSISTANT:** Favicon registered. Now let me actually **look** at every page before pushing this time:
 
-**ASSISTANT:** That's the welcome page management asked for. Let me run the browser-support audit you asked about, then ship it:
+**ASSISTANT:** They're on disk after all. Finding them:
 
-**ASSISTANT:** Will do. Committing and pushing now, then I'll verify the live deployment:
+**ASSISTANT:** Two things there. Let me confirm the CTA bug rather than assume:
 
-**ASSISTANT:** Pushed. Waiting for Vercel to pick it up:
+**ASSISTANT:** **Confirmed exactly:** `emColor` is byte-identical to `slabBackground` — "your soil." is acid-green text on an acid-green slab. Invisible, not missing.
 
-**ASSISTANT:** Live in 15s. Now verifying the deployed site properly:
+The cause: `globals.css` imports `site.css` at the top, so my later global `em` rule overrode the dark colour at equal specificity. Fixing that, broadening the copy, and processing the community photos:
 
-**ASSISTANT:** Every route on the **live deployment**: 200, **100% of reveals fired** (37/37 on home, nothing left hidden), zero broken images, both WebGL scenes mounting. Final visual check of the live site:
+**ASSISTANT:** The pipeline reprocesses all 27 photos from scratch each run and hit the timeout before reaching the new two. Let me make it incremental — a real improvement, not a workaround:
 
-**ASSISTANT:** Two real issues on the live Act III:
+**ASSISTANT:** Both processed at 1280×854 — the highest-resolution images in the set. Now wiring them in and fixing the invisible CTA text:
 
-1. **The copy is now wrong.** "What you flew through at the top of this page" — the shader is no longer at the top; it's directly behind that sentence. I broke that when I moved it.
-2. The mobile veil is so heavy the structure is barely visible.
+**ASSISTANT:** Now let me actually **look** at every page before pushing this time:
 
-**ASSISTANT:** My verification was wrong, not necessarily the deploy. `PoreLede` is a client component that renders the *neutral* sentence on the server — the tier-aware line only appears after hydration, so it will never be in the raw HTML. Checking the actual bundles instead:
+**ASSISTANT:** Community section works — both real photographs, and the colour of the gathering against the dark ground is the strongest image on the site. Checking the CTA:
 
-**ASSISTANT:** The CSS proves the deploy **is** live — `pore__veil` already carries the new `0.5` opacity. My polling loop was just grepping for a post-hydration string. Confirming in a real browser:
+**ASSISTANT:** Both lines legible now. Building, pushing, and this time verifying the live site properly:
 
-**ASSISTANT:** Deployed and verified live at **biochar-africa.vercel.app**.
+**ASSISTANT:** All four of your criticisms were correct. Live and verified now.
 
-## Verified on the deployment, not locally
+**"Did you REALLY go through the old site?" — No, and you caught a real failure.** I ran one summarising `WebFetch` against the homepage and treated the summary as the whole site. Crawling the actual HTML found an **`/our-team` page with six people, not two**:
 
-All five routes: **200**, **100% of reveals fired** (37/37 on home, 16/16, 22/22, 17/17, 7/7 — nothing left hidden after a full scroll), **zero broken images**, both WebGL scenes mounting.
+Al Amin Ibrahim · Prof. Aisha Abdulkadir · **Dr. Akanimo Odon** (PhD Lancaster, fellowships at Cambridge, Stanford and MIT) · Muhammad Musa · Dr. Ibrahim Yarima · Dr. Usman Aliyu
 
-## Why the headline vanished on his phone
+All six are now on `/about` with full credentials and portraits — downloaded at full resolution from the source, not the cropped Elementor thumbnails. That bench is the strongest credibility asset the company has, and both the old site and my build were burying it.
 
-The `IntersectionObserver` never delivered an entry for it, so the masked lines stayed translated out of view. But the trigger matters less than this: **the design failed closed.** The CSS hid the text and relied on JavaScript to bring it back, so any hiccup in that path deleted the most important sentence on the site. Three changes so it can't recur:
-
-- Hidden states are now scoped to a `.js` class set by an inline script **before first paint** — no script
+**"Did you even verify be
 
 ---
-*Auto-generated at 304.0% context usage by context-threshold-tracker*
+*Auto-generated at 347.2% context usage by context-threshold-tracker*

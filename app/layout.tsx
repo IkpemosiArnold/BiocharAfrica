@@ -41,11 +41,11 @@ const archivo = Archivo({
 export const metadata: Metadata = {
   metadataBase: new URL("https://biocharsolutions.africa"),
   title: {
-    default: "Biochar Solutions Africa: richer soil, every season",
+    default: "Biochar Solutions Africa: carbon solutions rooted in African soil",
     template: "%s · Biochar Solutions Africa",
   },
   description:
-    "We turn Nigerian crop waste into biochar: a stable carbon that locks CO₂ out of the atmosphere for a thousand years and makes tired soil fertile again. Field-proven in Niger State.",
+    "An integrated climate-smart agriculture and carbon-removal enterprise, turning agricultural residues into high-quality biochar, regenerative soil products, renewable process energy and measurable climate value. Regenerating African soils, removing carbon, creating rural prosperity.",
   keywords: [
     "biochar",
     "Nigeria",
@@ -60,9 +60,9 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_NG",
     siteName: "Biochar Solutions Africa",
-    title: "Biochar Solutions Africa: richer soil, every season",
+    title: "Biochar Solutions Africa: carbon solutions rooted in African soil",
     description:
-      "Carbon out of the sky, into Nigerian soil, for a thousand years.",
+      "Regenerating African soils. Removing carbon. Creating rural prosperity.",
   },
   robots: { index: true, follow: true },
 };

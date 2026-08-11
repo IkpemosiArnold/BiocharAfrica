@@ -33,7 +33,7 @@ export default function Permanence() {
 
       <div className="shell permanence__content">
         <p className="eyebrow" data-reveal>
-          <span>04</span>
+          <span>05</span>
           <span className="rule-dash" />
           <span>How long it stays</span>
         </p>

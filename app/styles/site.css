@@ -232,14 +232,37 @@
 
 .hero__inner {
   inline-size: 100%;
+  /* Column flow on a phone so the caption and controls can be ordered below
+     the headline. They sit before it in the DOM, next to the media they
+     describe, and without this they render above the title. */
+  display: flex;
+  flex-direction: column;
+}
+.hero__content {
+  order: 1;
+}
+.hero__caption {
+  order: 2;
+  margin-block-start: clamp(1.5rem, 1rem + 2vw, 2.5rem);
 }
 
-/* Phone: the photograph is the ground. */
+/* Phone: the photographs are the ground. */
 .hero__media {
   position: absolute;
   inset: 0;
   z-index: -2;
   margin: 0;
+}
+.hero__slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  /* Long crossfade. A hero that snaps between frames reads as a glitch; at
+     1.6s the change is noticed only if you are looking for it. */
+  transition: opacity 1.6s var(--ease-out-quint);
+}
+.hero__slide.is-active {
+  opacity: 1;
 }
 .hero__media .photo {
   block-size: 100%;
@@ -249,8 +272,49 @@
 .hero__media img {
   block-size: 100%;
   object-fit: cover;
-  /* Hold the figure and her bowl in frame as the crop narrows. */
+  /* Hold the working figure in frame as the crop narrows. */
   object-position: 42% 42%;
+}
+
+.hero__kicker {
+  margin-block-end: clamp(0.9rem, 0.7rem + 1vw, 1.5rem);
+  color: var(--ink-dim);
+}
+
+/* Provenance line, pinned to the foot of the frame on desktop and sitting in
+   the flow on a phone, where there is no room to float it. */
+.hero__place {
+  position: relative;
+  z-index: 1;
+  color: var(--ink-dim);
+}
+
+.hero__dots {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: 0.5rem;
+  margin-block-start: 1.1rem;
+}
+.hero__dot {
+  inline-size: 2.5rem;
+  block-size: 3px;
+  padding: 0;
+  border: 0;
+  background: color-mix(in oklch, var(--ink) 35%, transparent);
+  cursor: pointer;
+  transition: background-color 0.4s var(--ease-out-quint);
+}
+.hero__dot.is-active {
+  background: var(--color-rice-500);
+}
+/* The bar itself is 2px, which is far too small to hit. The tap target is
+   extended without changing what is drawn. */
+.hero__dot::after {
+  content: "";
+  position: absolute;
+  inset-block: -0.75rem;
+  inline-size: 2.25rem;
 }
 
 /* Graded so the photograph belongs to the same emulsion as the field video:
@@ -276,9 +340,12 @@
 }
 
 .hero__title {
-  font-size: var(--text-5xl);
-  line-height: 0.82;
-  letter-spacing: 0.002em;
+  /* Sized for THREE lines, not the two the previous headline had. At
+     --text-5xl this ran to 13rem a line and pushed the lede, the provenance
+     line and the slideshow controls off the bottom of the screen entirely. */
+  font-size: clamp(2.5rem, 0.9rem + 6.2vw, 6.75rem);
+  line-height: 0.84;
+  letter-spacing: 0.004em;
   margin-block-end: clamp(1.25rem, 0.8rem + 2vw, 2.25rem);
 }
 
@@ -353,6 +420,14 @@
     grid-column: 2;
     grid-row: 1;
     block-size: min(78vh, 42rem);
+  }
+  .hero__inner {
+    display: grid;
+  }
+  .hero__caption {
+    grid-column: 1;
+    grid-row: 2;
+    margin-block-start: clamp(1.75rem, 2vw, 3rem);
   }
   .hero__media .photo {
     block-size: 100%;
@@ -1369,6 +1444,48 @@
 .overview__sub {
   margin-block-start: 1.5rem;
   color: color-mix(in oklch, var(--ink) 74%, transparent);
+}
+.overview__cols {
+  display: grid;
+  gap: clamp(1.25rem, 0.8rem + 2vw, 2.5rem);
+  margin-block-start: clamp(1.75rem, 1.2rem + 2.5vw, 3rem);
+  color: color-mix(in oklch, var(--ink) 74%, transparent);
+}
+
+/* The three-part positioning line, set as a countable list rather than a
+   sentence, because management uses it as a standing claim. */
+.pillars {
+  list-style: none;
+  margin: clamp(2.5rem, 1.5rem + 4vw, 4.5rem) 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0;
+  border-block-start: 1px solid var(--rule);
+}
+.pillars li {
+  display: grid;
+  grid-template-columns: 3.5rem 1fr;
+  gap: 1rem;
+  align-items: baseline;
+  padding-block: clamp(0.9rem, 0.7rem + 1.2vw, 1.5rem);
+  border-block-end: 1px solid var(--rule);
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  font-size: var(--text-xl);
+  line-height: 1;
+}
+.pillars__n {
+  font-family: var(--font-body);
+  font-size: var(--text-eyebrow);
+  font-variation-settings: "wdth" 112;
+  letter-spacing: 0.18em;
+  color: var(--color-rice-500);
+}
+
+@media (min-width: 56rem) {
+  .overview__cols {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 /* Leadership. Six people with portraits, on hairline rows rather than cards, so
