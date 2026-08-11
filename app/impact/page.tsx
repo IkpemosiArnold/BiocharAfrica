@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import PageHead from "../components/PageHead";
 import Photo from "../components/Photo";
-import { FIELD_SITES } from "../lib/content";
+import { FIELD_SITES, IMPACT_POINTS } from "../lib/content";
 
 export const metadata: Metadata = {
   title: "Impact",
@@ -67,6 +67,35 @@ export default function Impact() {
               </p>
             </li>
           </ul>
+        </div>
+      </section>
+
+      <section
+        className="act"
+        data-ground="#1b1712"
+        data-ink="#ece7dd"
+        data-ink-dim="#948b7e"
+        data-rule="#332c23"
+      >
+        <div className="shell">
+          <p className="eyebrow act__eyebrow" data-reveal>
+            <span>What we are working toward</span>
+          </p>
+          <h2 className="act__title" data-reveal>
+            The impact
+            <br />
+            <em>proposition.</em>
+          </h2>
+          <ol className="props">
+            {IMPACT_POINTS.map((pt, i) => (
+              <li key={pt} data-reveal data-reveal-delay={i * 60}>
+                <span className="props__n tabular">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span>{pt}</span>
+              </li>
+            ))}
+          </ol>
         </div>
       </section>
 

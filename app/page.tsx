@@ -6,7 +6,7 @@ import Photo from "./components/Photo";
 import VideoPanel from "./components/VideoPanel";
 import PoreLede from "./components/PoreLede";
 import PoreAct from "./components/PoreAct";
-import { FIELD_SITES, SERVICES } from "./lib/content";
+import { FIELD_SITES, SOLUTIONS } from "./lib/content";
 
 /**
  * Home, seven acts, and the page's ground colour migrates from carbon black to
@@ -14,6 +14,13 @@ import { FIELD_SITES, SERVICES } from "./lib/content";
  * the sky and into the soil. Each <section> declares its palette via
  * data-ground / data-ink; GroundShift interpolates between them.
  */
+/* Management supplied two community photographs by message. Until the image
+   files are dropped into _source/photos/ and the build script is run, these
+   point at the closest existing frames so the section is complete and shipping.
+   Swapping is a one-line change per constant. */
+const COMMUNITY_WIDE = "transplanting-crew-wide" as const;
+const COMMUNITY_TRAINING = "production-bagging-crew" as const;
+
 export default function Home() {
   return (
     <>
@@ -281,11 +288,68 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Act VII. The migration lands: deep paddy green.
-           An earlier version flooded this whole section with the acid green.
-           At full-viewport scale that colour is punishing to read on and reads
-           as an unfinished placeholder, so the acid is now spent in one place
-           only: the CTA slab below, where it has maximum effect. ───────────── */}
+      {/* ── Act VII. The people who decide whether any of this happens twice.
+           Management supplied the community photography specifically for this,
+           and it is the only place on the site showing adoption at scale
+           rather than one farmer at a time. ─────────────────────────────────── */}
+      <section
+        className="act act--community"
+        data-ground="#131c0e"
+        data-ink="#e8eddd"
+        data-ink-dim="#8b9878"
+        data-rule="#26301d"
+      >
+        <div className="shell">
+          <p className="eyebrow act__eyebrow" data-reveal>
+            <span>06</span>
+            <span className="rule-dash" />
+            <span>Community</span>
+          </p>
+
+          <h2 className="act__title" data-reveal>
+            Adoption is not a sale.
+            <br />
+            <em>It is a village deciding.</em>
+          </h2>
+
+          <p className="measure-wide community__lede" data-reveal>
+            Biochar only works at scale if the people who farm the land choose
+            it, teach it to each other, and keep using it after the vehicles
+            leave. We build inclusive feedstock supply chains with farmers,
+            cooperatives, aggregators, processors, research institutions and
+            public agencies.
+          </p>
+        </div>
+
+        <div className="shell community__plates">
+          <figure className="community__wide">
+            <Photo
+              name={COMMUNITY_WIDE}
+              alt="A large gathering of community members at a Biochar Solutions Africa field demonstration"
+              sizes="(max-width: 900px) 100vw, 62vw"
+            />
+            <figcaption className="caption">
+              A demonstration draws the whole community, not a delegation.
+            </figcaption>
+          </figure>
+
+          <figure className="community__tall">
+            <Photo
+              name={COMMUNITY_TRAINING}
+              alt="Women preparing biomass by hand during a Biochar Solutions Africa training session"
+              sizes="(max-width: 900px) 100vw, 34vw"
+            />
+            <figcaption className="caption">
+              Technique transferred hand to hand, in the tools people already
+              own.
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      {/* ── Act VIII. Four integrated solutions, per management's document.
+           This replaces the old six-item service menu: those were tasks, these
+           are the business. ─────────────────────────────────────────────────── */}
       <section
         className="act act--services"
         data-ground="#141f0c"
@@ -295,17 +359,17 @@ export default function Home() {
       >
         <div className="shell">
           <p className="eyebrow act__eyebrow" data-reveal>
-            <span>06</span>
+            <span>07</span>
             <span className="rule-dash" />
             <span>What we do</span>
           </p>
 
           <h2 className="act__title services__title" data-reveal>
-            Six ways in.
+            Four ways in.
           </h2>
 
           <ul className="services">
-            {SERVICES.map((s, i) => (
+            {SOLUTIONS.map((s, i) => (
               <li
                 className="service"
                 key={s.n}

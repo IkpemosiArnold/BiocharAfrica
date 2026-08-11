@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import PageHead from "../components/PageHead";
 import ContactForm from "../components/ContactForm";
-import { COMPANY } from "../lib/content";
+import { COMPANY, PARTNER_AUDIENCES } from "../lib/content";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -22,7 +22,7 @@ export default function Contact() {
             <em>your soil.</em>
           </>
         }
-        lede="What you grow, roughly how much land, and what the soil has been doing lately. That is enough for a first useful conversation."
+        lede="Whether you farm, aggregate, process, regulate, research or finance. What you work with, roughly what scale, and what the soil has been doing lately is enough for a first useful conversation."
       />
 
       <section
@@ -73,7 +73,20 @@ export default function Contact() {
               </p>
             </div>
 
+            {/* Management's document names exactly who it wants to hear from.
+                Saying so up front qualifies the enquiry before it is written. */}
             <div className="contact__block" data-reveal data-reveal-delay="240">
+              <h2 className="eyebrow">
+                <span>We work with</span>
+              </h2>
+              <ul className="audiences">
+                {PARTNER_AUDIENCES.map((a) => (
+                  <li key={a}>{a}</li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="contact__block" data-reveal data-reveal-delay="320">
               <h2 className="eyebrow">
                 <span>Fields</span>
               </h2>

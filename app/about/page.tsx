@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import PageHead from "../components/PageHead";
 import Photo from "../components/Photo";
 import VideoPanel from "../components/VideoPanel";
-import { VALUES, COMPANY } from "../lib/content";
+import { VALUES, COMPANY, TEAM, OVERVIEW } from "../lib/content";
 
 export const metadata: Metadata = {
   title: "About",
@@ -25,6 +25,28 @@ export default function About() {
         }
         lede="Not in a laboratory and not in a policy paper. In flooded paddies in Niger State, alongside the people who will decide whether any of this is worth doing twice."
       />
+
+      <section
+        className="act band-tight"
+        data-ground="#131009"
+        data-ink="#ece7dd"
+        data-ink-dim="#8d857a"
+        data-rule="#2b261f"
+      >
+        <div className="shell">
+          <p className="overview measure-wide" data-reveal>
+            {OVERVIEW}
+          </p>
+          <p className="overview__sub measure-wide" data-reveal data-reveal-delay="110">
+            We deploy efficient, low-emission pyrolysis systems that convert
+            rice husks and straw, maize cobs and stalks and other responsibly
+            sourced residues into stable, carbon-rich products. The circular
+            model reduces open-field burning and uncontrolled decomposition
+            while improving soil productivity, strengthening agricultural
+            resilience and creating income across rural value chains.
+          </p>
+        </div>
+      </section>
 
       <section
         className="act"
@@ -130,6 +152,40 @@ export default function About() {
             place="Suntale, Niger State"
             className="about__training-clip"
           />
+        </div>
+      </section>
+
+      {/* The company's strongest credential and the old site's most buried
+          asset: a Wageningen soil-science PhD, and a founder who has actually
+          raised climate finance. */}
+      <section
+        className="act"
+        data-ground="#1b1712"
+        data-ink="#ece7dd"
+        data-ink-dim="#948b7e"
+        data-rule="#332c23"
+      >
+        <div className="shell">
+          <p className="eyebrow act__eyebrow" data-reveal>
+            <span>Leadership</span>
+          </p>
+          <h2 className="act__title" data-reveal>
+            Who is
+            <br />
+            <em>behind it.</em>
+          </h2>
+
+          <ul className="team">
+            {TEAM.map((m, i) => (
+              <li className="member" key={m.name} data-reveal data-reveal-delay={i * 110}>
+                <h3 className="member__name">{m.name}</h3>
+                <p className="member__role eyebrow">
+                  <span>{m.role}</span>
+                </p>
+                <p className="member__bio">{m.bio}</p>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 

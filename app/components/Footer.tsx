@@ -13,14 +13,12 @@ const COLUMNS = [
     ],
   },
   {
-    heading: "Services",
+    heading: "Solutions",
     links: [
-      { href: "/services#production", label: "Biochar Production" },
-      { href: "/services#application", label: "Biochar Application" },
-      { href: "/services#research", label: "Research & Development" },
-      { href: "/services#consulting", label: "Consulting" },
-      { href: "/services#briquettes", label: "Briquettes" },
-      { href: "/services#training", label: "Training & Education" },
+      { href: "/services#soil", label: "Biochar and Soil Products" },
+      { href: "/services#carbon", label: "Carbon Removal and Finance" },
+      { href: "/services#infrastructure", label: "Waste-to-Value" },
+      { href: "/services#community", label: "Farmer Partnerships" },
     ],
   },
 ];
@@ -37,11 +35,9 @@ export default function Footer() {
       <div className="shell">
         <div className="foot__top">
           <p className="foot__statement">
-            Carbon out of the sky,
+            Carbon solutions
             <br />
-            into Nigerian soil,
-            <br />
-            <em>for a thousand years.</em>
+            <em>rooted in African soil.</em>
           </p>
 
           <div className="foot__cols">

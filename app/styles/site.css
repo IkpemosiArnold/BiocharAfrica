@@ -1356,3 +1356,176 @@
   margin: 0;
   overflow-wrap: anywhere;
 }
+
+/* ==========================================================================
+   Content added from management's positioning document
+   ========================================================================== */
+
+.overview {
+  font-size: var(--text-xl);
+  line-height: 1.25;
+  text-wrap: pretty;
+}
+.overview__sub {
+  margin-block-start: 1.5rem;
+  color: color-mix(in oklch, var(--ink) 74%, transparent);
+}
+
+/* Leadership. Two people, so a grid of cards would look thin; hairline rows
+   carry it and match the values and claims lists elsewhere. */
+.team {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0;
+  border-block-start: 1px solid var(--rule);
+}
+.member {
+  display: grid;
+  gap: 0.55rem;
+  padding-block: clamp(1.75rem, 1.2rem + 2.5vw, 3rem);
+  border-block-end: 1px solid var(--rule);
+}
+.member__name {
+  font-size: var(--text-2xl);
+}
+.member__role {
+  color: var(--color-rice-500);
+}
+.member__bio {
+  color: color-mix(in oklch, var(--ink) 76%, transparent);
+  max-inline-size: 62ch;
+}
+
+@media (min-width: 56rem) {
+  .member {
+    grid-template-columns: 18rem 1fr;
+    column-gap: clamp(1.5rem, 1rem + 2vw, 3rem);
+    align-items: baseline;
+  }
+  .member__bio {
+    grid-column: 2;
+  }
+  .member__role {
+    grid-column: 1;
+  }
+}
+
+/* What each solution absorbs from the retired six-item service list. */
+.covers {
+  list-style: none;
+  margin: 1.25rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.covers li {
+  font-size: var(--text-eyebrow);
+  font-variation-settings: "wdth" 106;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  padding: 0.3rem 0.7rem;
+}
+
+.feedstocks {
+  list-style: none;
+  margin: clamp(1.5rem, 1rem + 2vw, 2.5rem) 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0;
+  border-block-start: 1px solid var(--rule);
+}
+.feedstocks li {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  font-size: var(--text-xl);
+  line-height: 1;
+  padding-block: clamp(0.9rem, 0.7rem + 1vw, 1.5rem);
+  border-block-end: 1px solid var(--rule);
+}
+.feedstocks__note {
+  margin-block-start: 1.25rem;
+  max-inline-size: 52ch;
+}
+
+/* The impact proposition. Numbered, because it is a list of commitments and
+   the numbering makes it countable rather than decorative. */
+.props {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0;
+  border-block-start: 1px solid var(--rule);
+}
+.props li {
+  display: grid;
+  grid-template-columns: 3.5rem 1fr;
+  gap: 0.5rem 1rem;
+  align-items: baseline;
+  padding-block: clamp(1rem, 0.8rem + 1.2vw, 1.6rem);
+  border-block-end: 1px solid var(--rule);
+  color: color-mix(in oklch, var(--ink) 84%, transparent);
+  font-size: var(--text-lg);
+  text-wrap: pretty;
+}
+.props__n {
+  font-family: var(--font-body);
+  font-size: var(--text-eyebrow);
+  font-variation-settings: "wdth" 112;
+  letter-spacing: 0.18em;
+  color: var(--color-rice-500);
+}
+
+/* Community. The wide gathering shot carries the section; the training frame
+   sits beside it lower, so the pair reads as a spread rather than a row. */
+.community__lede {
+  font-size: var(--text-lg);
+  color: color-mix(in oklch, var(--ink) 78%, transparent);
+}
+.community__plates {
+  margin-block-start: clamp(2.5rem, 1.5rem + 4vw, 5rem);
+  display: grid;
+  gap: clamp(1rem, 0.6rem + 1.6vw, 2rem);
+}
+.community__plates figure {
+  margin: 0;
+}
+.community__wide .photo {
+  aspect-ratio: 3 / 2;
+}
+.community__tall .photo {
+  aspect-ratio: 4 / 3;
+}
+
+@media (min-width: 56rem) {
+  .community__plates {
+    grid-template-columns: 1.7fr 1fr;
+    align-items: end;
+  }
+  .community__tall {
+    padding-block-end: clamp(1rem, 2vw, 2.5rem);
+  }
+}
+
+/* Who the document invites, as a qualifier beside the enquiry form. */
+.audiences {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.audiences li {
+  font-size: var(--text-xs);
+  color: var(--ink-dim);
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  padding: 0.3rem 0.7rem;
+}

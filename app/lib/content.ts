@@ -1,24 +1,37 @@
 /**
  * Site content.
  *
- * Every factual claim here traces to something the company already publishes
- * (its own site and letterhead) or to a property of biochar that is settled
- * science. Nothing is invented to sound impressive. The numbers an impact
- * section would normally carry, and which only the company can supply, are
+ * Sources, in order of authority:
+ *   1. docs/Document (14).docx, supplied by management. This is the current
+ *      positioning and supersedes the live site wherever they disagree. It
+ *      moves the company from "we sell biochar" to an integrated carbon-removal
+ *      and climate-finance proposition, which is a materially different pitch.
+ *   2. biocharsolutions.africa, for team credentials and contact details.
+ *   3. The company letterhead, for the address and phone numbers.
+ *
+ * Nothing is invented. The numbers an impact section would normally carry are
  * tracked in docs/DATA-NEEDED.md so they never ship inside the bundle.
  */
 
 export const COMPANY = {
   legalName: "Biochar Solutions Africa Ltd.",
   shortName: "Biochar Solutions Africa",
+  /* From the closing line of management's document. */
+  tagline: "Carbon solutions rooted in African soil.",
+  /* The document's own subtitle, and the clearest statement of the pitch. */
+  positioning:
+    "Regenerating African soils. Removing carbon. Creating rural prosperity.",
   address: "27 Ali Baba Crescent, Jabi, Abuja",
   country: "Nigeria",
-  // Taken from the company letterhead, which is more current than the old
-  // website's obviously-placeholder "+234 123 456 7890".
+  // Letterhead numbers; the live site lists the second of these.
   phones: ["+234 803 707 3300", "+234 908 242 1111"],
   emails: ["biocharsolutionsafrica@gmail.com", "info@bsafrica.com"],
   site: "www.biocharsolutions.africa",
 } as const;
+
+/** One-paragraph description, close to management's own wording. */
+export const OVERVIEW =
+  "An integrated climate-smart agriculture and carbon-removal enterprise, turning agricultural residues into high-quality biochar, regenerative soil products, renewable process energy and measurable climate value.";
 
 /** Real GPS stamps burned into the company's own field photography, 3 Aug 2026. */
 export const FIELD_SITES = [
@@ -54,43 +67,95 @@ export const FIELD_SITES = [
   },
 ] as const;
 
-export const SERVICES = [
+/**
+ * The four integrated solutions from management's document.
+ *
+ * These replace the six operational services the old site listed. The six were
+ * a menu of tasks; these are the business. The old items have not been thrown
+ * away, they map into these four, recorded in `covers` so that nothing which
+ * was previously advertised silently disappears.
+ */
+export const SOLUTIONS = [
   {
     n: "01",
-    title: "Biochar Production",
-    lede: "Premium-quality char from local biomass feedstock.",
-    body: "Rice husk, corn cob and wood residue: waste that would otherwise be burned in the open or left to rot. Pyrolysed under controlled low-oxygen conditions into a stable, carbon-rich amendment.",
+    slug: "soil",
+    title: "Agricultural Biochar and Soil Products",
+    lede: "Fit-for-purpose biochar and biochar-based soil amendments.",
+    body: "Designed to improve soil structure, water retention, nutrient-use efficiency, microbial activity and long-term soil health, particularly in the degraded, acidic, sandy and drought-prone soils that limit yield across much of the continent.",
+    covers: ["Biochar production", "Biochar application"],
   },
   {
     n: "02",
-    title: "Biochar Application",
-    lede: "Getting it into the ground, correctly.",
-    body: "Rate, timing and incorporation method decide whether biochar pays for itself in one season or three. We specify application for the crop and the soil in front of us, then work alongside the farmers who apply it.",
+    slug: "carbon",
+    title: "Carbon Removal and Climate Finance",
+    lede: "Carbon-removal projects that can be audited, not asserted.",
+    body: "Structured on feedstock traceability, lifecycle assessment, and digital monitoring, reporting and verification, aligned with recognised international carbon-crediting methodologies.",
+    covers: ["Carbon project structuring", "MRV", "Consulting"],
   },
   {
     n: "03",
-    title: "Research & Development",
-    lede: "Continuous trials on feedstock and process.",
-    body: "Pyrolysis temperature and residence time change what comes out of the kiln. We test feedstock combinations and process conditions against the soils and crops of the regions we serve.",
+    slug: "infrastructure",
+    title: "Waste-to-Value Infrastructure",
+    lede: "Decentralised and industrial-scale biomass conversion.",
+    body: "Productive alternatives to residue burning that reduce waste-management pressure and recover useful thermal energy and other valuable co-products, including clean-burning briquettes drawn from the same feedstock stream.",
+    covers: ["Pyrolysis systems", "Briquettes production", "Process energy"],
   },
   {
     n: "04",
-    title: "Consulting",
-    lede: "Systems, and the carbon that comes with them.",
-    body: "Designing biochar into an existing agricultural operation: feedstock logistics, production siting, application planning, and the measurement needed to make a carbon claim stand up.",
+    slug: "community",
+    title: "Farmer and Community Partnerships",
+    lede: "Inclusive feedstock supply chains, built with the people in them.",
+    body: "Work alongside farmers, cooperatives, aggregators, processors, research institutions and public agencies to run field demonstrations, transfer technique, and expand adoption of regenerative practice. Capacity that stays after we leave.",
+    covers: ["Training and education", "Field demonstration", "R&D trials"],
+  },
+] as const;
+
+/** Feedstocks management names explicitly. */
+export const FEEDSTOCKS = [
+  "Rice husks and straw",
+  "Maize cobs and stalks",
+  "Other responsibly sourced biomass residues",
+] as const;
+
+/** The impact proposition, verbatim in substance from the document. */
+export const IMPACT_POINTS = [
+  "Restore degraded soils and enhance agricultural productivity",
+  "Improve soil water retention and resilience to drought",
+  "Reduce residue burning, smoke pollution and greenhouse-gas emissions",
+  "Secure durable atmospheric carbon removal and storage",
+  "Create green employment and additional income for rural communities",
+  "Support climate-smart agriculture, circular economy and food security",
+  "Advance Africa's contribution to the Paris Agreement and the Sustainable Development Goals",
+] as const;
+
+/**
+ * Leadership, from the live site. This is the single strongest credibility
+ * asset the company has and the site was not showing it at all: a Wageningen
+ * soil-science PhD, and a founder who has actually raised climate finance.
+ */
+export const TEAM = [
+  {
+    name: "Al Amin Ibrahim",
+    role: "Founder and Chief Executive",
+    bio: "Doctoral researcher in Sustainable Development at the University of Abuja, with a background in finance, investment management and renewable energy, and direct experience securing climate financing.",
   },
   {
-    n: "05",
-    title: "Briquettes Production",
-    lede: "Cooking fuel from rice husk and char dust.",
-    body: "The same feedstock stream yields a clean-burning briquette: a direct alternative to felled-wood charcoal, and a second product line from a single supply chain.",
+    name: "Prof. Aisha Abdulkadir",
+    role: "Co-Founder and Chief Soil Scientist",
+    bio: "B.Agric and MSc in Soil Science from Ahmadu Bello University, Zaria, and a PhD from Wageningen University in the Netherlands. On the faculty of ABU's Department of Soil Science since 2002.",
   },
-  {
-    n: "06",
-    title: "Training & Education",
-    lede: "Capacity that stays after we leave.",
-    body: "Knowledge transfer for farmers, cooperatives and institutions: production technique, safe handling, application rates, and why the black material in the bowl is worth carrying into the field.",
-  },
+] as const;
+
+/** Who the document explicitly invites. Used as a qualifier on Contact. */
+export const PARTNER_AUDIENCES = [
+  "Farmers and cooperatives",
+  "Agro-processors and aggregators",
+  "Governments and public agencies",
+  "Research institutions",
+  "Development-finance organisations",
+  "Carbon-market participants",
+  "Technology providers",
+  "Impact investors",
 ] as const;
 
 export const VALUES = [

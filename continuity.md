@@ -3,90 +3,73 @@
 **Project:** BiocharAfrica
 **Session:** 34acf2db
 **Branch:** main
-**Context Usage:** 264.4% (528,835 / 200,000 tokens)
-**Timestamp:** 2026-08-10T21:39:03.272Z
+**Context Usage:** 304.0% (608,000 / 200,000 tokens)
+**Timestamp:** 2026-08-11T05:55:03.558Z
 **Working Directory:** /Users/mac/Documents/DevProjects/BiocharAfrica
 
 ## IMPORTANT: Resume from here
 
-Context window is at 264.4% capacity. Auto-compact will trigger soon.
+Context window is at 304.0% capacity. Auto-compact will trigger soon.
 This document was auto-generated. Continue from the tasks and conversation below.
 
 ## Active Tasks
 
-- [completed] Asset pipeline: graded video transcodes + responsive AVIF/WebP + LQIP
-- [completed] Design system + perf governor + scroll spine + ground migration
-- [completed] WebGL scene 1: volumetric biochar pore-structure hero
-- [completed] Swap display face off Instrument Serif; strip serif-italic emphasis
-- [completed] Remove every em dash from copy and comments
-- [completed] Contain acid green to a CTA slab; fix nav, footer, CTA contrast
-- [completed] Interior pages: about, services, impact, contact + form endpoint
-- [completed] Guarantee no internal notes are browser-reachable
-- [completed] Git cleaned, ignore files, committed and pushed to origin/main
-- [completed] Fix carbon core rendering black (vertexColors zeroing instanceColor)
-- [completed] Fix mobile scrim hiding the shader; on-screen ?debug=perf panel
-- [completed] Reduced motion renders a static scene instead of removing it
-- [completed] Art-direct the carbon core: stratigraphy, char seams, cylinders, masking
-- [pending] Contact form needs CONTACT_TO + a mail provider to deliver enquiries
+- [completed] Photograph-led welcome page using management's chosen image
+- [completed] Headline changed to plain commercial: Richer soil, every season
+- [completed] Move pore shader from hero to Act III where the copy explains it
+- [completed] Rebalance photography: 4 repeated frames → 10 distinct, 1 char-on-sand on home
+- [completed] Fix H1 invisible on Android: reveals now fail open, not closed
+- [completed] Fix capitals clipped by the line mask (no ascender headroom)
+- [completed] Fix hero grid row placement stranding the headline below the fold
+- [completed] Fix hydration mismatch from the pre-paint js class
+- [completed] Verify live deployment: all 5 routes, 100% reveals, no broken images
+- [pending] Contact form still needs CONTACT_TO + a mail provider to deliver enquiries
 
 
 ## Recent Conversation
 
-**ASSISTANT:** That's the answer, and it's unambiguous: **`reduced motion: true`, `webgl: Apple GPU`.** Your iPhone is fully capable — WebGL creates a context fine. It's the iOS **Reduce Motion** accessibility setting, and my code treats that as "render nothing."
+**ASSISTANT:** Layout bug: the photo is in row 1 but the text got pushed to row 2. Classic grid auto-placement — I placed the figure in column 2 first, so the cursor had already passed column 1 when the text came along:
 
-That's my logic being wrong, not your phone. `prefers-reduced-motion` means *"I'm sensitive to motion"* — vestibular triggers, motion sickness. It does not mean *"don't show me images."* I conflated the two and stripped the entire artwork when the correct response is to remove the **movement** and keep the picture.
+**ASSISTANT:** Two of those errors are my own test harness. The third is real and mine: **a hydration mismatch on `<html>`** — my pre-paint script adds the `js` class before React hydrates, so server and client classNames differ. That's the standard case for `suppressHydrationWarning`:
 
-This matters at scale: Reduce Motion is very commonly switched on by iPhone users, because it also kills the iOS parallax/zoom effects. So I was serving a blank hero to a large share of your mobile audience.
+**ASSISTANT:** Desktop hero works now. Let me answer your question with a test rather than a guess — I'll **break `IntersectionObserver` entirely** and see what disappears:
 
-The right fix is a stat
+**ASSISTANT:** With the observer fully dead: the H1 and lede now survive (that's the fix working). **But only 6 of 37 elements** — everything below the fold would still be blank on a device where the observer misbehaves. Still fail-closed. Let me make it detect a broken observer and bail out entirely:
 
-**ASSISTANT:** Now let me verify with reduced motion actually emulated, which is the exact condition on your phone:
+**ASSISTANT:** Good catch — that's real clipping, and it's my bug. `.line-mask` has `overflow: hidden`, and I added padding to protect **descenders** but not ascenders. With `line-height: 0.82`, the capitals overflow the top of the line box and get sliced:
 
-**ASSISTANT:** Exactly right: **tier FULL** (was STILL), canvas present, and frames byte-identical after 1.5s — the artwork renders, the motion doesn't. Let me look at it:
+**ASSISTANT:** Full round tops on the S and O now — the overshoot is no longer sliced. Let me verify mobile and the new Act III, then push:
 
-**ASSISTANT:** Structure renders on reduced-motion mobile. One flaw though — the panel reports `canvas on page: 0` when a canvas is clearly present; it reads the count before the canvas mounts. Since you're relying on this panel, it needs to be accurate:
+**ASSISTANT:** That's the welcome page management asked for. Let me run the browser-support audit you asked about, then ship it:
 
-**ASSISTANT:** Your debug panel gave the definitive answer, and it was my logic, not your phone.
+**ASSISTANT:** Will do. Committing and pushing now, then I'll verify the live deployment:
 
-**`reduced motion: true`, `webgl: Apple GPU`.** The iPhone could render it perfectly — `estimateTier()` returned `STILL` the instant it saw `prefers-reduced-motion`, before looking at any hardware.
+**ASSISTANT:** Pushed. Waiting for Vercel to pick it up:
 
-That was wrong. `prefers-reduced-motion` means *"I'm sensitive to motion"* — vestibular triggers, motion sickness. It doesn't mean *"don't show me images."* I treated one as the other and deleted the entire artwork. And it matters more on iOS than anywhere else: Reduce Motion is switched on by a large share of iPhone users **because it also disables the system parallax and zoom effects**, so I was serving a blank hero to a lot of perfectly capable phones — very likely including people at the management review.
+**ASSISTANT:** Live in 15s. Now verifying the deployed site properly:
 
-*
+**ASSISTANT:** Every route on the **live deployment**: 200, **100% of reveals fired** (37/37 on home, nothing left hidden), zero broken images, both WebGL scenes mounting. Final visual check of the live site:
 
-**ASSISTANT:** Good. Let me diagnose what's actually wrong with it before rewriting, because there are two distinct problems.
+**ASSISTANT:** Two real issues on the live Act III:
 
-**ASSISTANT:** Confirmed — two distinct problems, and one is a plain bug:
+1. **The copy is now wrong.** "What you flew through at the top of this page" — the shader is no longer at the top; it's directly behind that sentence. I broke that when I moved it.
+2. The mobile veil is so heavy the structure is barely visible.
 
-**1. The gradient clips.** Line 89: `Math.pow(t * 2.2, 0.75)` saturates at `t = 0.45`, so **the bottom 55% of the core is exactly one colour** (`#4a4038`), varied only by random lightness. That's the uniform brown.
+**ASSISTANT:** My verification was wrong, not necessarily the deploy. `PoreLede` is a client component that renders the *neutral* sentence on the server — the tier-aware line only appears after hydration, so it will never be in the raw HTML. Checking the actual bundles instead:
 
-**2. The silhouette and the interior are inverted.** Width varies randomly per band *and* colour varies — so the edge is ragged and the inside is flat. Good art direction is the opposite: clean silhouette, rich interior.
+**ASSISTANT:** The CSS proves the deploy **is** live — `pore__veil` already carries the new `0.5` opacity. My polling loop was just grepping for a post-hydration string. Confirming in a real browser:
 
-Rewriting it as an actual soil profile, where the black bands are the biochar:
+**ASSISTANT:** Deployed and verified live at **biochar-africa.vercel.app**.
 
-**ASSISTANT:** Now the form itself — a stack of boxes doesn't read as a core sample, and looking at it dead-on gives no dimensionality:
+## Verified on the deployment, not locally
 
-**ASSISTANT:** Let me look at it:
+All five routes: **200**, **100% of reveals fired** (37/37 on home, 16/16, 22/22, 17/17, 7/7 — nothing left hidden after a full scroll), **zero broken images**, both WebGL scenes mounting.
 
-**ASSISTANT:** Now it reads as a genuine core — cylindrical, with the laterite century ring clearly marked. Three things still off: it's too wide and dominates, the horizons are too low-frequency so it reads as a soft gradient rather than strata, and the ends are visible instead of running past the frame.
+## Why the headline vanished on his phone
 
-**ASSISTANT:** Real stratigraphy now — pale ash, a black char seam, the laterite century ring, ochre below. But the column still cuts off hard at ~550px. That's not the core ending; it's the **section boundary** clipping the canvas. Fixing that so it reads as endless:
+The `IntersectionObserver` never delivered an entry for it, so the masked lines stayed translated out of view. But the trigger matters less than this: **the design failed closed.** The CSS hid the text and relied on JavaScript to bring it back, so any hiccup in that path deleted the most important sentence on the site. Three changes so it can't recur:
 
-**ASSISTANT:** Fading properly at the edges now, and the strata read: dark char seam, laterite century ring, pale ash, warm ochre. Let me check it doesn't break on mobile, where the core sits off-centre at x=3.4:
-
-**ASSISTANT:** On mobile the core is pushed almost entirely off the right edge — the `x: 3.4` offset that works on desktop doesn't on a 390px viewport. Making it responsive:
-
-**ASSISTANT:** Mobile now sits the core behind the copy at reduced opacity with the century ring reading through, and the text stays legible. Committing and pushing:
-
-**ASSISTANT:** Done and pushed. The carbon core is now a soil profile rather than a dark column.
-
-**Two problems, and one was a plain bug I'd missed.** The colour ramp `lerp(deep, pow(t * 2.2, 0.75))` reaches 1 at `t = 0.45`, so the bottom **55% of the core was literally a single colour**, varied only by random lightness. That was the "uniform brown" — not a taste issue, a clipped function. Horizons are now chosen by layered value noise, so there's readable structure at every depth you scroll past.
-
-The second was compositional: width was jittered per band *and* colour was jittered, giving a ragged edge around a flat middle. That's backwards. Constant radius now, with only century markers protruding — **clean silhouette, rich interior**.
-
-Then the art direction proper:
-
-- **Discs, not cuboids.** A core s
+- Hidden states are now scoped to a `.js` class set by an inline script **before first paint** — no script
 
 ---
-*Auto-generated at 264.4% context usage by context-threshold-tracker*
+*Auto-generated at 304.0% context usage by context-threshold-tracker*

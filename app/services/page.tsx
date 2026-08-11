@@ -2,34 +2,33 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import PageHead from "../components/PageHead";
 import Photo from "../components/Photo";
-import { SERVICES } from "../lib/content";
+import { SOLUTIONS, FEEDSTOCKS } from "../lib/content";
 
 export const metadata: Metadata = {
-  title: "Services",
+  title: "Solutions",
   description:
-    "Biochar production, application, R&D, consulting, briquettes and training, from feedstock to field across Nigeria.",
+    "Agricultural biochar and soil products, carbon removal and climate finance, waste-to-value infrastructure, and farmer and community partnerships.",
 };
 
-const ANCHORS = [
-  "production",
-  "application",
-  "research",
-  "consulting",
-  "briquettes",
-  "training",
-];
-
-/* One distinct frame per service, so the page is carried by the work rather
-   than by six identically-sized cards, and deliberately only two from the
-   char-on-sand production set. An earlier version leaned on those repeatedly,
-   which made the site look like it had four photographs. */
+/* One distinct frame per solution, so the page is carried by the work rather
+   than by four identically-sized cards. */
 const PLATES = [
-  { name: "production-char-drying-rake", alt: "Biochar raked out to dry at the production site" },
-  { name: "application-teal-bowl-paddy", alt: "A farmer broadcasting biochar into standing rice" },
-  { name: "strawhat-portrait-char", alt: "A farmer in a wide straw hat holding a bowl of biochar in a green field" },
-  { name: "paddy-tilling-wide", alt: "A prepared paddy being worked before planting" },
-  { name: "production-sacks-stored", alt: "Sacks of finished biochar in storage" },
-  { name: "transplanting-crew-wide", alt: "A crew transplanting rice into treated beds" },
+  {
+    name: "application-teal-bowl-paddy",
+    alt: "A farmer broadcasting biochar into standing rice",
+  },
+  {
+    name: "production-char-drying-rake",
+    alt: "Biochar raked out to dry and cool at the production site",
+  },
+  {
+    name: "production-sacks-stored",
+    alt: "Sacks of finished biochar in storage before distribution",
+  },
+  {
+    name: "transplanting-crew-wide",
+    alt: "A crew transplanting rice seedlings into treated beds",
+  },
 ] as const;
 
 export default function Services() {
@@ -37,23 +36,23 @@ export default function Services() {
     <>
       <PageHead
         index="02"
-        label="Services"
+        label="Solutions"
         title={
           <>
-            From feedstock
+            From agricultural residues
             <br />
-            <em>to field.</em>
+            <em>to regenerative value.</em>
           </>
         }
-        lede="Six services that connect into one supply chain: waste biomass in at one end, carbon in the ground and a better harvest out at the other."
+        lede="Four integrated solutions connecting agriculture, industrial innovation and climate finance. Waste biomass in at one end; better soil, carbon locked in the ground and verifiable climate value out at the other."
       />
 
-      {SERVICES.map((s, i) => (
+      {SOLUTIONS.map((s, i) => (
         <section
           key={s.n}
-          id={ANCHORS[i]}
+          id={s.slug}
           className="act service-deep"
-          /* Alternating grounds so six sections do not read as one long slab. */
+          /* Alternating grounds so four sections do not read as one long slab. */
           data-ground={i % 2 === 0 ? "#16130f" : "#1b1712"}
           data-ink="#ece7dd"
           data-ink-dim="#948b7e"
@@ -72,6 +71,13 @@ export default function Services() {
               <p className="measure" data-reveal data-reveal-delay="90">
                 {s.body}
               </p>
+              {/* What each solution absorbs from the old six-item service list,
+                  so a returning visitor can still find what they came for. */}
+              <ul className="covers" data-reveal data-reveal-delay="150">
+                {s.covers.map((c) => (
+                  <li key={c}>{c}</li>
+                ))}
+              </ul>
             </div>
             <Photo
               name={PLATES[i].name}
@@ -83,6 +89,34 @@ export default function Services() {
           </div>
         </section>
       ))}
+
+      <section
+        className="act band-tight"
+        data-ground="#ece7dd"
+        data-ink="#16130f"
+        data-ink-dim="#6b6355"
+        data-rule="#cfc7b8"
+      >
+        <div className="shell">
+          <p className="eyebrow act__eyebrow" data-reveal>
+            <span>Feedstock</span>
+          </p>
+          <h2 className="act__title" data-reveal>
+            What goes in.
+          </h2>
+          <ul className="feedstocks">
+            {FEEDSTOCKS.map((f, i) => (
+              <li key={f} data-reveal data-reveal-delay={i * 80}>
+                {f}
+              </li>
+            ))}
+          </ul>
+          <p className="caption feedstocks__note" data-reveal>
+            Residues that would otherwise be burned in the open field or left to
+            decompose, returning their carbon to the atmosphere within a season.
+          </p>
+        </div>
+      </section>
 
       <section
         className="act"
