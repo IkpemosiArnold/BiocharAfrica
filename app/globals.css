@@ -184,12 +184,17 @@ h1 em,
 h2 em,
 h3 em,
 .foot__statement em,
-.cta__title em,
 .display-em {
   font-style: normal;
   font-weight: 400;
   color: var(--color-rice-500);
 }
+
+/* Deliberately NOT in the list above. The CTA sits on the acid green slab, so
+   rice-500 emphasis there is the same colour as its own background and the
+   emphasised line disappears completely. globals.css imports site.css at the
+   top, so a rule here would have overridden the dark colour set alongside the
+   slab. It is defined once, next to the slab, in site.css. */
 
 h1 {
   font-size: var(--text-4xl);

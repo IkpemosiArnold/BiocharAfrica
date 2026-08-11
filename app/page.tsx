@@ -14,12 +14,11 @@ import { FIELD_SITES, SOLUTIONS } from "./lib/content";
  * the sky and into the soil. Each <section> declares its palette via
  * data-ground / data-ink; GroundShift interpolates between them.
  */
-/* Management supplied two community photographs by message. Until the image
-   files are dropped into _source/photos/ and the build script is run, these
-   point at the closest existing frames so the section is complete and shipping.
-   Swapping is a one-line change per constant. */
-const COMMUNITY_WIDE = "transplanting-crew-wide" as const;
-const COMMUNITY_TRAINING = "production-bagging-crew" as const;
+/* The two community photographs management supplied. At 1280x854 they are the
+   highest-resolution images on the site, and the only ones showing adoption at
+   the scale of a whole community rather than one farmer. */
+const COMMUNITY_WIDE = "community-gathering-wide" as const;
+const COMMUNITY_TRAINING = "community-women-training" as const;
 
 export default function Home() {
   return (
@@ -325,7 +324,7 @@ export default function Home() {
           <figure className="community__wide">
             <Photo
               name={COMMUNITY_WIDE}
-              alt="A large gathering of community members at a Biochar Solutions Africa field demonstration"
+              alt="Several hundred community members, mostly women, gathered around a Biochar Solutions Africa field demonstration"
               sizes="(max-width: 900px) 100vw, 62vw"
             />
             <figcaption className="caption">
@@ -336,11 +335,11 @@ export default function Home() {
           <figure className="community__tall">
             <Photo
               name={COMMUNITY_TRAINING}
-              alt="Women preparing biomass by hand during a Biochar Solutions Africa training session"
+              alt="Women pounding biomass with mortar and pestle during a Biochar Solutions Africa training session"
               sizes="(max-width: 900px) 100vw, 34vw"
             />
             <figcaption className="caption">
-              Technique transferred hand to hand, in the tools people already
+              Technique transferred hand to hand, using tools people already
               own.
             </figcaption>
           </figure>
@@ -386,9 +385,9 @@ export default function Home() {
 
           <div className="cta" data-reveal>
             <h2 className="cta__title">
-              Tell us about
+              Tell us what
               <br />
-              <em>your soil.</em>
+              <em>you are working with.</em>
             </h2>
             <div className="cta__actions">
               <Link href="/contact" className="btn btn--solid">

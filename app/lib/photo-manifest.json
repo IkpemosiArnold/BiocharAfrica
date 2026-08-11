@@ -223,6 +223,79 @@
     "provenance": false,
     "lqip": "data:image/webp;base64,UklGRn4AAABXRUJQVlA4IHIAAACwBACdASoUABsAPxGAt1WsJ6UjKAgBgCIJaAC/WNBBOip3rKMDGwcIo+8W+XbUAP6M744T1F9Mhbr2CswogxGvyEvVofNNf0CcX32XrDwRAqsXozlUmbTHQtMOBOpW73YqMyaussbqGWxf3C+/sSAAAAA="
   },
+  "team-aisha-abdulkadir": {
+    "width": 720,
+    "height": 720,
+    "aspect": 1,
+    "widths": [
+      400,
+      640,
+      720
+    ],
+    "provenance": false,
+    "lqip": "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAACwBACdASoUABQAPxF8slGsKCSisBgIAYAiCWQAuwAPSQClUB25e/ol/UU2z/YAAP7tYQJiKLjrDoSReMOfVG8Qis68SuC9MKS6HAR65eE2Feca/vEn6rHmdqqOSABfs2AAAA=="
+  },
+  "team-akanimo-odon": {
+    "width": 1024,
+    "height": 1280,
+    "aspect": 0.8,
+    "widths": [
+      400,
+      640,
+      960,
+      1024
+    ],
+    "provenance": false,
+    "lqip": "data:image/webp;base64,UklGRnAAAABXRUJQVlA4IGQAAADQBACdASoUABkAPxF0s1MsJiSisBgIAYAiCWMAx+QPDJTaGVK5nbthcvsoEJc9QAD+8N+vk+z0uQxwQc8FmDmU3dm/Bxudi0PEgJAba4Y8FH9ngil8CU2Bo2D+edeE1OR/IIAA"
+  },
+  "team-al-amin-ibrahim": {
+    "width": 805,
+    "height": 1024,
+    "aspect": 0.7861,
+    "widths": [
+      400,
+      640,
+      805
+    ],
+    "provenance": false,
+    "lqip": "data:image/webp;base64,UklGRn4AAABXRUJQVlA4IHIAAADwBACdASoUABoAPxF+tlWsJ6SjKAgBgCIJYwCdABE2Ucc99eK/gOoHnBPRjP8B6OAA/q7DmLHNkI3/fQ24Je4nipdPIl8tyvfPfDMmDNaLIMAbyLn56LSc7G0rXZOIQZ5Z4PblbqBDDMtALU4Li8VCgAA="
+  },
+  "team-ibrahim-yarima": {
+    "width": 768,
+    "height": 1024,
+    "aspect": 0.75,
+    "widths": [
+      400,
+      640,
+      768
+    ],
+    "provenance": false,
+    "lqip": "data:image/webp;base64,UklGRnAAAABXRUJQVlA4IGQAAADQBACdASoUABsAPxF8slGsKCSisBgIAYAiCUAWI+0YNUD7bIiLcTRx6Yj0Q0WhPgD+0ye2eyBMgH4zB/+bbmmz/ZUQou8mZ+JyfNRndYhEBSp+gD0viOJCk2q4g/2NJjzaVwAA"
+  },
+  "team-muhammad-musa": {
+    "width": 946,
+    "height": 1280,
+    "aspect": 0.7391,
+    "widths": [
+      400,
+      640,
+      946
+    ],
+    "provenance": false,
+    "lqip": "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAADwBACdASoUABsAPxFwtFKsJaUisBgIAYAiCWMAuwAPSP8sSPbiUCjdft0F5tzUbwAA/u1hFg06aitQTWpDfLRqziLz+/7RHU8dHlFe+99RxOUtYp5Nejs9MpcSBN7GnSqZQhXBajwAAA=="
+  },
+  "team-usman-aliyu": {
+    "width": 724,
+    "height": 1080,
+    "aspect": 0.6704,
+    "widths": [
+      400,
+      640,
+      724
+    ],
+    "provenance": false,
+    "lqip": "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAACQBACdASoUAB4APwFkq1ArJSQit/qoAWAgCUAWHYQ8ChUBYPdyGuW5UuLTgAAA/tMsDZMWfKUXS9+ct0d9kML2UVgxO/Nz68w99uSmBT/neU3UAAA="
+  },
   "transplanting-crew-wide": {
     "width": 1020,
     "height": 768,
@@ -235,5 +308,31 @@
     ],
     "provenance": false,
     "lqip": "data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAABQAwCdASoUAA8APxFysVAsJqSisAgBgCIJZQC7AAMxjBW7YAD8bnlTirfQqqcxeb8TIkx62xLB9sDhewtgAAAA"
+  },
+  "community-gathering-wide": {
+    "width": 1280,
+    "height": 854,
+    "aspect": 1.4988,
+    "widths": [
+      400,
+      640,
+      960,
+      1280
+    ],
+    "provenance": false,
+    "lqip": "data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAACQAwCdASoUAA0APxF2slEsJySisAgBgCIJQBXDhDrq50Wlh9oAAP7qcQ7icMPKWpnTgBdAqHSi0kHJ60gQTqjJpNuwwz1p9uGwAA=="
+  },
+  "community-women-training": {
+    "width": 1280,
+    "height": 854,
+    "aspect": 1.4988,
+    "widths": [
+      400,
+      640,
+      960,
+      1280
+    ],
+    "provenance": false,
+    "lqip": "data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAACQAwCdASoUAA0APxFysFAsJqSisAgBgCIJZgCdACHMuSpfTZdmAP7I39uve9HpD5Lied25L8Q2OU5dCc1csZv/whsoQt7cfzOM/yoA"
   }
 }

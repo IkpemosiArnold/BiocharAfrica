@@ -177,12 +177,21 @@ export default function About() {
 
           <ul className="team">
             {TEAM.map((m, i) => (
-              <li className="member" key={m.name} data-reveal data-reveal-delay={i * 110}>
-                <h3 className="member__name">{m.name}</h3>
-                <p className="member__role eyebrow">
-                  <span>{m.role}</span>
-                </p>
-                <p className="member__bio">{m.bio}</p>
+              <li className="member" key={m.name} data-reveal data-reveal-delay={i * 90}>
+                <Photo
+                  name={m.photo}
+                  alt={`${m.name}, ${m.role} at Biochar Solutions Africa`}
+                  sizes="(max-width: 56rem) 40vw, 15rem"
+                  className="member__portrait"
+                  ratio="1 / 1"
+                />
+                <div className="member__text">
+                  <h3 className="member__name">{m.name}</h3>
+                  <p className="member__role eyebrow">
+                    <span>{m.role}</span>
+                  </p>
+                  <p className="member__bio">{m.bio}</p>
+                </div>
               </li>
             ))}
           </ul>

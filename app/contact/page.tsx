@@ -17,9 +17,9 @@ export default function Contact() {
         label="Contact"
         title={
           <>
-            Tell us about
+            Tell us what
             <br />
-            <em>your soil.</em>
+            <em>you are working with.</em>
           </>
         }
         lede="Whether you farm, aggregate, process, regulate, research or finance. What you work with, roughly what scale, and what the soil has been doing lately is enough for a first useful conversation."

@@ -10,7 +10,7 @@
  * KEPT: they are verifiable provenance for the field-log section, not a defect.
  */
 import sharp from "sharp";
-import { readdir, mkdir, writeFile } from "node:fs/promises";
+import { readdir, mkdir, writeFile, stat } from "node:fs/promises";
 import path from "node:path";
 
 const SRC = "_source/photos";
@@ -33,11 +33,41 @@ const PROVENANCE = new Set([
 await mkdir(OUT, { recursive: true });
 
 const files = (await readdir(SRC)).filter((f) => /\.jpe?g$/i.test(f));
-const manifest = {};
+
+/* Reuse the previous manifest so unchanged photos keep their entry without
+   being re-encoded. AVIF at effort 6 costs several seconds per size, so a full
+   rebuild of the whole set runs for many minutes and a single new photograph
+   should not pay for all of them. Pass --force to rebuild everything. */
+const FORCE = process.argv.includes("--force");
+let manifest = {};
+try {
+  manifest = JSON.parse(
+    await (await import("node:fs/promises")).readFile("app/lib/photo-manifest.json", "utf8")
+  );
+} catch {
+  manifest = {};
+}
+
+const isFresh = async (slug, srcFile) => {
+  if (FORCE || !manifest[slug]) return false;
+  try {
+    const src = await stat(path.join(SRC, srcFile));
+    const largest = manifest[slug].widths[manifest[slug].widths.length - 1];
+    const out = await stat(path.join(OUT, `${slug}-${largest}.avif`));
+    return out.mtimeMs >= src.mtimeMs;
+  } catch {
+    return false;
+  }
+};
 
 for (const file of files) {
   const slug = path.basename(file, path.extname(file)).replace(/^_wm-/, "");
   const rawKey = path.basename(file, path.extname(file));
+
+  if (await isFresh(slug, file)) {
+    console.log(`  ${slug.padEnd(32)} unchanged, skipped`);
+    continue;
+  }
 
   let pipeline = sharp(path.join(SRC, file)).rotate();
   const meta = await pipeline.metadata();

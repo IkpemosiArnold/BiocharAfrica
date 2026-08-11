@@ -128,9 +128,9 @@ export default function Services() {
         <div className="shell">
           <div className="cta" data-reveal>
             <h2 className="cta__title">
-              Tell us about
+              Tell us what
               <br />
-              <em>your soil.</em>
+              <em>you are working with.</em>
             </h2>
             <div className="cta__actions">
               <Link href="/contact" className="btn btn--solid">
