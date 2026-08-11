@@ -109,6 +109,13 @@ html {
   scroll-behavior: auto; /* Lenis owns scrolling */
 }
 
+html {
+  /* Belt and braces against sideways scroll. body already clips, but a child
+     that overflows the body box can still make the document scrollable, and a
+     horizontal scrollbar on a marketing site reads as broken on every device. */
+  overflow-x: clip;
+}
+
 body {
   margin: 0;
   background: var(--ground);

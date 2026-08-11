@@ -1089,6 +1089,13 @@
   grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
   gap: clamp(1.75rem, 1rem + 3vw, 3rem);
 }
+/* Grid and flex children default to min-content width, which for a track
+   holding "biocharsolutionsafrica@gmail.com" is the whole unbroken string. That
+   pushed the last footer column past the viewport and gave the entire page a
+   horizontal scrollbar. */
+.foot__cols > * {
+  min-inline-size: 0;
+}
 .foot__heading {
   margin-block-end: 1rem;
 }
@@ -1115,6 +1122,8 @@
   color: var(--ink-dim);
   display: grid;
   gap: 0.2rem;
+  /* Email addresses have no break opportunities of their own. */
+  overflow-wrap: anywhere;
 }
 .foot__address a {
   display: block;
