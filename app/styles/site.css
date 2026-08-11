@@ -264,6 +264,11 @@
 .hero__slide.is-active {
   opacity: 1;
 }
+/* Reduced motion keeps the dissolve but stretches it, so the change is closer
+   to a light shift than an event. Still pure opacity: no transform anywhere. */
+.hero__slide.is-gentle {
+  transition-duration: 2.6s;
+}
 .hero__media .photo {
   block-size: 100%;
   inline-size: 100%;
@@ -452,31 +457,46 @@
   padding-block: clamp(5rem, 3rem + 9vw, 12rem);
 }
 
+/* Grid placement belongs to the 12-column layout only. These classes are also
+   used inside plain blocks and inside other small grids, and an unscoped
+   `grid-column: 1 / -1` made the heading span every column of whatever grid it
+   happened to land in. That is what stacked the Partner section: the title took
+   both tracks and pushed the body onto a second row. */
 .act__eyebrow {
-  grid-column: 1 / -1;
   margin-block-end: clamp(2rem, 1.2rem + 3vw, 4rem);
+}
+.grid12 > .act__eyebrow {
+  grid-column: 1 / -1;
 }
 
 .act__title {
-  grid-column: 1 / -1;
   font-size: var(--text-3xl);
   margin-block-end: clamp(1.75rem, 1rem + 3vw, 3rem);
 }
-.act__body {
+.grid12 > .act__title {
   grid-column: 1 / -1;
+}
+.act__body {
   display: grid;
   gap: 1.15rem;
   max-inline-size: 46ch;
   color: color-mix(in oklch, var(--ink) 76%, transparent);
 }
+.grid12 > .act__body {
+  grid-column: 1 / -1;
+}
 
 @media (min-width: 62rem) {
   /* Asymmetric: the headline holds the left seven columns, body sits right and
-     drops below its cap-height, an editorial offset, not a two-column split. */
-  .act__title {
+     drops below its cap-height, an editorial offset, not a two-column split.
+     Scoped as a DIRECT CHILD of .grid12. Unscoped, these span-7 placements
+     leaked into every other grid containing an .act__title and silently forced
+     seven implicit columns, which is what stacked the Partner section instead
+     of setting it in two. */
+  .grid12 > .act__title {
     grid-column: 1 / 8;
   }
-  .act__body {
+  .grid12 > .act__body {
     grid-column: 8 / -1;
     padding-block-start: 0.75rem;
   }
@@ -1670,4 +1690,34 @@
   border: 1px solid var(--rule);
   border-radius: 999px;
   padding: 0.3rem 0.7rem;
+}
+
+/* The document's closing invitation. */
+.partner {
+  display: grid;
+  gap: clamp(1.5rem, 1rem + 2.5vw, 3rem);
+  margin-block: clamp(3rem, 2rem + 5vw, 6rem);
+  padding-block-start: clamp(2rem, 1.5rem + 3vw, 3.5rem);
+  border-block-start: 1px solid var(--rule);
+}
+.partner__body {
+  display: grid;
+  gap: 1.5rem;
+  color: color-mix(in oklch, var(--ink) 78%, transparent);
+  font-size: var(--text-lg);
+}
+
+/* The closing line is a full sentence, not a two-word slogan, so it needs a
+   smaller setting than the other CTA titles or it runs to five lines. */
+.act--partner .cta__title {
+  font-size: clamp(1.75rem, 0.9rem + 3.2vw, 3.4rem);
+  max-inline-size: 20ch;
+}
+
+@media (min-width: 62rem) {
+  .partner {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+    align-items: start;
+    column-gap: clamp(2rem, 4vw, 5rem);
+  }
 }

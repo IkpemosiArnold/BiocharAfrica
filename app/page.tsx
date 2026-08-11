@@ -6,7 +6,16 @@ import Photo from "./components/Photo";
 import VideoPanel from "./components/VideoPanel";
 import PoreLede from "./components/PoreLede";
 import PoreAct from "./components/PoreAct";
-import { FIELD_SITES, SOLUTIONS, OVERVIEW } from "./lib/content";
+import {
+  FIELD_SITES,
+  SOLUTIONS,
+  OVERVIEW,
+  IMPACT_POINTS,
+  REGENERATIVE_VALUE,
+  PARTNER_INVITE,
+  PARTNER_AUDIENCES,
+  CLOSING_LINE,
+} from "./lib/content";
 
 /**
  * Home, seven acts, and the page's ground colour migrates from carbon black to
@@ -408,11 +417,13 @@ export default function Home() {
           <p className="eyebrow act__eyebrow" data-reveal>
             <span>08</span>
             <span className="rule-dash" />
-            <span>What we do</span>
+            <span>Our integrated solutions</span>
           </p>
 
           <h2 className="act__title services__title" data-reveal>
-            Four ways in.
+            Our integrated
+            <br />
+            <em>solutions.</em>
           </h2>
 
           <ul className="services">
@@ -431,12 +442,81 @@ export default function Home() {
             ))}
           </ul>
 
-          <div className="cta" data-reveal>
-            <h2 className="cta__title">
-              Tell us what
+        </div>
+      </section>
+
+      {/* ── Act IX. The impact proposition, in management's own words and under
+           their own heading. ────────────────────────────────────────────────── */}
+      <section
+        className="act act--props"
+        data-ground="#101a0e"
+        data-ink="#e8eddd"
+        data-ink-dim="#828d76"
+        data-rule="#25301f"
+      >
+        <div className="shell">
+          <p className="eyebrow act__eyebrow" data-reveal>
+            <span>09</span>
+            <span className="rule-dash" />
+            <span>Our impact proposition</span>
+          </p>
+
+          <h2 className="act__title" data-reveal>
+            What this
+            <br />
+            <em>is for.</em>
+          </h2>
+
+          <ol className="props">
+            {IMPACT_POINTS.map((pt, i) => (
+              <li key={pt} data-reveal data-reveal-delay={i * 55}>
+                <span className="props__n tabular">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span>{pt}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      {/* ── Act X. The document's closing argument and its invitation. ─────── */}
+      <section
+        className="act act--partner"
+        data-ground="#141f0c"
+        data-ink="#e9f0dc"
+        data-ink-dim="#8a9b73"
+        data-rule="#2b3a1d"
+      >
+        <div className="shell">
+          <p className="eyebrow act__eyebrow" data-reveal>
+            <span>10</span>
+            <span className="rule-dash" />
+            <span>From residues to regenerative value</span>
+          </p>
+
+          <p className="overview measure-wide" data-reveal>
+            {REGENERATIVE_VALUE}
+          </p>
+
+          <div className="partner">
+            <h2 className="act__title" data-reveal>
+              Partner
               <br />
-              <em>you are working with.</em>
+              <em>with us.</em>
             </h2>
+            <div className="partner__body">
+              <p data-reveal>{PARTNER_INVITE}</p>
+              <ul className="audiences" data-reveal data-reveal-delay="100">
+                {PARTNER_AUDIENCES.map((a) => (
+                  <li key={a}>{a}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <div className="cta" data-reveal>
+            <h2 className="cta__title">{CLOSING_LINE}</h2>
             <div className="cta__actions">
               <Link href="/contact" className="btn btn--solid">
                 Start a conversation

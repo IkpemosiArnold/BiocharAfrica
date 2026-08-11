@@ -302,6 +302,15 @@ p {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+
+  /* Exempt: the hero cross-dissolve. The blanket reset above would collapse it
+     to a hard cut between photographs, which is a far more jarring thing to put
+     in front of a motion-sensitive visitor than a slow fade. This is opacity
+     only, with no transform on any axis, so it carries no vestibular risk. */
+  .hero__slide {
+    transition-duration: 2.6s !important;
+  }
+
   .grain {
     opacity: 0.08;
   }

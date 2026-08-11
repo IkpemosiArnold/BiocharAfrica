@@ -178,6 +178,20 @@ export const TEAM = [
   },
 ] as const;
 
+/**
+ * The document's own closing sections, kept close to its wording. Management
+ * asked for their write-up to be used obviously, so these carry their headings
+ * rather than paraphrases of them.
+ */
+export const REGENERATIVE_VALUE =
+  "Biochar Solutions Africa connects agriculture, industrial innovation and climate finance through a balanced multi-product business model. Our ambition is to establish a trusted African platform for technically sound biochar production, commercially viable soil solutions and high-integrity carbon removal, beginning in Nigeria and expanding across the continent.";
+
+export const PARTNER_INVITE =
+  "We welcome collaboration with farmers, agro-processors, governments, research institutions, development-finance organisations, carbon-market participants, technology providers and impact investors.";
+
+export const CLOSING_LINE =
+  "Let us transform Africa's agricultural residues into healthier soils, stronger communities and permanent climate value.";
+
 /** Who the document explicitly invites. Used as a qualifier on Contact. */
 export const PARTNER_AUDIENCES = [
   "Farmers and cooperatives",

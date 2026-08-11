@@ -13,9 +13,21 @@ import { prefersReducedMotion } from "../lib/perf";
  * first paint. LCP is decided by frame one, and nothing else is allowed to
  * compete with it.
  *
- * Under prefers-reduced-motion the rotation does not run at all. A background
- * that changes on its own is exactly the sort of unrequested movement that
- * setting exists to stop, so those visitors get a single still frame.
+ * On prefers-reduced-motion the rotation KEEPS RUNNING, deliberately, but
+ * slower. That setting exists for vestibular triggers, and those are caused by
+ * movement: parallax, translation, scaling, rotation, anything that implies the
+ * viewport is travelling. This transition has none. It is a pure opacity
+ * cross-dissolve with no transform on any axis, which is the standard
+ * low-risk case and is what makes it safe to keep.
+ *
+ * An earlier version stopped it entirely and that was over-cautious: it removed
+ * the design's centrepiece from a large share of visitors, since Reduce Motion
+ * is switched on widely on iOS, for a movement risk this animation does not
+ * carry. What the setting does still change here: the dissolve is slower, and
+ * it never scales or pans.
+ *
+ * Auto-advancing content also has to be controllable (WCAG 2.2.2), so taking
+ * hold of the dots stops the automatic rotation for the rest of the visit.
  */
 const SLIDES = [
   {
@@ -39,30 +51,34 @@ const SLIDES = [
 ] as const;
 
 const INTERVAL = 6000;
+/* Slower under reduced motion: fewer changes to notice, same content. */
+const INTERVAL_REDUCED = 10000;
 
 export default function HeroSlides() {
   const [index, setIndex] = useState(0);
   const [mounted, setMounted] = useState(false);
-  const [still, setStill] = useState(false);
+  const [reduced, setReduced] = useState(false);
+  /* Set once the visitor picks a frame themselves. Auto-advance then stops for
+     good, which is the control WCAG 2.2.2 asks for on moving content. */
+  const [userControlled, setUserControlled] = useState(false);
 
   useEffect(() => {
-    const reduced = prefersReducedMotion();
-    setStill(reduced);
+    setReduced(prefersReducedMotion());
     // Let the first frame settle before the others are even created.
     const t = window.setTimeout(() => setMounted(true), 900);
     return () => window.clearTimeout(t);
   }, []);
 
   useEffect(() => {
-    if (still || !mounted) return;
+    if (!mounted || userControlled) return;
     const id = window.setInterval(
       () => setIndex((i) => (i + 1) % SLIDES.length),
-      INTERVAL
+      reduced ? INTERVAL_REDUCED : INTERVAL
     );
     return () => window.clearInterval(id);
-  }, [still, mounted]);
+  }, [mounted, reduced, userControlled]);
 
-  const active = still ? 0 : index;
+  const active = index;
 
   return (
     <>
@@ -73,7 +89,9 @@ export default function HeroSlides() {
           return (
             <div
               key={s.name}
-              className={`hero__slide ${i === active ? "is-active" : ""}`}
+              className={`hero__slide ${i === active ? "is-active" : ""} ${
+                reduced ? "is-gentle" : ""
+              }`}
               aria-hidden={i === active ? undefined : true}
             >
               <Photo
@@ -99,7 +117,7 @@ export default function HeroSlides() {
           <span className="tabular">{SLIDES[active].coords}</span>
         </p>
 
-        {!still && (
+        {(
           <div className="hero__dots" role="tablist" aria-label="Hero images">
             {SLIDES.map((s, i) => (
               <button
