@@ -1,0 +1,524 @@
+- generic [ref=f1e1]:
+  - link "Skip to main content" [ref=f1e2] [cursor=pointer]:
+    - /url: "#content"
+  - generic [ref=f1e3]:
+    - link "Skip to main content" [ref=f1e4] [cursor=pointer]:
+      - /url: "#content"
+    - complementary [ref=f1e5]:
+      - navigation [ref=f1e10]:
+        - generic [ref=f1e12]:
+          - link [ref=f1e17] [cursor=pointer]:
+            - /url: ../index.html
+            - img "cPanel logo" [ref=f1e18]
+          - list [ref=f1e19]:
+            - listitem [ref=f1e20]:
+              - link "Tools" [ref=f1e21] [cursor=pointer]:
+                - /url: ../index.html
+            - listitem [ref=f1e26]:
+              - link "Sitejet Builder" [ref=f1e27] [cursor=pointer]:
+                - /url: ../sitejet/index.html
+            - listitem [ref=f1e33]:
+              - link "Social Media Management" [ref=f1e34] [cursor=pointer]:
+                - /url: ../socialbee/index.html
+            - listitem [ref=f1e44]:
+              - link "Site Quality Monitoring" [ref=f1e45] [cursor=pointer]:
+                - /url: ../koality/signup/index.html
+            - listitem [ref=f1e51]:
+              - link "WordPress Manager by Softaculous" [ref=f1e52] [cursor=pointer]:
+                - /url: ../softaculous/index.live.php?act=wordpress
+    - generic [ref=f1e59]:
+      - banner [ref=f1e60]:
+        - generic [ref=f1e65]:
+          - text: 
+          - generic [ref=f1e66]:
+            - text: 
+            - generic [ref=f1e68]:
+              - text: 
+              - combobox [ref=f1e70]:
+                - searchbox "Search Tools (/)" [ref=f1e71]
+                - text:  
+            - generic [ref=f1e73]:
+              - link "Notifications" [ref=f1e76] [cursor=pointer]:
+                - /url: ../notifications/index.html.tt
+                - generic [ref=f1e77]: 
+              - button "User Menu" [ref=f1e84] [cursor=pointer]:
+                - generic [ref=f1e85]: 
+      - generic [ref=f1e91]:
+        - heading "Zone Editor Domains / Manage Zone" [level=1] [ref=f1e92]:
+          - generic [ref=f1e93]:
+            - generic [ref=f1e94]: Zone Editor
+            - list [ref=f1e95]:
+              - listitem [ref=f1e96]:
+                - link "Domains" [ref=f1e98] [cursor=pointer]:
+                  - /url: javascript:void(0)
+                  - text:  Domains
+              - listitem [ref=f1e99]:
+                - text: /
+                - generic [ref=f1e100]: Manage Zone
+        - generic [ref=f1e102]:
+          - paragraph [ref=f1e103]:
+            - text: DNS converts domain names into computer-readable IP addresses. Use this feature to manage DNS zones. For more information, read the
+            - link "documentation" [ref=f1e104] [cursor=pointer]:
+              - /url: //go.cpanel.net/zoneeditor
+            - text: .
+          - generic [ref=f1e105]:
+            - generic [ref=f1e106]:
+              - heading "Zone Records for “biocharsolutions.africa”" [level=2] [ref=f1e108]
+              - generic [ref=f1e109]:
+                - text: "Configured nameservers for this zone:"
+                - list [ref=f1e110]:
+                  - listitem [ref=f1e111]: nsa.whogohost.com
+                  - listitem [ref=f1e112]: nsb.whogohost.com
+            - generic [ref=f1e113]:   
+            - generic [ref=f1e115]:
+              - generic [ref=f1e116]:
+                - generic [ref=f1e117]:
+                  - generic [ref=f1e120]:
+                    - textbox "Search" [active] [ref=f1e121]:
+                      - /placeholder: Filter by name
+                    - button "Search" [ref=f1e123] [cursor=pointer]:
+                      - generic [ref=f1e124]: 
+                  - generic "Filter:" [ref=f1e127]:
+                    - generic [ref=f1e128]:
+                      - generic [ref=f1e129]: "Filter:"
+                      - list [ref=f1e130]:
+                        - listitem [ref=f1e131]:
+                          - link "All" [ref=f1e132] [cursor=pointer]:
+                            - /url: javascript:void(0)
+                        - listitem [ref=f1e133] [cursor=pointer]:
+                          - link "A" [ref=f1e134]:
+                            - /url: javascript:void(0)
+                        - listitem [ref=f1e135] [cursor=pointer]:
+                          - link "CNAME" [ref=f1e136]:
+                            - /url: javascript:void(0)
+                        - listitem [ref=f1e137] [cursor=pointer]:
+                          - link "MX" [ref=f1e138]:
+                            - /url: javascript:void(0)
+                        - listitem [ref=f1e139] [cursor=pointer]:
+                          - link "SRV" [ref=f1e140]:
+                            - /url: javascript:void(0)
+                        - listitem [ref=f1e141] [cursor=pointer]:
+                          - link "TXT" [ref=f1e142]:
+                            - /url: javascript:void(0)
+                - generic [ref=f1e144]:
+                  - list "Pagination" [ref=f1e145]:
+                    - listitem:
+                      - link "Go to first page." [ref=f1e146]:
+                        - /url: ""
+                        - text: <<
+                    - listitem:
+                      - link "Go to previous page." [ref=f1e147]:
+                        - /url: ""
+                        - text: <
+                    - listitem:
+                      - link "Go to next page." [ref=f1e148]:
+                        - /url: ""
+                        - text: ">"
+                    - listitem:
+                      - link "Go to last page." [ref=f1e149]:
+                        - /url: ""
+                        - text: ">>"
+                  - paragraph [ref=f1e150]: Displaying 1 to 28 out of 28 items
+              - generic [ref=f1e152]:
+                - button "Actions Click for more options." [ref=f1e155] [cursor=pointer]:
+                  - text: Actions
+                  - generic [ref=f1e157]: Click for more options.
+                - generic [ref=f1e158]:
+                  - button " Save All Records" [disabled] [ref=f1e159]:
+                    - text: 
+                    - generic [ref=f1e160]:
+                      - generic [ref=f1e161]: 
+                      - text: Save All Records
+                  - generic [ref=f1e162]:
+                    - button " Add Record" [ref=f1e163] [cursor=pointer]:
+                      - generic [ref=f1e164]: 
+                      - text: Add Record
+                    - button "Click for more options." [ref=f1e165] [cursor=pointer]
+                  - generic [ref=f1e168]:
+                    - button "additional actions menu" [ref=f1e169] [cursor=pointer]:
+                      - generic [ref=f1e170]: 
+                    - text: 
+              - table [ref=f1e174]:
+                - rowgroup [ref=f1e175]:
+                  - row [ref=f1e176]:
+                    - columnheader [ref=f1e177]:
+                      - link "Name" [ref=f1e178] [cursor=pointer]:
+                        - /url: javascript:void(0)
+                        - text: 
+                    - columnheader [ref=f1e180]:
+                      - link "TTL" [ref=f1e181] [cursor=pointer]:
+                        - /url: javascript:void(0)
+                        - text: 
+                    - columnheader [ref=f1e183]:
+                      - link "Type" [ref=f1e184] [cursor=pointer]:
+                        - /url: javascript:void(0)
+                        - text: 
+                    - columnheader "Record" [ref=f1e186]
+                    - columnheader "Actions" [ref=f1e187]
+                - rowgroup [ref=f1e188]:
+                  - text: 
+                  - row [ref=f1e189]:
+                    - cell "biocharsolutions.africa." [ref=f1e190]
+                    - cell "14400" [ref=f1e191]
+                    - cell "A" [ref=f1e192]
+                    - cell "131.153.147.50" [ref=f1e193]
+                    - cell [ref=f1e196]:
+                      - button "✏ Edit" [ref=f1e197] [cursor=pointer]:
+                        - generic [ref=f1e198]: ✏
+                        - text: Edit
+                      - button " Delete" [ref=f1e199] [cursor=pointer]:
+                        - generic [ref=f1e200]: 
+                        - text: Delete
+                  - row [ref=f1e201]:
+                    - cell "biocharsolutions.africa." [ref=f1e202]
+                    - cell "14400" [ref=f1e203]
+                    - cell "MX" [ref=f1e204]
+                    - 'cell "Priority: 0 Destination: biocharsolutions.africa" [ref=f1e205]'
+                    - cell [ref=f1e208]:
+                      - button "✏ Edit" [ref=f1e209] [cursor=pointer]:
+                        - generic [ref=f1e210]: ✏
+                        - text: Edit
+                      - button " Delete" [ref=f1e211] [cursor=pointer]:
+                        - generic [ref=f1e212]: 
+                        - text: Delete
+                  - row [ref=f1e213]:
+                    - cell "biocharsolutions.africa." [ref=f1e214]
+                    - cell "14400" [ref=f1e215]
+                    - cell "TXT" [ref=f1e216]
+                    - cell "v=spf1 +a +mx +ip4:131.153.147.50 include:spf.antispamcloud.com include:spf.host-ww.net +include:relay.mailchannels.net ~all" [ref=f1e217]
+                    - cell [ref=f1e221]:
+                      - button "✏ Edit" [ref=f1e222] [cursor=pointer]:
+                        - generic [ref=f1e223]: ✏
+                        - text: Edit
+                      - button " Delete" [ref=f1e224] [cursor=pointer]:
+                        - generic [ref=f1e225]: 
+                        - text: Delete
+                  - row [ref=f1e226]:
+                    - cell "_acme-challenge.biocharsolutions.africa." [ref=f1e227]
+                    - cell "1" [ref=f1e228]
+                    - cell "TXT" [ref=f1e229]
+                    - cell "bm96Gn4lAaOA_D_gELQlofIwgO9JV9x4RbI-yrByXkE" [ref=f1e230]
+                    - cell [ref=f1e234]:
+                      - button "✏ Edit" [ref=f1e235] [cursor=pointer]:
+                        - generic [ref=f1e236]: ✏
+                        - text: Edit
+                      - button " Delete" [ref=f1e237] [cursor=pointer]:
+                        - generic [ref=f1e238]: 
+                        - text: Delete
+                  - row [ref=f1e239]:
+                    - cell "_cpanel-dcv-test-record.biocharsolutions.africa." [ref=f1e240]
+                    - cell "14400" [ref=f1e241]
+                    - cell "TXT" [ref=f1e242]
+                    - cell "_cpanel-dcv-test-record=TYmaVhlNQEsdms1YXkL5Wb36XWbCk6R7Lqb5Bz9xbb6vurS3Vplrux9jd64QGsLk" [ref=f1e243]
+                    - cell [ref=f1e247]:
+                      - button "✏ Edit" [ref=f1e248] [cursor=pointer]:
+                        - generic [ref=f1e249]: ✏
+                        - text: Edit
+                      - button " Delete" [ref=f1e250] [cursor=pointer]:
+                        - generic [ref=f1e251]: 
+                        - text: Delete
+                  - row [ref=f1e252]:
+                    - cell "default._domainkey.biocharsolutions.africa." [ref=f1e253]
+                    - cell "14400" [ref=f1e254]
+                    - cell "TXT" [ref=f1e255]
+                    - cell "v=DKIM1;k=rsa;p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArzLZsP/+32rFzmeM6E0kkR7Cs2lznktj6kcfdtBOqKp0Y8iS/AJ6dUrV2++q6gRqTNpClqeQPGte20ej0DMChjmEs2oekbxsdyZ1dp+rpFg2iiU8/Zsg5r/UHKrZhs68xdy5K7qAR4HJD2+ANdPlMdneGvdEOpcuqetZEuiP3goGIWiDUUGWFu9sNytq5duLJ C qV85rzdGEtQi5lzOPlU+v8p5pf0+hvzhaeS+ca11cW6iDjsP1hly3h0N+lY6VcEsS5S3yewpDSSvCuAF7XYLoVEwwlTVQf40p4m7s0cRuPwl4rnvJOSflktt5t1CgrWb0pqhHaCtx9CjqPUb5MLQIDAQAB" [ref=f1e256]:
+                      - generic [ref=f1e258]:
+                        - generic [ref=f1e259]:
+                          - text: v=DKIM1;k=rsa;p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArzLZsP/+32rFzmeM6E0kkR7Cs2lznktj6kcfdtBOqKp0Y8iS/AJ6dUrV2++q6gRqTNpClqeQPGte20ej0DMChjmEs2oekbxsdyZ1dp+rpFg2iiU8/Zsg5r/UHKrZhs68xdy5K7qAR4HJD2+ANdPlMdneGvdEOpcuqetZEuiP3goGIWiDUUGWFu9sNytq5duLJ C
+                          - separator [ref=f1e260]
+                        - generic [ref=f1e261]: qV85rzdGEtQi5lzOPlU+v8p5pf0+hvzhaeS+ca11cW6iDjsP1hly3h0N+lY6VcEsS5S3yewpDSSvCuAF7XYLoVEwwlTVQf40p4m7s0cRuPwl4rnvJOSflktt5t1CgrWb0pqhHaCtx9CjqPUb5MLQIDAQAB
+                    - cell [ref=f1e262]:
+                      - button "✏ Edit" [ref=f1e263] [cursor=pointer]:
+                        - generic [ref=f1e264]: ✏
+                        - text: Edit
+                      - button " Delete" [ref=f1e265] [cursor=pointer]:
+                        - generic [ref=f1e266]: 
+                        - text: Delete
+                  - row [ref=f1e267]:
+                    - cell "_autodiscover._tcp.biocharsolutions.africa." [ref=f1e268]
+                    - cell "14400" [ref=f1e269]
+                    - cell "SRV" [ref=f1e270]
+                    - 'cell "Priority: 0 Weight: 0 Port: 443 Target: cpanelemaildiscovery.cpanel.net" [ref=f1e271]'
+                    - cell [ref=f1e274]:
+                      - button "✏ Edit" [ref=f1e275] [cursor=pointer]:
+                        - generic [ref=f1e276]: ✏
+                        - text: Edit
+                      - button " Delete" [ref=f1e277] [cursor=pointer]:
+                        - generic [ref=f1e278]: 
+                        - text: Delete
+                  - row [ref=f1e279]:
+                    - cell "_caldav._tcp.biocharsolutions.africa." [ref=f1e280]
+                    - cell "14400" [ref=f1e281]
+                    - cell "SRV" [ref=f1e282]
+                    - 'cell "Priority: 0 Weight: 0 Port: 2079 Target: biocharsolutions.africa" [ref=f1e283]'
+                    - cell [ref=f1e286]:
+                      - button "✏ Edit" [ref=f1e287] [cursor=pointer]:
+                        - generic [ref=f1e288]: ✏
+                        - text: Edit
+                      - button " Delete" [ref=f1e289] [cursor=pointer]:
+                        - generic [ref=f1e290]: 
+                        - text: Delete
+                  - row [ref=f1e291]:
+                    - cell "_caldav._tcp.biocharsolutions.africa." [ref=f1e292]
+                    - cell "14400" [ref=f1e293]
+                    - cell "TXT" [ref=f1e294]
+                    - cell "path=/" [ref=f1e295]
+                    - cell [ref=f1e299]:
+                      - button "✏ Edit" [ref=f1e300] [cursor=pointer]:
+                        - generic [ref=f1e301]: ✏
+                        - text: Edit
+                      - button " Delete" [ref=f1e302] [cursor=pointer]:
+                        - generic [ref=f1e303]: 
+                        - text: Delete
+                  - row [ref=f1e304]:
+                    - cell "_caldavs._tcp.biocharsolutions.africa." [ref=f1e305]
+                    - cell "14400" [ref=f1e306]
+                    - cell "SRV" [ref=f1e307]
+                    - 'cell "Priority: 0 Weight: 0 Port: 2080 Target: biocharsolutions.africa" [ref=f1e308]'
+                    - cell [ref=f1e311]:
+                      - button "✏ Edit" [ref=f1e312] [cursor=pointer]:
+                        - generic [ref=f1e313]: ✏
+                        - text: Edit
+                      - button " Delete" [ref=f1e314] [cursor=pointer]:
+                        - generic [ref=f1e315]: 
+                        - text: Delete
+                  - row [ref=f1e316]:
+                    - cell "_caldavs._tcp.biocharsolutions.africa." [ref=f1e317]
+                    - cell "14400" [ref=f1e318]
+                    - cell "TXT" [ref=f1e319]
+                    - cell "path=/" [ref=f1e320]
+                    - cell [ref=f1e324]:
+                      - button "✏ Edit" [ref=f1e325] [cursor=pointer]:
+                        - generic [ref=f1e326]: ✏
+                        - text: Edit
+                      - button " Delete" [ref=f1e327] [cursor=pointer]:
+                        - generic [ref=f1e328]: 
+                        - text: Delete
+                  - row [ref=f1e329]:
+                    - cell "_carddav._tcp.biocharsolutions.africa." [ref=f1e330]
+                    - cell "14400" [ref=f1e331]
+                    - cell "SRV" [ref=f1e332]
+                    - 'cell "Priority: 0 Weight: 0 Port: 2079 Target: biocharsolutions.africa" [ref=f1e333]'
+                    - cell [ref=f1e336]:
+                      - button "✏ Edit" [ref=f1e337] [cursor=pointer]:
+                        - generic [ref=f1e338]: ✏
+                        - text: Edit
+                      - button " Delete" [ref=f1e339] [cursor=pointer]:
+                        - generic [ref=f1e340]: 
+                        - text: Delete
+                  - row [ref=f1e341]:
+                    - cell "_carddav._tcp.biocharsolutions.africa." [ref=f1e342]
+                    - cell "14400" [ref=f1e343]
+                    - cell "TXT" [ref=f1e344]
+                    - cell "path=/" [ref=f1e345]
+                    - cell [ref=f1e349]:
+                      - button "✏ Edit" [ref=f1e350] [cursor=pointer]:
+                        - generic [ref=f1e351]: ✏
+                        - text: Edit
+                      - button " Delete" [ref=f1e352] [cursor=pointer]:
+                        - generic [ref=f1e353]: 
+                        - text: Delete
+                  - row [ref=f1e354]:
+                    - cell "_carddavs._tcp.biocharsolutions.africa." [ref=f1e355]
+                    - cell "14400" [ref=f1e356]
+                    - cell "SRV" [ref=f1e357]
+                    - 'cell "Priority: 0 Weight: 0 Port: 2080 Target: biocharsolutions.africa" [ref=f1e358]'
+                    - cell [ref=f1e361]:
+                      - button "✏ Edit" [ref=f1e362] [cursor=pointer]:
+                        - generic [ref=f1e363]: ✏
+                        - text: Edit
+                      - button " Delete" [ref=f1e364] [cursor=pointer]:
+                        - generic [ref=f1e365]: 
+                        - text: Delete
+                  - row [ref=f1e366]:
+                    - cell "_carddavs._tcp.biocharsolutions.africa." [ref=f1e367]
+                    - cell "14400" [ref=f1e368]
+                    - cell "TXT" [ref=f1e369]
+                    - cell "path=/" [ref=f1e370]
+                    - cell [ref=f1e374]:
+                      - button "✏ Edit" [ref=f1e375] [cursor=pointer]:
+                        - generic [ref=f1e376]: ✏
+                        - text: Edit
+                      - button " Delete" [ref=f1e377] [cursor=pointer]:
+                        - generic [ref=f1e378]: 
+                        - text: Delete
+                  - row [ref=f1e379]:
+                    - cell "autoconfig.biocharsolutions.africa." [ref=f1e380]
+                    - cell "14400" [ref=f1e381]
+                    - cell "A" [ref=f1e382]
+                    - cell "131.153.147.50" [ref=f1e383]
+                    - cell [ref=f1e386]:
+                      - button "✏ Edit" [ref=f1e387] [cursor=pointer]:
+                        - generic [ref=f1e388]: ✏
+                        - text: Edit
+                      - button " Delete" [ref=f1e389] [cursor=pointer]:
+                        - generic [ref=f1e390]: 
+                        - text: Delete
+                  - row [ref=f1e391]:
+                    - cell "autodiscover.biocharsolutions.africa." [ref=f1e392]
+                    - cell "14400" [ref=f1e393]
+                    - cell "A" [ref=f1e394]
+                    - cell "131.153.147.50" [ref=f1e395]
+                    - cell [ref=f1e398]:
+                      - button "✏ Edit" [ref=f1e399] [cursor=pointer]:
+                        - generic [ref=f1e400]: ✏
+                        - text: Edit
+                      - button " Delete" [ref=f1e401] [cursor=pointer]:
+                        - generic [ref=f1e402]: 
+                        - text: Delete
+                  - row [ref=f1e403]:
+                    - cell "cpanel.biocharsolutions.africa." [ref=f1e404]
+                    - cell "14400" [ref=f1e405]
+                    - cell "A" [ref=f1e406]
+                    - cell "131.153.147.50" [ref=f1e407]
+                    - cell [ref=f1e410]:
+                      - button "✏ Edit" [ref=f1e411] [cursor=pointer]:
+                        - generic [ref=f1e412]: ✏
+                        - text: Edit
+                      - button " Delete" [ref=f1e413] [cursor=pointer]:
+                        - generic [ref=f1e414]: 
+                        - text: Delete
+                  - row [ref=f1e415]:
+                    - cell "cpcalendars.biocharsolutions.africa." [ref=f1e416]
+                    - cell "14400" [ref=f1e417]
+                    - cell "A" [ref=f1e418]
+                    - cell "131.153.147.50" [ref=f1e419]
+                    - cell [ref=f1e422]:
+                      - button "✏ Edit" [ref=f1e423] [cursor=pointer]:
+                        - generic [ref=f1e424]: ✏
+                        - text: Edit
+                      - button " Delete" [ref=f1e425] [cursor=pointer]:
+                        - generic [ref=f1e426]: 
+                        - text: Delete
+                  - row [ref=f1e427]:
+                    - cell "cpcontacts.biocharsolutions.africa." [ref=f1e428]
+                    - cell "14400" [ref=f1e429]
+                    - cell "A" [ref=f1e430]
+                    - cell "131.153.147.50" [ref=f1e431]
+                    - cell [ref=f1e434]:
+                      - button "✏ Edit" [ref=f1e435] [cursor=pointer]:
+                        - generic [ref=f1e436]: ✏
+                        - text: Edit
+                      - button " Delete" [ref=f1e437] [cursor=pointer]:
+                        - generic [ref=f1e438]: 
+                        - text: Delete
+                  - row [ref=f1e439]:
+                    - cell "ftp.biocharsolutions.africa." [ref=f1e440]
+                    - cell "14400" [ref=f1e441]
+                    - cell "A" [ref=f1e442]
+                    - cell "131.153.147.50" [ref=f1e443]
+                    - cell [ref=f1e446]:
+                      - button "✏ Edit" [ref=f1e447] [cursor=pointer]:
+                        - generic [ref=f1e448]: ✏
+                        - text: Edit
+                      - button " Delete" [ref=f1e449] [cursor=pointer]:
+                        - generic [ref=f1e450]: 
+                        - text: Delete
+                  - row [ref=f1e451]:
+                    - cell "mail.biocharsolutions.africa." [ref=f1e452]
+                    - cell "14400" [ref=f1e453]
+                    - cell "CNAME" [ref=f1e454]
+                    - cell "biocharsolutions.africa" [ref=f1e455]
+                    - cell [ref=f1e458]:
+                      - button "✏ Edit" [ref=f1e459] [cursor=pointer]:
+                        - generic [ref=f1e460]: ✏
+                        - text: Edit
+                      - button " Delete" [ref=f1e461] [cursor=pointer]:
+                        - generic [ref=f1e462]: 
+                        - text: Delete
+                  - row [ref=f1e463]:
+                    - cell "_acme-challenge.mail.biocharsolutions.africa." [ref=f1e464]
+                    - cell "1" [ref=f1e465]
+                    - cell "TXT" [ref=f1e466]
+                    - cell "DdFRNnQkxRU0cctILXAnioHGOszbWIrA0cIpFoMSzbM" [ref=f1e467]
+                    - cell [ref=f1e471]:
+                      - button "✏ Edit" [ref=f1e472] [cursor=pointer]:
+                        - generic [ref=f1e473]: ✏
+                        - text: Edit
+                      - button " Delete" [ref=f1e474] [cursor=pointer]:
+                        - generic [ref=f1e475]: 
+                        - text: Delete
+                  - row [ref=f1e476]:
+                    - cell "webdisk.biocharsolutions.africa." [ref=f1e477]
+                    - cell "14400" [ref=f1e478]
+                    - cell "A" [ref=f1e479]
+                    - cell "131.153.147.50" [ref=f1e480]
+                    - cell [ref=f1e483]:
+                      - button "✏ Edit" [ref=f1e484] [cursor=pointer]:
+                        - generic [ref=f1e485]: ✏
+                        - text: Edit
+                      - button " Delete" [ref=f1e486] [cursor=pointer]:
+                        - generic [ref=f1e487]: 
+                        - text: Delete
+                  - row [ref=f1e488]:
+                    - cell "webmail.biocharsolutions.africa." [ref=f1e489]
+                    - cell "14400" [ref=f1e490]
+                    - cell "A" [ref=f1e491]
+                    - cell "131.153.147.50" [ref=f1e492]
+                    - cell [ref=f1e495]:
+                      - button "✏ Edit" [ref=f1e496] [cursor=pointer]:
+                        - generic [ref=f1e497]: ✏
+                        - text: Edit
+                      - button " Delete" [ref=f1e498] [cursor=pointer]:
+                        - generic [ref=f1e499]: 
+                        - text: Delete
+                  - row [ref=f1e500]:
+                    - cell "whm.biocharsolutions.africa." [ref=f1e501]
+                    - cell "14400" [ref=f1e502]
+                    - cell "A" [ref=f1e503]
+                    - cell "131.153.147.50" [ref=f1e504]
+                    - cell [ref=f1e507]:
+                      - button "✏ Edit" [ref=f1e508] [cursor=pointer]:
+                        - generic [ref=f1e509]: ✏
+                        - text: Edit
+                      - button " Delete" [ref=f1e510] [cursor=pointer]:
+                        - generic [ref=f1e511]: 
+                        - text: Delete
+                  - row [ref=f1e512]:
+                    - cell "www.biocharsolutions.africa." [ref=f1e513]
+                    - cell "14400" [ref=f1e514]
+                    - cell "CNAME" [ref=f1e515]
+                    - cell "biocharsolutions.africa" [ref=f1e516]
+                    - cell [ref=f1e519]:
+                      - button "✏ Edit" [ref=f1e520] [cursor=pointer]:
+                        - generic [ref=f1e521]: ✏
+                        - text: Edit
+                      - button " Delete" [ref=f1e522] [cursor=pointer]:
+                        - generic [ref=f1e523]: 
+                        - text: Delete
+                  - row [ref=f1e524]:
+                    - cell "_acme-challenge.www.biocharsolutions.africa." [ref=f1e525]
+                    - cell "1" [ref=f1e526]
+                    - cell "TXT" [ref=f1e527]
+                    - cell "ZI8l1_MsuurCtXAWqTw8HKtsLz52M5v6XwcRd6OkaDw" [ref=f1e528]
+                    - cell [ref=f1e532]:
+                      - button "✏ Edit" [ref=f1e533] [cursor=pointer]:
+                        - generic [ref=f1e534]: ✏
+                        - text: Edit
+                      - button " Delete" [ref=f1e535] [cursor=pointer]:
+                        - generic [ref=f1e536]: 
+                        - text: Delete
+              - text: 
+      - contentinfo [ref=f1e537]:
+        - generic [ref=f1e542]:
+          - generic [ref=f1e543]:
+            - link [ref=f1e547] [cursor=pointer]:
+              - /url: https://www.cpanel.net
+              - img "cPanel logo" [ref=f1e548]
+            - generic [ref=f1e549]: 136.0.33
+          - list [ref=f1e551]:
+            - listitem [ref=f1e552]:
+              - link "Home" [ref=f1e553] [cursor=pointer]:
+                - /url: ../index.html
+            - listitem [ref=f1e554]:
+              - link "Trademarks" [ref=f1e555] [cursor=pointer]:
+                - /url: ../trademarks.html
+            - listitem [ref=f1e556]:
+              - link "Privacy Policy" [ref=f1e557] [cursor=pointer]:
+                - /url: https://go.cpanel.net/privacy
+            - listitem [ref=f1e558]:
+              - link "Documentation" [ref=f1e559] [cursor=pointer]:
+                - /url: https://go.cpanel.net/cpaneldocsHome
+            - listitem [ref=f1e560]:
+              - link "Give Feedback" [ref=f1e561] [cursor=pointer]:
+                - /url: https://go.cpanel.net/give-feedback?utm_source=cpanel-feedback&cpanel_productversion=11.136.0.33&companyid=2793&cpanel_appkey=zone_editor

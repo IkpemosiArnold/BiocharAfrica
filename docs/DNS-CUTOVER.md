@@ -134,12 +134,20 @@ any guide including this one. The `www` CNAME target is now **unique per project
 (it looks like `d1d4fc829fe7bc7c.vercel-dns-017.com`), so a generic value copied
 from an old tutorial will fail.
 
-**7. Change only these two records at WhoGoHost:**
+**7. Change only these two records at WhoGoHost.** Values read from this
+project's Vercel dashboard on 11 Aug 2026:
 
 ```
-A       @     ->  <the A record IP Vercel shows>          TTL 300
-CNAME   www   ->  <the project CNAME Vercel shows>        TTL 300
+A       @     ->  216.198.79.1                            TTL 300
+CNAME   www   ->  a63de0ba0c7e9dec.vercel-dns-017.com.    TTL 300
 ```
+
+`216.198.79.1` is Vercel's current recommended IP; the legacy `76.76.21.21` and
+`cname.vercel-dns.com` still work but should not be used for a new setup. The
+CNAME target is unique to this project and will not work for any other.
+
+**The `www` CNAME is safe to set immediately.** It carries no mail, so it does
+not have to wait for the MX TTL. Only the apex must wait.
 
 **8. Wait for the certificate.** Vercel issues TLS automatically once DNS
 resolves, usually a few minutes. The dashboard will say **Valid Configuration**.
@@ -214,3 +222,59 @@ the form over SMTP. Set the environment variables in Vercel, not in the repo.
 Obvious once said, easy to forget: the website moves off that server but **the
 mailboxes stay on it**. Cancelling the WhoGoHost hosting to "save money now that
 the site is on Vercel" deletes the email.
+
+---
+
+# EXECUTION LOG
+
+## 11 Aug 2026, 20:30–21:20 UTC — Phase 1 complete, done live in cPanel Zone Editor
+
+Zone is edited at **cPanel → Zone Editor** on `cpanel.biocharsolutions.africa`
+(server `wghp3.wghservers.com`). Nameservers left at WhoGoHost throughout.
+
+| Record | Before | After |
+|---|---|---|
+| `mail` | CNAME → apex | **A → 131.153.147.50**, TTL 300 |
+| MX | `0 biocharsolutions.africa.` | **`0 mail.biocharsolutions.africa.`**, TTL 300 |
+| SPF | `v=spf1 +a +mx ip4:…` | **`+a` removed**, rest unchanged |
+| `_dmarc` | did not exist | **`v=DMARC1; p=none; rua=…; fo=1`** |
+| `www` | CNAME → apex | **CNAME → `a63de0ba0c7e9dec.vercel-dns-017.com.`**, TTL 300 |
+| apex A | `131.153.147.50` TTL 14400 | value **unchanged**, TTL lowered to 300 |
+| `_caldav._tcp` SRV | target apex | target `mail.biocharsolutions.africa` |
+| `_caldavs._tcp` SRV | target apex | target `mail.biocharsolutions.africa` |
+| `_carddav._tcp` SRV | target apex | target `mail.biocharsolutions.africa` |
+| `_carddavs._tcp` SRV | target apex | target `mail.biocharsolutions.africa` |
+
+The four SRV records were **not** in the original plan. They were found by
+reading the actual zone rather than by querying the records we expected to
+exist: cPanel publishes CalDAV/CardDAV autodiscovery on ports 2079/2080 and had
+pointed all four at the apex. They would have followed it to Vercel and quietly
+broken calendar and contacts sync. Same root cause as the MX, so fixed in the
+same pass.
+
+`_autodiscover._tcp` correctly targets `cpanelemaildiscovery.cpanel.net` and was
+left alone.
+
+**Result: nothing in the zone depends on the apex A record any more except the
+website itself.** Verified: `./scripts/check-dns.sh` → 11 passed, 0 failures.
+
+`www.biocharsolutions.africa` already serves the new site over HTTPS.
+
+## Remaining: the apex
+
+**Do not move the apex before 2026-08-12 00:45 UTC (01:45 WAT).**
+
+The MX was changed at 20:45 UTC while carrying a 14400s TTL. Any resolver that
+cached the OLD MX before that moment still believes the mail exchanger is the
+apex, for up to four hours. Move the apex inside that window and those resolvers
+deliver mail to Vercel.
+
+After that time:
+
+```
+A   @   ->  216.198.79.1     (TTL already 300)
+```
+
+Then `./scripts/check-dns.sh` and confirm the site loads on the bare domain.
+
+Rollback is `A @ -> 131.153.147.50`, live in ~5 minutes at TTL 300.

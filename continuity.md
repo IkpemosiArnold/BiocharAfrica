@@ -3,13 +3,13 @@
 **Project:** BiocharAfrica
 **Session:** 34acf2db
 **Branch:** main
-**Context Usage:** 347.2% (694,415 / 200,000 tokens)
-**Timestamp:** 2026-08-11T12:40:38.106Z
+**Context Usage:** 318.6% (637,143 / 200,000 tokens)
+**Timestamp:** 2026-08-11T19:48:14.104Z
 **Working Directory:** /Users/mac/Documents/DevProjects/BiocharAfrica
 
 ## IMPORTANT: Resume from here
 
-Context window is at 347.2% capacity. Auto-compact will trigger soon.
+Context window is at 318.6% capacity. Auto-compact will trigger soon.
 This document was auto-generated. Continue from the tasks and conversation below.
 
 ## Active Tasks
@@ -28,45 +28,66 @@ This document was auto-generated. Continue from the tasks and conversation below
 
 ## Recent Conversation
 
-**ASSISTANT:** Now mapping each photo to the right person by DOM position, and downloading them:
+**ASSISTANT:** Partner section renders but the two-column grid isn't applying at 1280px. Let me check rather than guess:
 
-**ASSISTANT:** Clean 1:1 mapping. Downloading the originals (not the cropped Elementor thumbnails) and running them through the pipeline:
+**ASSISTANT:** Two real findings.
 
-**ASSISTANT:** All six at good resolution. Let me also grab the real logo for the favicon you asked about, then process everything:
+**The grid bug:** `gridTemplateColumns` came back as **seven** tracks, not two. The culprit is a rule meant only for the 12-column layout — `.act__title { grid-column: 1 / 8 }` — leaking into any grid that contains an `.act__title`, forcing seven implicit columns and pushing the body to row 2.
 
-**ASSISTANT:** Six full bios with serious credentials — Lancaster, Wageningen, Cambridge/Stanford/MIT fellowships. Updating the data:
+**And you're right about reduced motion.** Let me fix both:
 
-**ASSISTANT:** Now the favicon, then I'll look at Contact properly before pushing anything:
+**ASSISTANT:** Under emulated reduced motion it now rotates, with `transitionProperty: opacity`, `transform: none` — movement-free, so no vestibular risk. Checking the grid fix, then pushing:
 
-**ASSISTANT:** Favicon registered. Now let me actually **look** at every page before pushing this time:
+**ASSISTANT:** Grid leak fixed (two tracks now, not seven) — but they're still stacked. Let me inspect the actual placement rather than infer:
 
-**ASSISTANT:** They're on disk after all. Finding them:
+**ASSISTANT:** Found it: `.act__title` carries `grid-column: 1 / -1` in its **base** rule, so the heading spans both columns in any grid it lands in. I only scoped the media-query version. Scoping the base rules too:
 
-**ASSISTANT:** Two things there. Let me confirm the CTA bug rather than assume:
+**ASSISTANT:** Fixed, and the 12-column layouts still span correctly (`1 / 8`). Pushing and verifying live:
 
-**ASSISTANT:** **Confirmed exactly:** `emColor` is byte-identical to `slabBackground` — "your soil." is acid-green text on an acid-green slab. Invisible, not missing.
+**ASSISTANT:** Two issues on the live desktop build — **horizontal overflow**, which is a real defect. Let me find the culprit element:
 
-The cause: `globals.css` imports `site.css` at the top, so my later global `em` rule overrode the dark colour at equal specificity. Fixing that, broadening the copy, and processing the community photos:
+**ASSISTANT:** 18px of overflow from three unclassed 242px anchors — that's the footer address block (two phones + one email). Long unbreakable strings in an `auto-fit` grid track. Fixing the cause and adding a guard:
 
-**ASSISTANT:** The pipeline reprocesses all 27 photos from scratch each run and hit the timeout before reaching the new two. Let me make it incremental — a real improvement, not a workaround:
+**USER:** <task-notification>
+<task-id>bi8by6u3c</task-id>
+<tool-use-id>toolu_01EMtatvpjUXsYif3LCkNSqP</tool-use-id>
+<status>stopped</status>
+<summary>No completion record was found for this background shell command from the previous session. It may have been stopped (via the UI, Monitor timeout, or agent teardown — these leave no transcript marker), or it may have been running when the previous Claude Code process exited. Check the output file for partial results before assuming it completed.</summary>
+</task-notification>
 
-**ASSISTANT:** Both processed at 1280×854 — the highest-resolution images in the set. Now wiring them in and fixing the invisible CTA text:
+**ASSISTANT:** Congratulations on the approval. Before advising, let me look at the actual DNS for the domain — the answer depends entirely on what's currently there.
 
-**ASSISTANT:** Now let me actually **look** at every page before pushing this time:
+**ASSISTANT:** **Stop — there's a trap here that would take down their email.**
 
-**ASSISTANT:** Community section works — both real photographs, and the colour of the gathering against the dark ground is the strongest image on the site. Checking the CTA:
+Look at the MX record: `0 biocharsolutions.africa.` The mail exchanger is the **apex domain itself**, which resolves to `131.153.147.50` — the same cPanel server as the website. And `mail.` is a CNAME pointing back at that apex.
 
-**ASSISTANT:** Both lines legible now. Building, pushing, and this time verifying the live site properly:
+So if you simply repoint the A record to Vercel, the MX follows it to Vercel, Vercel runs no mail server, and **all inbound email dies instantly.**
 
-**ASSISTANT:** All four of your criticisms were correct. Live and verified now.
+Let me gather the rest before writing the runbook:
 
-**"Did you REALLY go through the old site?" — No, and you caught a real failure.** I ran one summarising `WebFetch` against the homepage and treated the summary as the whole site. Crawling the actual HTML found an **`/our-team` page with six people, not two**:
+**ASSISTANT:** Now I have the full picture, and it's worse than a simple repoint. Let me confirm Vercel's current DNS targets rather than recite them from memory:
 
-Al Amin Ibrahim · Prof. Aisha Abdulkadir · **Dr. Akanimo Odon** (PhD Lancaster, fellowships at Cambridge, Stanford and MIT) · Muhammad Musa · Dr. Ibrahim Yarima · Dr. Usman Aliyu
+**ASSISTANT:** Vercel's docs confirm two things that matter: the `www` CNAME target is now **project-unique** (e.g. `d1d4fc829fe7bc7c.vercel-dns-017.com`), so it must be read from your dashboard rather than copied from a blog post — and their own warning that the nameserver method requires recreating every DNS record you want to keep.
 
-All six are now on `/about` with full credentials and portraits — downloaded at full resolution from the source, not the cropped Elementor thumbnails. That bench is the strongest credibility asset the company has, and both the old site and my build were burying it.
+Here's the situation and the safe path:
 
-**"Did you even verify be
+**ASSISTANT:** Now a script so you can verify each phase instead of guessing:
+
+**ASSISTANT:** Good news on the approval. **Bad news: the obvious way to do this would take down their email**, and you can't see why without reading the zone.
+
+## The trap
+
+```
+MX     biocharsolutions.africa.  →  0 biocharsolutions.africa.   ← the APEX itself
+A      biocharsolutions.africa.  →  131.153.147.50               ← WhoGoHost cPanel
+CNAME  mail.biocharsolutions.africa. → biocharsolutions.africa.  ← follows the apex too
+```
+
+**The mail exchanger *is* the apex A record.** Change that record to Vercel and the MX follows it to Vercel, which runs no SMTP server — every inbound email bounces within minutes. And `mail.` can't save you, because it's a CNAME back to the same apex.
+
+## Two decisions
+
+**Don't move the app to WhoGoHost.** "Move it to the domain" means changing where the domain *points*, no
 
 ---
-*Auto-generated at 347.2% context usage by context-threshold-tracker*
+*Auto-generated at 318.6% context usage by context-threshold-tracker*
