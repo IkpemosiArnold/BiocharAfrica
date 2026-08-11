@@ -538,12 +538,15 @@
 }
 
 @media (max-width: 61.99rem) {
+  /* Was so opaque the structure was effectively invisible on a phone, which is
+     the same mistake the hero scrim made. Enough to read on, not enough to
+     erase the artwork. */
   .pore__veil {
     background: linear-gradient(
       to bottom,
-      oklch(0.11 0.012 62 / 0.72) 0%,
-      oklch(0.11 0.012 62 / 0.9) 34%,
-      oklch(0.11 0.012 62 / 0.94) 100%
+      oklch(0.11 0.012 62 / 0.5) 0%,
+      oklch(0.11 0.012 62 / 0.72) 30%,
+      oklch(0.11 0.012 62 / 0.8) 100%
     );
   }
 }
