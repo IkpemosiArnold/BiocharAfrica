@@ -3,66 +3,26 @@
 **Project:** BiocharAfrica
 **Session:** 34acf2db
 **Branch:** main
-**Context Usage:** 387.4% (774,700 / 200,000 tokens)
-**Timestamp:** 2026-08-12T12:26:13.172Z
+**Context Usage:** 395.3% (790,529 / 200,000 tokens)
+**Timestamp:** 2026-08-12T12:55:56.752Z
 **Working Directory:** /Users/mac/Documents/DevProjects/BiocharAfrica
 
 ## IMPORTANT: Resume from here
 
-Context window is at 387.4% capacity. Auto-compact will trigger soon.
+Context window is at 395.3% capacity. Auto-compact will trigger soon.
 This document was auto-generated. Continue from the tasks and conversation below.
 
 ## Active Tasks
 
 - [completed] DNS cutover complete: domain live, email untouched, 12/12 checks pass
-- [completed] Complete the menu from the old site: add Team page, Home in drawer, footer
-- [completed] Stop the hero and community act sharing the same two photographs
-- [in_progress] NEED FROM YOU: the sack-rows photo file (not in repo); bagging shot at better than 794x386
-- [pending] Contact form: set CONTACT_TO + SMTP so enquiries actually arrive
+- [completed] Complete the menu from the old site: Team page, Home in drawer, footer
+- [completed] Stage the sack-rows photo that was culled at import; use both of management's frames uncropped
+- [in_progress] Contact form: set CONTACT_TO + SMTP so enquiries actually arrive
 - [pending] In a day or two: raise TTLs from 300 back to 14400
 - [pending] Optional: decide whether apex or www should be canonical
 
 
 ## Recent Conversation
-
-**ASSISTANT:** Apex has moved and email is untouched. The `308` is a redirect, not an error — let me confirm where it goes and that TLS is valid:
-
-**ASSISTANT:** **Cutover complete.** The full chain works:
-
-```
-http://biocharsolutions.africa   → 308 → https
-https://biocharsolutions.africa  → 308 → https://www.biocharsolutions.africa/
-                                        → 200, server: Vercel
-                                        → "Biochar Solutions Africa: carbon solutions rooted in African soil"
-```
-
-HTTPS negotiated fine on the bare domain (HTTP/2 response proves the certificate is valid — the empty `openssl` output is this sandbox, not the site). Let me teach the checker that this redirect is success, not a warning:
-
-**ASSISTANT:** **Done. The site is live on the real domain.**
-
-I moved the apex only after proving the old MX had genuinely flushed — querying five public resolvers (Google, Cloudflare, Quad9, OpenDNS, Verisign) rather than trusting the four-hour clock. All returned the new MX. Then:
-
-```
-A  @  131.153.147.50  →  216.198.79.1     propagated in ~15s
-```
-
-```
-http://biocharsolutions.africa   → 308 → https
-https://biocharsolutions.africa  → 308 → https://www.biocharsolutions.africa/
-                                       → 200, server: Vercel
-```
-
-**`./scripts/check-dns.sh` → 12 passed, 0 warnings, 0 failures.** Email verified unchanged right through the switch: MX still `mail.biocharsolutions.africa` → `131.153.147.50`.
-
-I also fixed the checker itself — it was flagging the apex's `308` as a warning, but t
-
-**ASSISTANT:** Two clear items. Let me start by pulling the old site's actual menu — it's still on the cPanel server, so I can reach it by IP with a Host header:
-
-**ASSISTANT:** TLS handshake fails against the old server directly. Let me check what I captured earlier in the session, and fall back to the archive:
-
-**ASSISTANT:** Archive is blocked. The old site is WordPress, so let me try its REST API and sitemap directly on the old server:
-
-**ASSISTANT:** The sandbox can't reach the old server over HTTPS. But I captured screenshots of the old site earlier in the session — let me read the menu straight off those:
 
 **ASSISTANT:** The old menu is right there: **Home · About · Services · Team · Contact** (footer confirms: Home, About Us, Our Services, Our Team, Contact Us).
 
@@ -92,5 +52,27 @@ The old site's menu was **Home · About · Services · Team · Contact** — I r
 
 **Team was missing entirely.** I'd buried the six leaders inside `/about`. They now have their own page, which is also where they belong on merit — six named people with checkable credentials (Lancaster PhD, Cambridge/Stanford/MIT fellowships) is the strongest credibility asset the company has, and a carbon buyer will go looking for it. `/about` keeps a face strip and a "Meet the team" link rather than a duplicate roster. Home added to the mo
 
+**ASSISTANT:** Found them — two files dropped into `_source/originals/`, timestamped to match management's 07:27 messages. Let me check what resolution we actually got:
+
+**ASSISTANT:** Both are small. Let me check whether these are actually new files or re-sends of what I already have:
+
+**ASSISTANT:** Both are **byte-identical to files I already had.** The bagging shot is `production-bagging-crew`, already in use. And the sacks photo has been sitting in `_source/originals` since day one — I culled it during the initial triage and never staged it. That's my miss, not a missing file.
+
+Let me look at it:
+
+**ASSISTANT:** That's a strong image — it shows **production scale**, which nothing else on the site does. It's 775×395 though, so let me check the slots it has to fit:
+
+**ASSISTANT:** Both slots crop to 3/2 and 4/3, but both of management's photos are ~2:1 — forcing them in would cut off the rows of sacks that make the point. Let me stage the photo and fit the frames to the material:
+
+**ASSISTANT:** Both render uncropped, zero overlap with the hero, and rendered at essentially 1:1 (733px displayed vs 793px natural) so no upscaling. One stale caption though — that second line was written for the old training photo:
+
+**ASSISTANT:** Live. Both of management's frames are now in the community section, uncropped.
+
+**One correction to what I told you earlier.** Both files you dropped are **byte-identical to images already in the repo**. The bagging shot was already in use. The sack rows had been sitting in `_source/originals` since the very first import — I culled it during the initial triage and never staged it. So it was never a missing file, it was my oversight. It's now staged as `production-sacks-stacked`.
+
+It genuinely earns its place: it's the **only photograph on the site showing output volume** rather than one farmer, which is exactly what a buyer asking "at what scale?" wants to see.
+
+**I also had to change the frames, not just the photos.** The two slots were 3/2 and 4/3, but both photographs are roughly 2:1. D
+
 ---
-*Auto-generated at 387.4% context usage by context-threshold-tracker*
+*Auto-generated at 395.3% context usage by context-threshold-tracker*
