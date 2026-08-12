@@ -1667,11 +1667,14 @@
 .community__plates figure {
   margin: 0;
 }
+/* Both source frames are roughly 2:1. The slots used to be 3/2 and 4/3, which
+   cropped a third off the sacks. Fit the frame to the photograph, not the other
+   way round. */
 .community__wide .photo {
-  aspect-ratio: 3 / 2;
+  aspect-ratio: 2 / 1;
 }
 .community__tall .photo {
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 2 / 1;
 }
 
 @media (min-width: 56rem) {

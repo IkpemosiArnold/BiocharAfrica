@@ -334,5 +334,17 @@
     ],
     "provenance": false,
     "lqip": "data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAACQAwCdASoUAA0APxFysFAsJqSisAgBgCIJZgCdACHMuSpfTZdmAP7I39uve9HpD5Lied25L8Q2OU5dCc1csZv/whsoQt7cfzOM/yoA"
+  },
+  "production-sacks-stacked": {
+    "width": 775,
+    "height": 395,
+    "aspect": 1.962,
+    "widths": [
+      400,
+      640,
+      775
+    ],
+    "provenance": false,
+    "lqip": "data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAACQAwCdASoUAAoAPxFysFAsJqSisAgBgCIJZQAASayGdwHKzdxQAP7AamPIHwgI1M10WFBHwYSiuoJBCkcwfn63djJhOpwNPggAAA=="
   }
 }

@@ -31,14 +31,19 @@ import {
    work, the char being bagged and stacked, so the page covers production as
    well as gathering instead of showing one thing twice.
 
-   NOTE: management sent a better frame of the sack rows than the one held here.
-   Drop it into _source/photos/ and re-run scripts/build-images.mjs to swap it in.
+   Both frames here are management's own picks. The sack rows had been sitting
+   unstaged in _source/originals since the first import: it was culled during the
+   initial triage and never processed, which is why it appeared to be missing.
+
+   Both are roughly 2:1, so the frames below are set to 2/1 rather than the 3/2
+   and 4/3 they used to be. Cropping a 2:1 photograph into 4/3 would have cut
+   away a third of the rows of sacks, which are the entire subject.
 
    (original note) At 1280x854 they are the
    highest-resolution images on the site, and the only ones showing adoption at
    the scale of a whole community rather than one farmer. */
-const COMMUNITY_WIDE = "production-bagging-crew" as const;
-const COMMUNITY_TRAINING = "production-sacks-stored" as const;
+const COMMUNITY_WIDE = "production-sacks-stacked" as const;
+const COMMUNITY_TRAINING = "production-bagging-crew" as const;
 
 export default function Home() {
   return (
@@ -392,23 +397,22 @@ export default function Home() {
           <figure className="community__wide">
             <Photo
               name={COMMUNITY_WIDE}
-              alt="A crew bagging finished biochar from heaps at the production site"
+              alt="Dozens of woven sacks filled with finished biochar, stacked in the yard at the production site"
               sizes="(max-width: 900px) 100vw, 62vw"
             />
             <figcaption className="caption">
-              Finished char, bagged at the production site.
+              One run, bagged and stacked. Output you can count.
             </figcaption>
           </figure>
 
           <figure className="community__tall">
             <Photo
               name={COMMUNITY_TRAINING}
-              alt="Sacks of finished biochar stacked in storage"
+              alt="A crew bagging finished biochar from heaps at the production site"
               sizes="(max-width: 900px) 100vw, 34vw"
             />
             <figcaption className="caption">
-              Technique transferred hand to hand, using tools people already
-              own.
+              Bagged by hand from the heap, with tools people already own.
             </figcaption>
           </figure>
         </div>
