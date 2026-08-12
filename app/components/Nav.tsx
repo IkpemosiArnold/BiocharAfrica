@@ -3,9 +3,14 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
+/* Mirrors the old site's menu (Home / About / Services / Team / Contact), with
+   Impact added, since that page carries the evidence and the GPS-logged field
+   record. Team was missing entirely and management asked for the menu to be
+   completed from the old site. */
 const LINKS = [
   { href: "/about", label: "About" },
   { href: "/services", label: "Services" },
+  { href: "/team", label: "Team" },
   { href: "/impact", label: "Impact" },
 ];
 
@@ -83,7 +88,7 @@ export default function Nav() {
       </div>
 
       <div id="nav-drawer" className={`nav__drawer ${open ? "is-open" : ""}`}>
-        {[...LINKS, { href: "/contact", label: "Contact" }].map((l, i) => (
+        {[{ href: "/", label: "Home" }, ...LINKS, { href: "/contact", label: "Contact" }].map((l, i) => (
           <Link
             key={l.href}
             href={l.href}

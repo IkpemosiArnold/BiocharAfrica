@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import PageHead from "../components/PageHead";
 import Photo from "../components/Photo";
 import VideoPanel from "../components/VideoPanel";
@@ -158,6 +159,8 @@ export default function About() {
       {/* The company's strongest credential and the old site's most buried
           asset: a Wageningen soil-science PhD, and a founder who has actually
           raised climate finance. */}
+      {/* The full bench lives on /team, which the old site also had as its own
+           menu item. This is a pointer, not a duplicate. */}
       <section
         className="act"
         data-ground="#1b1712"
@@ -174,27 +177,29 @@ export default function About() {
             <br />
             <em>behind it.</em>
           </h2>
-
-          <ul className="team">
-            {TEAM.map((m, i) => (
-              <li className="member" key={m.name} data-reveal data-reveal-delay={i * 90}>
+          <p className="measure-wide" data-reveal>
+            Soil science, pyrolysis engineering, carbon markets and rural
+            development, led from Abuja. Six people with checkable credentials
+            rather than an anonymous project vehicle.
+          </p>
+          <ul className="team-strip" data-reveal data-reveal-delay="90">
+            {TEAM.map((m) => (
+              <li key={m.name}>
                 <Photo
                   name={m.photo}
-                  alt={`${m.name}, ${m.role} at Biochar Solutions Africa`}
-                  sizes="(max-width: 56rem) 40vw, 15rem"
-                  className="member__portrait"
+                  alt={`${m.name}, ${m.role}`}
+                  sizes="6rem"
+                  className="team-strip__face"
                   ratio="1 / 1"
                 />
-                <div className="member__text">
-                  <h3 className="member__name">{m.name}</h3>
-                  <p className="member__role eyebrow">
-                    <span>{m.role}</span>
-                  </p>
-                  <p className="member__bio">{m.bio}</p>
-                </div>
               </li>
             ))}
           </ul>
+          <p data-reveal data-reveal-delay="150">
+            <Link href="/team" className="btn btn--ghost">
+              Meet the team
+            </Link>
+          </p>
         </div>
       </section>
 

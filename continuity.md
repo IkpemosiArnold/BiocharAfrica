@@ -3,58 +3,26 @@
 **Project:** BiocharAfrica
 **Session:** 34acf2db
 **Branch:** main
-**Context Usage:** 361.7% (723,409 / 200,000 tokens)
-**Timestamp:** 2026-08-11T21:28:12.762Z
+**Context Usage:** 370.8% (741,556 / 200,000 tokens)
+**Timestamp:** 2026-08-12T06:15:49.069Z
 **Working Directory:** /Users/mac/Documents/DevProjects/BiocharAfrica
 
 ## IMPORTANT: Resume from here
 
-Context window is at 361.7% capacity. Auto-compact will trigger soon.
+Context window is at 370.8% capacity. Auto-compact will trigger soon.
 This document was auto-generated. Continue from the tasks and conversation below.
 
 ## Active Tasks
 
-- [completed] Phase 1a: mail CNAME -> A record 131.153.147.50 (TTL 300)
-- [completed] Phase 1b: MX repointed from apex to mail.biocharsolutions.africa
-- [completed] Phase 1c: '+a' removed from SPF
-- [completed] Phase 1d: DMARC added (p=none, report-only)
-- [completed] Repoint 4 CalDAV/CardDAV SRV records off the apex
-- [completed] www CNAME -> Vercel; already serving the new site over HTTPS
-- [completed] Apex A TTL lowered 14400 -> 300, value untouched
-- [in_progress] YOU: send a test email in AND out before the apex moves
-- [pending] After 00:45 UTC (01:45 WAT): apex A -> 216.198.79.1, then verify
-- [pending] Contact form needs CONTACT_TO + SMTP to deliver enquiries
+- [completed] Phase 1: decouple email from the apex (mail A, MX, SPF, DMARC, 4x SRV)
+- [completed] Phase 2: apex A -> 216.198.79.1, www CNAME -> Vercel
+- [completed] Verify: 12 passed, 0 failures; email unchanged through the switch
+- [in_progress] Contact form: set CONTACT_TO + SMTP so enquiries actually arrive
+- [pending] In a day or two: raise TTLs from 300 back to 14400
+- [pending] Optional: decide whether apex or www should be canonical
 
 
 ## Recent Conversation
-
-**ASSISTANT:** Now let me see the actual zone records so I can drive the edits:
-
-**ASSISTANT:** I have the full zone — 28 records. And reading it surfaced something my DNS queries missed:
-
-**Four CalDAV/CardDAV SRV records also target the apex** (`_caldav`, `_caldavs`, `_carddav`, `_carddavs` → `biocharsolutions.africa` on ports 2079/2080). Those are cPanel calendar and contacts sync. When the apex moves to Vercel they'll point at a host with no such ports. Lower severity than email, but same root cause, so I'll fix them in the same pass.
-
-Starting with the safest and most important: converting `mail` from a CNAME into a real A record.
-
-**ASSISTANT:** The Type dropdown is editable, so I can convert it in place. Changing `mail` from CNAME to A:
-
-**ASSISTANT:** Type switched to A and it's now asking for an IPv4 address. Filling in the mail server IP and dropping the TTL to 300:
-
-**ASSISTANT:** `mail` is now a real A record at TTL 300. Now the critical one — repointing the MX off the apex:
-
-**ASSISTANT:** **The dangerous part is done.** MX now resolves independently of the apex:
-
-```
-MX  →  mail.biocharsolutions.africa.  (TTL 300)
-mail →  A 131.153.147.50
-apex →  still 131.153.147.50, untouched
-```
-
-Now the SPF, before the apex moves:
-
-**ASSISTANT:** SPF clean. Now `www` → Vercel, which is safe immediately since it carries no mail:
-
-**ASSISTANT:** Now lowering the apex TTL — value unchanged, so no risk, but it makes tonight's switch fast to roll back:
 
 **ASSISTANT:** Everything landed correctly:
 
@@ -109,5 +77,50 @@ Let me record what we did and work out precisely when the apex can move:
 
 Four **CalDAV/CardDAV SRV records** were also t
 
+**ASSISTANT:** Let me check where we stand before recommending anything:
+
+**ASSISTANT:** Window expired 5 hours ago, and the zone is stable overnight. But time arithmetic isn't proof — let me confirm the new MX has actually propagated to public resolvers worldwide:
+
+**ASSISTANT:** Real proof, not arithmetic: **all five public resolvers** now return the new MX at TTL 300. The old apex-pointing MX is fully flushed worldwide, and `www` is live with the new site.
+
+**The apex is safe to move.** That's the last step.
+
+One gate before I flip it:
+
+**ASSISTANT:** Email confirmed working. Moving the apex — let me check the session is still alive:
+
+**ASSISTANT:** Session alive, apex confirmed at `131.153.147.50` with TTL 300. Flipping it:
+
+**ASSISTANT:** Apex has moved and email is untouched. The `308` is a redirect, not an error — let me confirm where it goes and that TLS is valid:
+
+**ASSISTANT:** **Cutover complete.** The full chain works:
+
+```
+http://biocharsolutions.africa   → 308 → https
+https://biocharsolutions.africa  → 308 → https://www.biocharsolutions.africa/
+                                        → 200, server: Vercel
+                                        → "Biochar Solutions Africa: carbon solutions rooted in African soil"
+```
+
+HTTPS negotiated fine on the bare domain (HTTP/2 response proves the certificate is valid — the empty `openssl` output is this sandbox, not the site). Let me teach the checker that this redirect is success, not a warning:
+
+**ASSISTANT:** **Done. The site is live on the real domain.**
+
+I moved the apex only after proving the old MX had genuinely flushed — querying five public resolvers (Google, Cloudflare, Quad9, OpenDNS, Verisign) rather than trusting the four-hour clock. All returned the new MX. Then:
+
+```
+A  @  131.153.147.50  →  216.198.79.1     propagated in ~15s
+```
+
+```
+http://biocharsolutions.africa   → 308 → https
+https://biocharsolutions.africa  → 308 → https://www.biocharsolutions.africa/
+                                       → 200, server: Vercel
+```
+
+**`./scripts/check-dns.sh` → 12 passed, 0 warnings, 0 failures.** Email verified unchanged right through the switch: MX still `mail.biocharsolutions.africa` → `131.153.147.50`.
+
+I also fixed the checker itself — it was flagging the apex's `308` as a warning, but t
+
 ---
-*Auto-generated at 361.7% context usage by context-threshold-tracker*
+*Auto-generated at 370.8% context usage by context-threshold-tracker*

@@ -23,11 +23,22 @@ import {
  * the sky and into the soil. Each <section> declares its palette via
  * data-ground / data-ink; GroundShift interpolates between them.
  */
-/* The two community photographs management supplied. At 1280x854 they are the
+/* Production photography for the community act.
+
+   These were the two community frames management supplied, but those now open
+   the hero slideshow, and management pointed out the repetition: the same two
+   pictures twice on one page. This section shows the other end of the same
+   work, the char being bagged and stacked, so the page covers production as
+   well as gathering instead of showing one thing twice.
+
+   NOTE: management sent a better frame of the sack rows than the one held here.
+   Drop it into _source/photos/ and re-run scripts/build-images.mjs to swap it in.
+
+   (original note) At 1280x854 they are the
    highest-resolution images on the site, and the only ones showing adoption at
    the scale of a whole community rather than one farmer. */
-const COMMUNITY_WIDE = "community-gathering-wide" as const;
-const COMMUNITY_TRAINING = "community-women-training" as const;
+const COMMUNITY_WIDE = "production-bagging-crew" as const;
+const COMMUNITY_TRAINING = "production-sacks-stored" as const;
 
 export default function Home() {
   return (
@@ -381,18 +392,18 @@ export default function Home() {
           <figure className="community__wide">
             <Photo
               name={COMMUNITY_WIDE}
-              alt="Several hundred community members, mostly women, gathered around a Biochar Solutions Africa field demonstration"
+              alt="A crew bagging finished biochar from heaps at the production site"
               sizes="(max-width: 900px) 100vw, 62vw"
             />
             <figcaption className="caption">
-              A demonstration draws the whole community, not a delegation.
+              Finished char, bagged at the production site.
             </figcaption>
           </figure>
 
           <figure className="community__tall">
             <Photo
               name={COMMUNITY_TRAINING}
-              alt="Women pounding biomass with mortar and pestle during a Biochar Solutions Africa training session"
+              alt="Sacks of finished biochar stacked in storage"
               sizes="(max-width: 900px) 100vw, 34vw"
             />
             <figcaption className="caption">

@@ -1730,3 +1730,19 @@
     column-gap: clamp(2rem, 4vw, 5rem);
   }
 }
+
+/* Row of faces on /about, pointing at the full team page. Small and uniform,
+   because this is a signpost rather than the roster itself. */
+.team-strip {
+  list-style: none;
+  margin: clamp(1.75rem, 1.2rem + 2vw, 2.75rem) 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+.team-strip__face {
+  inline-size: clamp(3.25rem, 8vw, 4.5rem);
+  border-radius: 50%;
+  overflow: hidden;
+}
