@@ -1554,32 +1554,49 @@
 .member__role {
   color: var(--color-rice-500);
 }
+/* These are the most credible words on the site: Wageningen, Lancaster,
+   Cambridge, ABU Zaria. They were set at --text-sm, smaller than body copy,
+   which read as a footnote rather than a credential. */
 .member__bio {
-  color: color-mix(in oklch, var(--ink) 74%, transparent);
-  font-size: var(--text-sm);
-  max-inline-size: 68ch;
+  color: color-mix(in oklch, var(--ink) 80%, transparent);
+  font-size: var(--text-base);
+  line-height: 1.5;
+  max-inline-size: 62ch;
 }
 
 @media (min-width: 56rem) {
   .member {
-    grid-template-columns: 9rem 16rem 1fr;
+    grid-template-columns: 9rem 1fr;
     column-gap: clamp(1.5rem, 1rem + 2vw, 3rem);
     align-items: start;
   }
+
+  /* The text block keeps its own grid rather than being flattened into the
+     outer one with display: contents.
+
+     Flattened, the portrait occupied row 1 and inflated it to the full height
+     of the image, which pushed each person's role about 150px below their name
+     and left a void under every bio. Each entry was 285px tall carrying maybe
+     100px of content, so six strong CVs read as sparse. Nesting keeps the rows
+     sized by the text, not by the photograph. */
   .member__text {
-    display: contents;
+    display: grid;
+    grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
+    column-gap: clamp(1.5rem, 1rem + 2vw, 3rem);
+    row-gap: 0.35rem;
+    align-items: start;
   }
   .member__name {
-    grid-column: 2;
+    grid-column: 1;
+    grid-row: 1;
   }
   .member__role {
-    grid-column: 2;
+    grid-column: 1;
     grid-row: 2;
-    align-self: start;
   }
   .member__bio {
-    grid-column: 3;
-    grid-row: 1 / span 3;
+    grid-column: 2;
+    grid-row: 1 / span 2;
   }
 }
 
