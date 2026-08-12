@@ -3,91 +3,111 @@
 **Project:** BiocharAfrica
 **Session:** 34acf2db
 **Branch:** main
-**Context Usage:** 318.6% (637,143 / 200,000 tokens)
-**Timestamp:** 2026-08-11T19:48:14.104Z
+**Context Usage:** 361.7% (723,409 / 200,000 tokens)
+**Timestamp:** 2026-08-11T21:28:12.762Z
 **Working Directory:** /Users/mac/Documents/DevProjects/BiocharAfrica
 
 ## IMPORTANT: Resume from here
 
-Context window is at 318.6% capacity. Auto-compact will trigger soon.
+Context window is at 361.7% capacity. Auto-compact will trigger soon.
 This document was auto-generated. Continue from the tasks and conversation below.
 
 ## Active Tasks
 
-- [completed] Adopt management's positioning doc: 4 solutions, impact proposition, feedstocks
-- [completed] Crawl the old site properly: found /our-team with 6 people, not 2
-- [completed] Add all six leaders with full bios and downloaded portraits
-- [completed] Wire management's two community photographs into the community act
-- [completed] Fix CTA rendering acid-green text on the acid-green slab (invisible)
-- [completed] Broaden CTA copy beyond soil to match the four solutions
-- [completed] Favicon and apple touch icon from the company logo
-- [completed] Make the image pipeline incremental (full rebuild exceeded 10 min)
-- [completed] Verify live: 5 routes, 100% reveals, no broken images, no invisible text
-- [pending] Contact form still needs CONTACT_TO + a mail provider to deliver enquiries
+- [completed] Phase 1a: mail CNAME -> A record 131.153.147.50 (TTL 300)
+- [completed] Phase 1b: MX repointed from apex to mail.biocharsolutions.africa
+- [completed] Phase 1c: '+a' removed from SPF
+- [completed] Phase 1d: DMARC added (p=none, report-only)
+- [completed] Repoint 4 CalDAV/CardDAV SRV records off the apex
+- [completed] www CNAME -> Vercel; already serving the new site over HTTPS
+- [completed] Apex A TTL lowered 14400 -> 300, value untouched
+- [in_progress] YOU: send a test email in AND out before the apex moves
+- [pending] After 00:45 UTC (01:45 WAT): apex A -> 216.198.79.1, then verify
+- [pending] Contact form needs CONTACT_TO + SMTP to deliver enquiries
 
 
 ## Recent Conversation
 
-**ASSISTANT:** Partner section renders but the two-column grid isn't applying at 1280px. Let me check rather than guess:
+**ASSISTANT:** Now let me see the actual zone records so I can drive the edits:
 
-**ASSISTANT:** Two real findings.
+**ASSISTANT:** I have the full zone — 28 records. And reading it surfaced something my DNS queries missed:
 
-**The grid bug:** `gridTemplateColumns` came back as **seven** tracks, not two. The culprit is a rule meant only for the 12-column layout — `.act__title { grid-column: 1 / 8 }` — leaking into any grid that contains an `.act__title`, forcing seven implicit columns and pushing the body to row 2.
+**Four CalDAV/CardDAV SRV records also target the apex** (`_caldav`, `_caldavs`, `_carddav`, `_carddavs` → `biocharsolutions.africa` on ports 2079/2080). Those are cPanel calendar and contacts sync. When the apex moves to Vercel they'll point at a host with no such ports. Lower severity than email, but same root cause, so I'll fix them in the same pass.
 
-**And you're right about reduced motion.** Let me fix both:
+Starting with the safest and most important: converting `mail` from a CNAME into a real A record.
 
-**ASSISTANT:** Under emulated reduced motion it now rotates, with `transitionProperty: opacity`, `transform: none` — movement-free, so no vestibular risk. Checking the grid fix, then pushing:
+**ASSISTANT:** The Type dropdown is editable, so I can convert it in place. Changing `mail` from CNAME to A:
 
-**ASSISTANT:** Grid leak fixed (two tracks now, not seven) — but they're still stacked. Let me inspect the actual placement rather than infer:
+**ASSISTANT:** Type switched to A and it's now asking for an IPv4 address. Filling in the mail server IP and dropping the TTL to 300:
 
-**ASSISTANT:** Found it: `.act__title` carries `grid-column: 1 / -1` in its **base** rule, so the heading spans both columns in any grid it lands in. I only scoped the media-query version. Scoping the base rules too:
+**ASSISTANT:** `mail` is now a real A record at TTL 300. Now the critical one — repointing the MX off the apex:
 
-**ASSISTANT:** Fixed, and the 12-column layouts still span correctly (`1 / 8`). Pushing and verifying live:
-
-**ASSISTANT:** Two issues on the live desktop build — **horizontal overflow**, which is a real defect. Let me find the culprit element:
-
-**ASSISTANT:** 18px of overflow from three unclassed 242px anchors — that's the footer address block (two phones + one email). Long unbreakable strings in an `auto-fit` grid track. Fixing the cause and adding a guard:
-
-**USER:** <task-notification>
-<task-id>bi8by6u3c</task-id>
-<tool-use-id>toolu_01EMtatvpjUXsYif3LCkNSqP</tool-use-id>
-<status>stopped</status>
-<summary>No completion record was found for this background shell command from the previous session. It may have been stopped (via the UI, Monitor timeout, or agent teardown — these leave no transcript marker), or it may have been running when the previous Claude Code process exited. Check the output file for partial results before assuming it completed.</summary>
-</task-notification>
-
-**ASSISTANT:** Congratulations on the approval. Before advising, let me look at the actual DNS for the domain — the answer depends entirely on what's currently there.
-
-**ASSISTANT:** **Stop — there's a trap here that would take down their email.**
-
-Look at the MX record: `0 biocharsolutions.africa.` The mail exchanger is the **apex domain itself**, which resolves to `131.153.147.50` — the same cPanel server as the website. And `mail.` is a CNAME pointing back at that apex.
-
-So if you simply repoint the A record to Vercel, the MX follows it to Vercel, Vercel runs no mail server, and **all inbound email dies instantly.**
-
-Let me gather the rest before writing the runbook:
-
-**ASSISTANT:** Now I have the full picture, and it's worse than a simple repoint. Let me confirm Vercel's current DNS targets rather than recite them from memory:
-
-**ASSISTANT:** Vercel's docs confirm two things that matter: the `www` CNAME target is now **project-unique** (e.g. `d1d4fc829fe7bc7c.vercel-dns-017.com`), so it must be read from your dashboard rather than copied from a blog post — and their own warning that the nameserver method requires recreating every DNS record you want to keep.
-
-Here's the situation and the safe path:
-
-**ASSISTANT:** Now a script so you can verify each phase instead of guessing:
-
-**ASSISTANT:** Good news on the approval. **Bad news: the obvious way to do this would take down their email**, and you can't see why without reading the zone.
-
-## The trap
+**ASSISTANT:** **The dangerous part is done.** MX now resolves independently of the apex:
 
 ```
-MX     biocharsolutions.africa.  →  0 biocharsolutions.africa.   ← the APEX itself
-A      biocharsolutions.africa.  →  131.153.147.50               ← WhoGoHost cPanel
-CNAME  mail.biocharsolutions.africa. → biocharsolutions.africa.  ← follows the apex too
+MX  →  mail.biocharsolutions.africa.  (TTL 300)
+mail →  A 131.153.147.50
+apex →  still 131.153.147.50, untouched
 ```
 
-**The mail exchanger *is* the apex A record.** Change that record to Vercel and the MX follows it to Vercel, which runs no SMTP server — every inbound email bounces within minutes. And `mail.` can't save you, because it's a CNAME back to the same apex.
+Now the SPF, before the apex moves:
 
-## Two decisions
+**ASSISTANT:** SPF clean. Now `www` → Vercel, which is safe immediately since it carries no mail:
 
-**Don't move the app to WhoGoHost.** "Move it to the domain" means changing where the domain *points*, no
+**ASSISTANT:** Now lowering the apex TTL — value unchanged, so no risk, but it makes tonight's switch fast to roll back:
+
+**ASSISTANT:** Everything landed correctly:
+
+```
+apex   300  A      131.153.147.50          (value unchanged, TTL lowered)
+MX     300  MX     mail.biocharsolutions.africa.
+www    300  CNAME  a63de0ba0c7e9dec.vercel-dns-017.com.
+mail   300  A      131.153.147.50
+SPF         no '+a'
+```
+
+Adding the DMARC record now:
+
+**ASSISTANT:** **Milestone: `www.biocharsolutions.africa` is already serving the new site.** Vercel issued the certificate and it's live. Full check:
+
+```
+11 passed, 1 warning, 0 failures
+PASS  MX decoupled from the apex
+PASS  mail is an A record -> 131.153.147.50
+PASS  SPF has no bare '+a'
+PASS  DKIM present   PASS  DMARC present
+PASS  apex is free to move: email no longer depends on it
+PASS  https://www.biocharsolutions.africa serves the NEW site
+```
+
+Let me finish the four SRV records that share the same root cause:
+
+**ASSISTANT:** The rows have stable IDs. Let me find the four SRV edit buttons precisely:
+
+**ASSISTANT:** Predictable field IDs. Setting the target to the mail host:
+
+**ASSISTANT:** All four SRV records moved off the apex. Final verification of the whole zone:
+
+**ASSISTANT:** **11 passed, 0 failures.** The mail ports don't answer from this machine, but that's almost certainly the local network blocking outbound SMTP/IMAP — not conclusive either way, which is exactly why you need to send a real test.
+
+Let me record what we did and work out precisely when the apex can move:
+
+**ASSISTANT:** Phase 1 done — **email is now fully decoupled from the apex**, which was the whole risk. Everything below was changed live in the cPanel Zone Editor, nameservers left at WhoGoHost:
+
+| Record | Before | After |
+|---|---|---|
+| `mail` | CNAME → apex | **A → 131.153.147.50** |
+| **MX** | `0 biocharsolutions.africa.` | **`0 mail.biocharsolutions.africa.`** |
+| SPF | `+a +mx ip4:…` | **`+a` removed** |
+| `_dmarc` | didn't exist | **added, `p=none`** (report-only, blocks nothing) |
+| `www` | CNAME → apex | **→ Vercel** |
+| apex A | `.50`, TTL 14400 | **value untouched**, TTL → 300 |
+
+**`www.biocharsolutions.africa` is already serving the new site over HTTPS.** Have a look.
+
+### One thing I found by reading the zone rather than trusting my own plan
+
+Four **CalDAV/CardDAV SRV records** were also t
 
 ---
-*Auto-generated at 318.6% context usage by context-threshold-tracker*
+*Auto-generated at 361.7% context usage by context-threshold-tracker*

@@ -117,15 +117,22 @@ echo "        www = ${WWW_C:-$(q A "www.$DOMAIN")}"
 echo
 echo "LIVE RESPONSE"
 for host in "$DOMAIN" "www.$DOMAIN"; do
-  code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 12 "https://$host/" 2>/dev/null)
+  # Follow redirects. Vercel serves the apex as a 308 to www by design, so the
+  # landing status is what matters, not the first hop.
+  code=$(curl -sL -o /dev/null -w '%{http_code}' --max-time 20 "https://$host/" 2>/dev/null)
+  final=$(curl -sL -o /dev/null -w '%{url_effective}' --max-time 20 "https://$host/" 2>/dev/null)
   if [ "$code" = "200" ]; then
-    if curl -s --max-time 12 "https://$host/" 2>/dev/null | grep -qi "rooted in"; then
-      ok "https://$host serves the NEW site (200)"
+    if curl -sL --max-time 20 "https://$host/" 2>/dev/null | grep -qi "rooted in African soil"; then
+      if [ "$final" = "https://$host/" ]; then
+        ok "https://$host serves the NEW site (200)"
+      else
+        ok "https://$host -> $final serves the NEW site (200)"
+      fi
     else
-      hmm "https://$host returns 200 but does not look like the new site yet"
+      hmm "https://$host returns 200 but does not look like the new site"
     fi
   else
-    hmm "https://$host returned '${code:-no response}' (normal mid-cutover while TLS is issued)"
+    no "https://$host returned '${code:-no response}'"
   fi
 done
 

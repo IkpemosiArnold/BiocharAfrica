@@ -278,3 +278,40 @@ A   @   ->  216.198.79.1     (TTL already 300)
 Then `./scripts/check-dns.sh` and confirm the site loads on the bare domain.
 
 Rollback is `A @ -> 131.153.147.50`, live in ~5 minutes at TTL 300.
+
+## 12 Aug 2026, 06:05 UTC — Phase 2 complete. Cutover done.
+
+Waited out the old MX TTL before touching the apex, and confirmed it had actually
+flushed rather than trusting the clock: all five public resolvers (Google,
+Cloudflare, Quad9, OpenDNS, Verisign) were returning the new MX at TTL 300.
+
+```
+A   @   131.153.147.50   ->   216.198.79.1
+```
+
+Propagated to 8.8.8.8 in ~15 seconds. Live chain:
+
+```
+http://biocharsolutions.africa   -> 308 -> https
+https://biocharsolutions.africa  -> 308 -> https://www.biocharsolutions.africa/
+                                        -> 200, server: Vercel
+```
+
+`./scripts/check-dns.sh` -> **12 passed, 0 warnings, 0 failures.**
+
+Email verified unchanged through the switch: MX still
+`0 mail.biocharsolutions.africa.` -> `131.153.147.50`.
+
+### Note: the site is canonically on www
+
+Vercel issues a 308 from the apex to `www`, which is its default and its
+recommendation. Both hostnames work and both are HTTPS. If management would
+rather the bare domain be canonical, that is a setting in Vercel (Project ->
+Domains -> set the apex as primary), not a DNS change.
+
+### Still open
+
+- **TTLs are at 300.** Leave them for a day or two in case a rollback is needed,
+  then raise back to 14400 to reduce lookup load.
+- **The contact form cannot deliver.** `CONTACT_TO` and an SMTP provider still
+  need setting in Vercel's environment variables.
