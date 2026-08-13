@@ -315,3 +315,30 @@ Domains -> set the apex as primary), not a DNS change.
   then raise back to 14400 to reduce lookup load.
 - **The contact form cannot deliver.** `CONTACT_TO` and an SMTP provider still
   need setting in Vercel's environment variables.
+
+## 13 Aug 2026 — DMARC reporting address corrected
+
+The DMARC record added on 11 Aug sent aggregate reports to
+`biocharsolutionsafrica@gmail.com`, which was taken from the old website. It
+later emerged that this is not a company address at all: the real domain
+mailboxes are aisha@, akanimo@, alamin@, ibrahim@, info@, muhammad@ and usman@.
+Reports now go to `info@biocharsolutions.africa`.
+
+```
+v=DMARC1;p=none;sp=none;adkim=r;aspf=r;pct=100;fo=1;rf=afrf;ri=86400;
+rua=mailto:info@biocharsolutions.africa
+```
+
+cPanel expanded the record to its full default form on save. Every added term is
+the permissive default (`p=none`, `sp=none`, relaxed alignment, 100% sampling,
+daily reports), so it still only observes and reports, and cannot cause a
+message to be blocked.
+
+Worth knowing if you edit DMARC here again: the Zone Editor's structured DMARC
+form has a "record as string" box that does NOT live-update as you change the
+fields. It kept showing the old value the whole time. It is a stale display, not
+the source of truth; the structured fields are what get saved. Verify with dig,
+not with that box.
+
+Verified after the change: `./scripts/check-dns.sh` 12 passed, 0 failures, MX
+and mail unchanged.
