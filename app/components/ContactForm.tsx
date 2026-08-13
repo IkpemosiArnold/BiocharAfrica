@@ -3,7 +3,13 @@
 import { useState } from "react";
 import { COMPANY } from "../lib/content";
 
-type Status = "idle" | "sending" | "sent" | "unconfigured" | "error";
+type Status =
+  | "idle"
+  | "sending"
+  | "sent"
+  | "unconfigured"
+  | "throttled"
+  | "error";
 
 /**
  * Enquiry form.
@@ -46,6 +52,14 @@ export default function ContactForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
+
+      // Too many in quick succession. Not a failure worth a mailto fallback,
+      // the visitor just needs to wait, so say that rather than bouncing them
+      // into their mail client.
+      if (res.status === 429) {
+        setStatus("throttled");
+        return;
+      }
 
       if (res.status === 503) {
         setMailto(
@@ -139,6 +153,13 @@ export default function ContactForm() {
         <button className="btn btn--solid" type="submit" disabled={status === "sending"}>
           {status === "sending" ? "Sending" : "Send enquiry"}
         </button>
+
+        {status === "throttled" && (
+          <p className="form__fallback" role="alert">
+            That is a few messages in quick succession. Give it a minute and try
+            again.
+          </p>
+        )}
 
         {(status === "unconfigured" || status === "error") && (
           <p className="form__fallback" role="alert">

@@ -3,55 +3,27 @@
 **Project:** BiocharAfrica
 **Session:** 34acf2db
 **Branch:** main
-**Context Usage:** 420.0% (839,991 / 200,000 tokens)
-**Timestamp:** 2026-08-13T06:42:56.608Z
+**Context Usage:** 427.2% (854,419 / 200,000 tokens)
+**Timestamp:** 2026-08-13T07:51:25.457Z
 **Working Directory:** /Users/mac/Documents/DevProjects/BiocharAfrica
 
 ## IMPORTANT: Resume from here
 
-Context window is at 420.0% capacity. Auto-compact will trigger soon.
+Context window is at 427.2% capacity. Auto-compact will trigger soon.
 This document was auto-generated. Continue from the tasks and conversation below.
 
 ## Active Tasks
 
 - [completed] Replace placeholder emails with the real info@biocharsolutions.africa
-- [completed] Rewrite the /team lede so it says something about the team
-- [completed] Replace Al Amin's bio with management's expanded version, title Dr.
+- [completed] Rewrite the /team lede; expand the CEO bio with management's text
 - [completed] Publish the 41-page 2024 report as a click-to-download on /impact
-- [in_progress] Update the DMARC rua address off the old Gmail to info@
+- [completed] DMARC reports redirected to info@biocharsolutions.africa
 - [pending] YOU: set mailbox passwords in cPanel (I must not handle credentials)
 - [pending] Wire the contact form to info@biocharsolutions.africa via SMTP
 - [pending] In a day or two: raise TTLs from 300 back to 14400
 
 
 ## Recent Conversation
-
-**ASSISTANT:** That's the nav auto-hiding on scroll-down (working as designed) — my test just needed to scroll up first:
-
-**ASSISTANT:** **100% on every route via client-side navigation** — 23/23, 26/26, 10/10, 26/26, zero invisible. Shipping this now since it's live-site-breaking:
-
-**ASSISTANT:** Verified live on a phone via the drawer — headings render on every route now. That bug is dead.
-
-Now, your team question. Let me look at what's actually there:
-
-**ASSISTANT:** The content is genuinely substantive — Wageningen, Lancaster, Cambridge/Stanford/MIT fellowships, ABU Zaria, Bayero, Maiduguri, with real roles and institutions. So the *data* is rich. Let me see whether the *presentation* is selling it short:
-
-**ASSISTANT:** Now I can see it. The **content is rich; the layout is starving it.** Each member block is 285px tall for ~100px of text, the role is orphaned ~150px below the name, and the bio only uses 611px of an 856px column. Let me look at the rules:
-
-**ASSISTANT:** Found the bug. On desktop `.member__text { display: contents }` flattens name, role and bio into the outer grid — and because the **portrait spans row 1**, row 1 inflates to 144px, so the role gets pushed ~150px below the name and a void opens under each bio.
-
-The bios aren't thin; the layout is. Fixing it and giving the credentials the weight they deserve:
-
-**ASSISTANT:** You were right that something was off, though the cause wasn't what either of us assumed.
-
-## The bios were never shortened — the layout was eating them
-
-The content is all there: **Wageningen, Lancaster, Cambridge/Stanford/MIT fellowships, ABU Zaria, Bayero, Maiduguri**, with departments, dates and prior roles.
-
-The problem was `display: contents` on the text block. It flattened name, role and bio into the outer grid, so the **portrait occupied row 1 and inflated it to the full height of the image** — pushing each person's role ~150px below their name and opening a void under every bio. Each entry was 285px tall carrying about 100px of content. Six serious CVs read as an afterthought.
-
-- Gap between name and role: **150px → 24px**
-- Entry height: **285px → 225px**, with *more* text visibl
 
 **ASSISTANT:** Several things there. Let me check what I'm working with:
 
@@ -79,5 +51,30 @@ Against your actual cPanel list, the site now publishes **`info@biocharsolutions
 
 **CEO bio** — used verbatim, now three paragraphs (bios became paragraph arrays across all six). Two corrections applied: management says he *holds* the PhD and calls him Dr. Al-Amin, where the old site said "doctoral researcher", so the
 
+**ASSISTANT:** cPanel has a structured DMARC editor. Updating the `rua` field:
+
+**ASSISTANT:** The field is inside a collapsed "Optional Parameters" panel. Expanding it first:
+
+**ASSISTANT:** Field is set but cPanel's generated record still shows the old value — AngularJS hasn't picked up the change. Let me type it properly so the model updates:
+
+**ASSISTANT:** Still not syncing — programmatic events aren't enough for this AngularJS form. Let me use real keystrokes:
+
+**ASSISTANT:** Let me save and check against DNS — that's the only reliable verdict. DMARC at `p=none` is report-only, so there's no risk to mail either way:
+
+**ASSISTANT:** Worked — that `as_string` field was just a stale display, not the source of truth. The saved record:
+
+**ASSISTANT:** Done. DMARC reports now go to a real company address:
+
+```
+v=DMARC1;p=none;sp=none;adkim=r;aspf=r;pct=100;fo=1;rf=afrf;ri=86400;
+rua=mailto:info@biocharsolutions.africa
+```
+
+cPanel expanded it to its full default form on save. Every term it added is the permissive default (`p=none`, `sp=none`, relaxed alignment, 100% sampling, daily reports), so it still only **observes and reports — it cannot cause a message to be blocked.**
+
+**Mail path verified unchanged**, and the full check is still **12 passed, 0 failures**.
+
+One thing worth recording, which I've put in the runbook: the Zone Editor's structured DMARC form has a *"record as string"* box that **does not live-update as you edit the fields**. It kept displaying the old Gmail address right through — including after real keystrokes — and m
+
 ---
-*Auto-generated at 420.0% context usage by context-threshold-tracker*
+*Auto-generated at 427.2% context usage by context-threshold-tracker*
