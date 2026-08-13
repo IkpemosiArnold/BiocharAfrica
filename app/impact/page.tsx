@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import PageHead from "../components/PageHead";
 import Photo from "../components/Photo";
+import ReportCard from "../components/ReportCard";
 import { FIELD_SITES, IMPACT_POINTS } from "../lib/content";
 
 export const metadata: Metadata = {
@@ -200,6 +201,20 @@ export default function Impact() {
               </li>
             ))}
           </ol>
+        </div>
+      </section>
+
+      {/* The full report, for anyone who wants the long version rather than a
+           page of highlights. */}
+      <section
+        className="act band-tight"
+        data-ground="#16130f"
+        data-ink="#ece7dd"
+        data-ink-dim="#8d857a"
+        data-rule="#2b261f"
+      >
+        <div className="shell">
+          <ReportCard />
         </div>
       </section>
 

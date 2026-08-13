@@ -29,7 +29,7 @@ export default function Team() {
             <em>behind it.</em>
           </>
         }
-        lede="Soil science, pyrolysis engineering, carbon markets and rural development. Most carbon projects in this region are assembled by intermediaries; this one is run by the people whose names are on it."
+        lede="Six founders and specialists: soil science, environmental management, pyrolysis, project delivery and business development. Doctorates from Wageningen, Lancaster, Ahmadu Bello, Bayero and Maiduguri, with fellowships from Cambridge, Stanford and MIT. Led from Abuja, working the fields of Niger State."
       />
 
       <section
@@ -60,7 +60,11 @@ export default function Team() {
                   <p className="member__role eyebrow">
                     <span>{m.role}</span>
                   </p>
-                  <p className="member__bio">{m.bio}</p>
+                  <div className="member__bio">
+                    {m.bio.map((para) => (
+                      <p key={para.slice(0, 40)}>{para}</p>
+                    ))}
+                  </div>
                 </div>
               </li>
             ))}

@@ -1562,6 +1562,10 @@
   font-size: var(--text-base);
   line-height: 1.5;
   max-inline-size: 62ch;
+  /* Bios are paragraph arrays now, since management supplied a three-paragraph
+     profile for the CEO and a single string could not hold it. */
+  display: grid;
+  gap: 0.85rem;
 }
 
 @media (min-width: 56rem) {
@@ -1765,4 +1769,44 @@
   inline-size: clamp(3.25rem, 8vw, 4.5rem);
   border-radius: 50%;
   overflow: hidden;
+}
+
+/* ==========================================================================
+   Report download
+   ========================================================================== */
+
+.report {
+  display: grid;
+  gap: clamp(1.5rem, 1rem + 2.5vw, 3rem);
+  padding-block: clamp(1.75rem, 1.2rem + 2.5vw, 3rem);
+  border-block: 1px solid var(--rule);
+}
+.report__title {
+  font-size: var(--text-2xl);
+  margin-block: 0.75rem 0.9rem;
+  max-inline-size: 18ch;
+}
+.report__lede {
+  color: color-mix(in oklch, var(--ink) 76%, transparent);
+  max-inline-size: 54ch;
+}
+.report__action {
+  display: grid;
+  gap: 0.75rem;
+  justify-items: start;
+  align-content: center;
+}
+/* The weight of the file, stated plainly next to the button. */
+.report__meta {
+  font-size: var(--text-xs);
+  color: var(--ink-dim);
+  letter-spacing: 0.04em;
+}
+
+@media (min-width: 56rem) {
+  .report {
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    column-gap: clamp(2rem, 4vw, 5rem);
+  }
 }

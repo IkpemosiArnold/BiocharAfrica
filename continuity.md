@@ -3,13 +3,13 @@
 **Project:** BiocharAfrica
 **Session:** 34acf2db
 **Branch:** main
-**Context Usage:** 395.3% (790,529 / 200,000 tokens)
-**Timestamp:** 2026-08-12T12:55:56.752Z
+**Context Usage:** 409.7% (819,463 / 200,000 tokens)
+**Timestamp:** 2026-08-12T18:39:03.018Z
 **Working Directory:** /Users/mac/Documents/DevProjects/BiocharAfrica
 
 ## IMPORTANT: Resume from here
 
-Context window is at 395.3% capacity. Auto-compact will trigger soon.
+Context window is at 409.7% capacity. Auto-compact will trigger soon.
 This document was auto-generated. Continue from the tasks and conversation below.
 
 ## Active Tasks
@@ -23,42 +23,6 @@ This document was auto-generated. Continue from the tasks and conversation below
 
 
 ## Recent Conversation
-
-**ASSISTANT:** The old menu is right there: **Home · About · Services · Team · Contact** (footer confirms: Home, About Us, Our Services, Our Team, Contact Us).
-
-So the gap is **Team** — I built the six leaders into `/about`, but the old site gave them their own page, and they're the strongest credibility asset here. Let me check the photo duplication management flagged:
-
-**ASSISTANT:** Confirmed — `community-gathering-wide` and `community-women-training` appear in **both** the hero slideshow and the community section. Management is right.
-
-Let me check whether I already have the first replacement they sent:
-
-**ASSISTANT:** That's exactly the first photo they sent — I have it as `production-bagging-crew`, though only at **794×386**, which is small for a feature slot. The second (rows of sacks) I don't have at all.
-
-Let me do the menu work now, which is fully actionable, and swap the community photos to the closest matches I hold:
-
-**ASSISTANT:** Now the dedicated Team page the old site had:
-
-**ASSISTANT:** Now the community photo swap management asked for, plus the strip styling:
-
-**ASSISTANT:** Build passes with 11 routes now. Let me verify the new page and the edited `/about` before this goes to a live company site:
-
-**ASSISTANT:** `/about` teaser works, `/team` has all six with no broken images, and the nav reads **About · Services · Team · Impact**. Pushing:
-
-**ASSISTANT:** Both items done and live. All six routes return 200 on the real domain, and the DNS checker still reads **12 passed, 0 failures**.
-
-## The menu
-
-The old site's menu was **Home · About · Services · Team · Contact** — I read it off the screenshots I'd captured earlier, since the sandbox can't open HTTPS to the old server and web.archive.org is blocked.
-
-**Team was missing entirely.** I'd buried the six leaders inside `/about`. They now have their own page, which is also where they belong on merit — six named people with checkable credentials (Lancaster PhD, Cambridge/Stanford/MIT fellowships) is the strongest credibility asset the company has, and a carbon buyer will go looking for it. `/about` keeps a face strip and a "Meet the team" link rather than a duplicate roster. Home added to the mo
-
-**ASSISTANT:** Found them — two files dropped into `_source/originals/`, timestamped to match management's 07:27 messages. Let me check what resolution we actually got:
-
-**ASSISTANT:** Both are small. Let me check whether these are actually new files or re-sends of what I already have:
-
-**ASSISTANT:** Both are **byte-identical to files I already had.** The bagging shot is `production-bagging-crew`, already in use. And the sacks photo has been sitting in `_source/originals` since day one — I culled it during the initial triage and never staged it. That's my miss, not a missing file.
-
-Let me look at it:
 
 **ASSISTANT:** That's a strong image — it shows **production scale**, which nothing else on the site does. It's 775×395 though, so let me check the slots it has to fit:
 
@@ -74,5 +38,42 @@ It genuinely earns its place: it's the **only photograph on the site showing out
 
 **I also had to change the frames, not just the photos.** The two slots were 3/2 and 4/3, but both photographs are roughly 2:1. D
 
+**ASSISTANT:** Let me check what's actually in the data versus what's rendering:
+
+**ASSISTANT:** Stop — that navigation bug is far more serious than the bios. Let me reproduce it:
+
+**ASSISTANT:** **Reproduced, and it's severe.** After a client-side navigation to `/about`: **23 revealable elements, 0 revealed, 0 visible** — the entire page is blank text. After a reload it works.
+
+The cause: `SmoothScroll` lives in the root layout, so its `useEffect(…, [])` runs **once**. On client-side navigation the layout persists, the observer is still watching the *old* page's unmounted elements, and the new ones never get observed — so they keep `opacity: 0` forever. Same fail-closed class as the Android bug; I only fixed the initial-mount path.
+
+**ASSISTANT:** Fixed — every route now reveals its above-the-fold content on client-side navigation (`scrollY: 0`, 4–5 revealed each). The rest are below-fold, which is correct. Let me confirm they reveal on scroll after a navigation:
+
+**ASSISTANT:** That's the nav auto-hiding on scroll-down (working as designed) — my test just needed to scroll up first:
+
+**ASSISTANT:** **100% on every route via client-side navigation** — 23/23, 26/26, 10/10, 26/26, zero invisible. Shipping this now since it's live-site-breaking:
+
+**ASSISTANT:** Verified live on a phone via the drawer — headings render on every route now. That bug is dead.
+
+Now, your team question. Let me look at what's actually there:
+
+**ASSISTANT:** The content is genuinely substantive — Wageningen, Lancaster, Cambridge/Stanford/MIT fellowships, ABU Zaria, Bayero, Maiduguri, with real roles and institutions. So the *data* is rich. Let me see whether the *presentation* is selling it short:
+
+**ASSISTANT:** Now I can see it. The **content is rich; the layout is starving it.** Each member block is 285px tall for ~100px of text, the role is orphaned ~150px below the name, and the bio only uses 611px of an 856px column. Let me look at the rules:
+
+**ASSISTANT:** Found the bug. On desktop `.member__text { display: contents }` flattens name, role and bio into the outer grid — and because the **portrait spans row 1**, row 1 inflates to 144px, so the role gets pushed ~150px below the name and a void opens under each bio.
+
+The bios aren't thin; the layout is. Fixing it and giving the credentials the weight they deserve:
+
+**ASSISTANT:** You were right that something was off, though the cause wasn't what either of us assumed.
+
+## The bios were never shortened — the layout was eating them
+
+The content is all there: **Wageningen, Lancaster, Cambridge/Stanford/MIT fellowships, ABU Zaria, Bayero, Maiduguri**, with departments, dates and prior roles.
+
+The problem was `display: contents` on the text block. It flattened name, role and bio into the outer grid, so the **portrait occupied row 1 and inflated it to the full height of the image** — pushing each person's role ~150px below their name and opening a void under every bio. Each entry was 285px tall carrying about 100px of content. Six serious CVs read as an afterthought.
+
+- Gap between name and role: **150px → 24px**
+- Entry height: **285px → 225px**, with *more* text visibl
+
 ---
-*Auto-generated at 395.3% context usage by context-threshold-tracker*
+*Auto-generated at 409.7% context usage by context-threshold-tracker*

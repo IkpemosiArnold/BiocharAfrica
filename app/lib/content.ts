@@ -25,7 +25,13 @@ export const COMPANY = {
   country: "Nigeria",
   // Letterhead numbers; the live site lists the second of these.
   phones: ["+234 803 707 3300", "+234 908 242 1111"],
-  emails: ["biocharsolutionsafrica@gmail.com", "info@bsafrica.com"],
+  /* The only real mailbox for public contact. The site previously published
+     biocharsolutionsafrica@gmail.com and info@bsafrica.com, taken from the old
+     site and the letterhead. Neither exists: the first is a personal Gmail, the
+     second is on a different domain entirely. Confirmed against the live cPanel
+     account list, where the domain mailboxes are aisha@, akanimo@, alamin@,
+     ibrahim@, info@, muhammad@ and usman@. */
+  emails: ["info@biocharsolutions.africa"],
   site: "www.biocharsolutions.africa",
 } as const;
 
@@ -141,40 +147,62 @@ export const IMPACT_POINTS = [
  */
 export const TEAM = [
   {
-    name: "Al Amin Ibrahim",
+    /* Supplied verbatim by management, 13 Aug 2026, replacing the shorter
+       version taken from the old site. Note the correction: the old site
+       described him as a doctoral researcher; management states he holds the
+       PhD and refers to him as Dr. Al-Amin, so the title is applied here.
+
+       Their text used em dashes around the residue list. Those are commas here
+       to match the rest of the site's punctuation; no wording is changed. A
+       stray capital in "Africa, He holds" is also corrected. */
+    name: "Dr. Al Amin Ibrahim",
     role: "Founder and Chief Executive",
     photo: "team-al-amin-ibrahim",
-    bio: "Doctoral researcher in Sustainable Development at the University of Abuja, with a background in finance, investment management and renewable energy. Has a track record of securing climate financing and has represented organisations at international climate conferences.",
+    bio: [
+      "As Founder and CEO of Biochar Solutions Africa, he holds a PhD in Sustainable Development from the University of Abuja, with doctoral research centred on the relationship between climate finance, ESG and sustainable energy development in Nigeria. Dr. Al-Amin is developing a specialised platform around biochar production, regenerative agriculture, soil restoration, carbon sequestration and agricultural-waste valorisation.",
+      "The Biochar Solutions Africa platform identifies biochar's role in soil improvement, nutrient retention, waste management, circular economy and agricultural productivity.",
+      "His vision for the sector is considerably broader than biochar production alone. It involves developing an integrated African circular bioeconomy in which agricultural residues, including rice husks and straw, maize cobs and stalks and other biomass residues, can be converted through controlled thermochemical processes into biochar and associated value streams.",
+    ],
   },
   {
     name: "Prof. Aisha Abdulkadir",
     role: "Co-Founder and Chief Soil Scientist",
     photo: "team-aisha-abdulkadir",
-    bio: "B.Agric and MSc in Soil Science from Ahmadu Bello University, Zaria, and a PhD from Wageningen University in the Netherlands, where she worked on modelling nutrient flows and balances in agroecosystems with the Plant Production Systems Group. On the faculty of ABU's Department of Soil Science since 2002, specialising in soil physics.",
+    bio: [
+      "B.Agric and MSc in Soil Science from Ahmadu Bello University, Zaria, and a PhD from Wageningen University in the Netherlands, where she worked on modelling nutrient flows and balances in agroecosystems with the Plant Production Systems Group. On the faculty of ABU's Department of Soil Science since 2002, specialising in soil physics.",
+    ],
   },
   {
     name: "Dr. Akanimo Odon",
     role: "Co-Founder and Head of R&D",
     photo: "team-akanimo-odon",
-    bio: "Master's in environmental rehabilitation and a PhD in Environmental Management from Lancaster University, with business and enterprise fellowships from Cambridge, Stanford and MIT. Consultant at the Lancaster Environment Centre and Chair for Africa of the Scientific Research and Innovation Council UK.",
+    bio: [
+      "Master's in environmental rehabilitation and a PhD in Environmental Management from Lancaster University, with business and enterprise fellowships from Cambridge, Stanford and MIT. Consultant at the Lancaster Environment Centre and Chair for Africa of the Scientific Research and Innovation Council UK.",
+    ],
   },
   {
     name: "Muhammad Musa",
     role: "Co-Founder and Head of Operations",
     photo: "team-muhammad-musa",
-    bio: "MSc in Environmental Management from Bayero University Kano and a BSc in Geography from Yobe State University. Previously project manager and chief executive at Sahel Humanity Centre, an environmental management and sustainability company in Damaturu, Yobe State. Responsible for staffing and operational process.",
+    bio: [
+      "MSc in Environmental Management from Bayero University Kano and a BSc in Geography from Yobe State University. Previously project manager and chief executive at Sahel Humanity Centre, an environmental management and sustainability company in Damaturu, Yobe State. Responsible for staffing and operational process.",
+    ],
   },
   {
     name: "Dr. Ibrahim Yarima",
     role: "Project Coordinator",
     photo: "team-ibrahim-yarima",
-    bio: "BSc Botany from the University of Maiduguri, a specialist diploma in biological technology from the Nigeria Institute of Science and Technology, an MSc in Land Resources from Bayero University Kano, and a PhD in Geography and Environmental Management from Maiduguri. Research fellow at the Centre for Arid Zone Studies.",
+    bio: [
+      "BSc Botany from the University of Maiduguri, a specialist diploma in biological technology from the Nigeria Institute of Science and Technology, an MSc in Land Resources from Bayero University Kano, and a PhD in Geography and Environmental Management from Maiduguri. Research fellow at the Centre for Arid Zone Studies.",
+    ],
   },
   {
     name: "Dr. Usman Aliyu",
     role: "Head of Business Development",
     photo: "team-usman-aliyu",
-    bio: "PhD and MSc in Environmental Management from the University of Maiduguri, a first degree in Geology and a postgraduate diploma in environmental management. Fifteen years helping start-ups in northern Nigeria scale, concentrated on eco-innovation, product management and business development.",
+    bio: [
+      "PhD and MSc in Environmental Management from the University of Maiduguri, a first degree in Geology and a postgraduate diploma in environmental management. Fifteen years helping start-ups in northern Nigeria scale, concentrated on eco-innovation, product management and business development.",
+    ],
   },
 ] as const;
 
@@ -222,3 +250,19 @@ export const VALUES = [
     body: "Transparent practice and claims we can show you the coordinates for.",
   },
 ] as const;
+
+/**
+ * The company's 2024 report, supplied by management for publication.
+ * Size is recorded here so the download button can state it: at 6.6MB this is
+ * by far the heaviest thing on the site, and on a metered Nigerian mobile plan
+ * that is a real cost to disclose before the tap rather than after.
+ */
+export const REPORT = {
+  year: "2024",
+  title: "Biochar Africa Report",
+  summary:
+    "The company's full 2024 report: the production model, the feedstock economics, the field programme in Niger State and the carbon case, set out at length.",
+  file: "/reports/biochar-solutions-africa-report-2024.pdf",
+  pages: 41,
+  size: "6.6 MB",
+} as const;
